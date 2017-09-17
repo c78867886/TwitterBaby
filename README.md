@@ -55,9 +55,9 @@ Contributing
 
 ## Authors
 
-- Json Ho
-- Alex Lee
-- Json He
+- Jason Ho
+- Chih-Yin Lee
+- Jason He
 - Diane Lin
 
 
