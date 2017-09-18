@@ -8,9 +8,10 @@ mongoose.connection.on('connected',function () {
     console.log('Mongoose connect ' + DB_URL + " success");
 });
 
+// New Schema
 var Schema = mongoose.Schema;
 
-// Schema info
+// Schema attr info
 var UserSchema = new Schema({
     username: {type: String},
     userpwd: {type: String},
@@ -21,7 +22,7 @@ var UserSchema = new Schema({
 var User = mongoose.model("User",UserSchema);
 
 function insert(usrName, usrPwd, usrAge) {
-    //用Model创建一个Entity实体，就是一个User的数据
+    //A user info used to insert
     var user_1 = new User({
         username: usrName,
         userpwd: usrPwd,
