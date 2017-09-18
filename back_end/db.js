@@ -19,9 +19,10 @@ var UserSchema = new Schema({
     logindate: {type: Date}
 });
 
-var User = mongoose.model("User",UserSchema);
+//var User = mongoose.model("User",UserSchema);
 
-function insert(usrName, usrPwd, usrAge) {
+function User_Insert(UserSchema, Table, usrName, usrPwd, usrAge) {
+    var User = mongoose.model(Table ,UserSchema);
     //A user info used to insert
     var user_1 = new User({
         username: usrName,
@@ -39,10 +40,10 @@ function insert(usrName, usrPwd, usrAge) {
     });
 }
 
-// from front-end
+// from front-end (in the future)
 var usrName = 'Alex Lee'
 var usrPwd = 'madan'
 var usrAge = 20
 
 // insert
-insert(usrName, usrPwd, usrAge);
+User_Insert(UserSchema, "User", usrName, usrPwd, usrAge);
