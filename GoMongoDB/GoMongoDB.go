@@ -6,21 +6,17 @@ import (
 	"gopkg.in/mgo.v2/bson"
 	"time"
 )
+//"mongodb://SEavanger:SEavanger@ds139964.mlab.com:39964/se_avangers"
 
 type Person struct {
 	ID        bson.ObjectId `bson:"_id,omitempty"`
-	firstname      string
-	lastname      string
-	email     string
-	psw	string
-	age int
-	timestamp time.Time
-
+	Firstname      string
+	Lastname      string
+	Email     string
+	Psw	string
+	Age int
+	Timestamp time.Time
 }
-
-var (
-	IsDrop = false
-)
 
 func main() {
 	session, err := mgo.Dial("mongodb://SEavanger:SEavanger@ds139964.mlab.com:39964/se_avangers")
@@ -33,19 +29,19 @@ func main() {
 	session.SetMode(mgo.Monotonic, true)
 
 	// Drop Database
-	if IsDrop {
-		err = session.DB("se_avangers").DropDatabase()
-		if err != nil {
-			panic(err)
-		}
+	/*
+	err = session.DB("se_avangers").DropDatabase()
+	if err != nil {
+		panic(err)
 	}
+	*/
 
 	// Collection People
 	c := session.DB("se_avangers").C("user")
 
 	// Index
 	index := mgo.Index{
-		Key:        []string{"name", "phone"},
+		Key:        []string{"id"},
 		Unique:     true,
 		DropDups:   true,
 		Background: true,
@@ -58,15 +54,15 @@ func main() {
 	}
 
 	// Insert Datas
-	err = c.Insert(&Person{firstname: "Ale", lastname: "Wong", email: "ccjdis@gmail.com", psw:"2234", age:23, timestamp: time.Now()},
-		&Person{firstname: "Boyyu", lastname: "Wong", email: "73737827@gmail.com", psw:"343232", age:53, timestamp: time.Now()})
+	err = c.Insert(
+		&Person{Firstname: "Ale", Lastname: "Wong", Email: "ccjdis@gmail.com", Psw:"2234", Age:23, Timestamp: time.Now()},
+		&Person{Firstname: "Boyyu", Lastname: "Wong", Email: "73737827@gmail.com", Psw:"343232", Age:53, Timestamp: time.Now()})
 
 	if err != nil {
 		panic(err)
 	}
 
 	// Query All
-	//var results []Person
 	var results []Person
 	err = c.Find(bson.M{"firstname": "Ale"}).Sort("-timestamp").All(&results)
 
@@ -84,4 +80,5 @@ func main() {
 		panic(err)
 	}
 	*/
+
 }
