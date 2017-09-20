@@ -18,10 +18,6 @@ type Person struct {
 
 }
 
-var (
-	IsDrop = false
-)
-
 func main() {
 	session, err := mgo.Dial("mongodb://SEavanger:SEavanger@ds139964.mlab.com:39964/se_avangers")
 	if err != nil {
@@ -33,14 +29,14 @@ func main() {
 	session.SetMode(mgo.Monotonic, true)
 
 	// Drop Database
-	if IsDrop {
-		err = session.DB("se_avangers").DropDatabase()
-		if err != nil {
-			panic(err)
-		}
+	/*
+	err = session.DB("se_avangers").DropDatabase()
+	if err != nil {
+		panic(err)
 	}
+	*/
 
-	// Collection People
+	// Collection user
 	c := session.DB("se_avangers").C("user")
 
 	// Index
@@ -58,15 +54,15 @@ func main() {
 	}
 
 	// Insert Datas
-	err = c.Insert(&Person{firstname: "Ale", lastname: "Wong", email: "ccjdis@gmail.com", psw:"2234", age:23, timestamp: time.Now()},
+	err = c.Insert(
+		&Person{firstname: "Ale", lastname: "Wong", email: "ccjdis@gmail.com", psw:"2234", age:23, timestamp: time.Now()},
 		&Person{firstname: "Boyyu", lastname: "Wong", email: "73737827@gmail.com", psw:"343232", age:53, timestamp: time.Now()})
 
 	if err != nil {
 		panic(err)
 	}
 
-	// Query All
-	//var results []Person
+	// Query
 	var results []Person
 	err = c.Find(bson.M{"firstname": "Ale"}).Sort("-timestamp").All(&results)
 

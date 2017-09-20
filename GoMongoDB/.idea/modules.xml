@@ -2,6 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/GoMongoDB.iml" filepath="$PROJECT_DIR$/.idea/GoMongoDB.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/helloworld.iml" filepath="$PROJECT_DIR$/.idea/helloworld.iml" />
     </modules>
   </component>
