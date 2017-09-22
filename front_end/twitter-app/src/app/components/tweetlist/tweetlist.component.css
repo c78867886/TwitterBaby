@@ -1,0 +1,9 @@
+.example-card {
+    width: 80%;
+    margin: 0 auto;
+}
+
+.action {
+    display: flex;
+    justify-content: flex-end;
+}

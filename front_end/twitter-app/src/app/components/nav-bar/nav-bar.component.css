@@ -1,0 +1,17 @@
+.example-spacer {
+    flex: 1 1 auto;
+}
+
+.button {
+    margin-right: 80px;
+}
+
+.form {
+    margin-right: 60px;
+    font-size: 17px;
+    max-width: 170px;
+}
+
+.search {
+    color: white;
+}
