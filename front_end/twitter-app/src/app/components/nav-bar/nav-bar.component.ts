@@ -7,7 +7,7 @@ import { Component, OnInit, Inject } from '@angular/core';
 })
 export class NavBarComponent implements OnInit {
 
-  constructor(@Inject("data") private data) { }
+  constructor(@Inject('data') private data) { }
 
   ngOnInit() {
   }
