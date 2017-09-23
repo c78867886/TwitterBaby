@@ -1,5 +1,6 @@
 <md-card *ngFor="let tweet of tweetlist" class="example-card">
   <md-card-header>
+    <div md-card-avatar class="header-image"></div>
     <md-card-title>{{ tweet.timestamp }}</md-card-title>
     <md-card-subtitle>Dog Breed</md-card-subtitle>
   </md-card-header>
@@ -9,7 +10,7 @@
     </p>
   </md-card-content>
   <md-card-actions class="action">
-    <button md-button>LIKE</button>
-    <button md-button>SHARE</button>
+    <button md-raised-button color="accent">LIKE</button>
+    <button md-raised-button color="accent">SHARE</button>
   </md-card-actions>
 </md-card>
