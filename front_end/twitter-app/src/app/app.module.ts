@@ -10,7 +10,7 @@ import { DataService } from './services/data.service';
 import { rooting } from './app.router';
 
 import { MdToolbarModule, MdInputModule, MdMenuModule, 
-         MdIconModule, MdButtonModule, MdCardModule } from '@angular/material';
+         MdIconModule, MdButtonModule, MdCardModule, MdExpansionModule } from '@angular/material';
 import { UserInfoComponent } from './components/user-info/user-info.component';
 import { TweetlistComponent } from './components/tweetlist/tweetlist.component';
 import { PostareaComponent } from './components/postarea/postarea.component';
@@ -35,6 +35,7 @@ import { SignupComponent } from './components/signup/signup.component';
     MdIconModule,
     MdButtonModule,
     MdCardModule,
+    MdExpansionModule,
     rooting
   ],
   providers: [{provide: 'data',
