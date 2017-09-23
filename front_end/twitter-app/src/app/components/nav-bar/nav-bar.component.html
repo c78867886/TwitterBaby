@@ -1,11 +1,14 @@
 <md-toolbar color="primary">
-  <span>BabyTwitter</span>
+  <span routerLink="/home" class="brand">BabyTwitter</span>
   <span class="example-spacer"></span>
-  <form class="form">
+
+  <form class="form" (submit)="onSubmit()">
     <md-form-field class="search">
-      <input mdInput placeholder="Search a friend" class="input">
+      <input name="search" mdInput placeholder="Search a friend" class="input" [(ngModel)]='username'>
     </md-form-field>
+    <button type='submit' [routerLink]="['/user', username]" style="display:none"></button>
   </form>
+
   <button class="button" md-icon-button [mdMenuTriggerFor]="menu">
     <md-icon>account_box</md-icon>
     <span>JasonHo</span>

@@ -6,10 +6,13 @@ import { Component, OnInit, Inject } from '@angular/core';
   styleUrls: ['./nav-bar.component.css']
 })
 export class NavBarComponent implements OnInit {
-
+  username: string = "";
   constructor(@Inject('data') private data) { }
 
   ngOnInit() {
   }
 
+  onSubmit(): void {
+    this.username = '';
+  }
 }
