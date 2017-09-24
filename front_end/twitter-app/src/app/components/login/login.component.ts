@@ -1,5 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Inject } from '@angular/core';
 import { Tweet } from '../../models/tweet.model';
+import { ActivatedRoute } from "@angular/router";
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
@@ -20,9 +21,19 @@ export class LoginComponent implements OnInit {
       timestamp: "2012-12-01"
     }
   ]
-  constructor() { }
+  constructor(
+    private route: ActivatedRoute,
+    @Inject('data') private data) { }
 
   ngOnInit() {
+    this.route.params.subscribe(params => {
+      this.data.getTweetList(params["id"])
+        .then(list => 
+          {
+            this.list = list;
+          }
+        );
+    });
   }
 
 }

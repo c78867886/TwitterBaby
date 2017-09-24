@@ -2,6 +2,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FormsModule } from '@angular/forms';
+import { HttpModule } from '@angular/http';
 
 import { AppComponent } from './app.component';
 import { NavBarComponent } from './components/nav-bar/nav-bar.component';
@@ -38,6 +39,7 @@ import { UserPageComponent } from './components/user-page/user-page.component';
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
+    HttpModule,
     FormsModule,
     MdToolbarModule,
     MdInputModule,
