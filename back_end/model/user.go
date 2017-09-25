@@ -10,6 +10,7 @@ type User struct {
 	Email 		string			`json:"email" bson:"email"`
 	Followers	[]string		`json:"followers,omitempty" bson:"followers,omitempty"`
 	Followed	[]string		`json:"followed,omitempty" bson:"followed,omitempty"`
+	Bio			string			`json:"bio,omitempty" bson:"bio,omitempty"`
 	Token		string			`json:"token,omitempty" bson:"-"`
 	
 	UserIDdev	string			`json:"useriddev,omitempty" bson:"useriddev,omitempty"`
