@@ -17,43 +17,38 @@ func TestFetchOwnTweets (t *testing.T) {
 
 	// Setup
 	e := echo.New()
-	req := httptest.NewRequest(echo.GET, "/", nil)
-	rec := httptest.NewRecorder()
-	c := e.NewContext(req, rec)
-	c.SetPath("/api/v1/tweetlist")
-	c.SetParamNames("user")
-	c.SetParamValues("JasonHo")
 	h := &Handler{session}
 
-	// Assertions
-	var tweetJSON = `[{"id":"59c8402ca54d7515eefc62b8","from":"JasonHo","message":"Hi, I am Jason Ho.","timestamp":"2017.1.1"}]`
-	if assert.NoError(t, h.FetchOwnTweets(c)) {
-		assert.Equal(t, http.StatusOK, rec.Code)
-		assert.Equal(t, tweetJSON, rec.Body.String())
+	// test empty request parameter
+	//c.SetParamValues("")
+
+	// test cases
+	requestParam := []string {
+		"JasonHo", 
+		"JasonHe", 
+		"MarsLee", 
+		"DianeLin"}
+
+	expectedJSON := []string {
+		`[{"content":"Hi, I am Jason Ho.","timestamp":"2017-9-25"},{"content":"Hello from Jason Ho.","timestamp":"2017-9-25"},{"content":"Hello world!","timestamp":"2017-9-25"}]`, 
+		`[{"content":"Hi, I am Jason He.","timestamp":"2017-9-25"},{"content":"Hello from Jason He.","timestamp":"2017-9-25"}]`, 
+		`[{"content":"Hi, I am Chih-Yin Lee.","timestamp":"2017-9-25"},{"content":"Hello from Chih-Yin Lee.","timestamp":"2017-9-25"}]`, 
+		`[{"content":"Hi, I am Diane Lin.","timestamp":"2017-9-25"},{"content":"Hello from Diane Lin.","timestamp":"2017-9-25"}]`}
+
+	// Run
+	for i, rp := range requestParam {
+		// Setup
+		req := httptest.NewRequest(echo.GET, "/", nil)
+		rec := httptest.NewRecorder()
+		c := e.NewContext(req, rec)
+		c.SetPath("/api/v1/tweetlist")
+		c.SetParamNames("user")
+		c.SetParamValues(rp)
+
+		// Assertion
+		if assert.NoError(t, h.FetchOwnTweets(c)) {
+			assert.Equal(t, http.StatusOK, rec.Code)
+			assert.Equal(t, expectedJSON[i], rec.Body.String())
+		}
 	}
 }
-
-/*func TestFetchOwnTweets_1 (t *testing.T) {
-	// Setup
-	e := echo.New()
-	session, err := mgo.Dial("mongodb://SEavanger:SEavanger@ds139964.mlab.com:39964/se_avangers")
-	if err != nil {
-		panic(err)
-	}
-	h := &Handler{DB: session}
-	e.GET("/api/v1/tweetlist", h.FetchOwnTweets)
-	
-	req := httptest.NewRequest(echo.GET, "/", nil)
-	rec := httptest.NewRecorder()
-	c := e.NewContext(req, rec)
-	c.SetPath("/api/v1/tweetlist")
-	c.SetParamNames("user")
-	c.SetParamValues("JasonHo")
-
-	// Assertions
-	var tweetJSON = `[{"id":"59c82b80a54d750fd33d5527","from":"JasonHo","message":"Hi, I am Jason Ho."}]`
-	if assert.NoError(t, h.FetchOwnTweets(c)) {
-		assert.Equal(t, http.StatusOK, rec.Code)
-		assert.Equal(t, tweetJSON, rec.Body.String())
-	}
-}*/
