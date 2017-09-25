@@ -51,14 +51,14 @@ func main() {
 
 	// Start server
 	e.HideBanner = true
-	e.Logger.Fatal(e.Start(":1323"))
+	e.Logger.Fatal(e.Start("127.0.0.1:1323"))
 }
 
 func serverControl(e *echo.Echo, session *mgo.Session) {
 	var op string
 	
 	for {
-		fmt.Print("Option: ")
+		fmt.Print("Option('q' to quit): ")
 		fmt.Scanln(&op)
 		if op == "q" {
 			fmt.Println("Shutting down server.")

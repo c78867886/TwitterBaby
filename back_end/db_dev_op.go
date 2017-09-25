@@ -1,8 +1,9 @@
 package main
 
 import (
-	"gopkg.in/mgo.v2/bson"
 	"fmt"
+	"time"
+	"gopkg.in/mgo.v2/bson"
 	"gopkg.in/mgo.v2"
 	"model"
 )
@@ -38,10 +39,15 @@ func DBInsert() {
 	tweetC := session.DB("se_avangers").C("tweets")
 
 	tweets := []model.Tweet {
-		model.Tweet{ID: bson.NewObjectId(), From: "JasonHo", Message: "Hi, I am Jason Ho.", Timestamp: "2017.1.1"}, 
-		model.Tweet{ID: bson.NewObjectId(), From: "MarsLee", Message: "Hi, I am Chih-Yin Lee.", Timestamp: "2017.2.4"}, 
-		model.Tweet{ID: bson.NewObjectId(), From: "JasonHe", Message: "Hi, I am Jason He.", Timestamp: "2017.3.6"}, 
-		model.Tweet{ID: bson.NewObjectId(), From: "DianeLin", Message: "Hi, I am Diane Lin.", Timestamp: "2017.4.8"}}
+		model.Tweet{ID: bson.NewObjectId(), From: "JasonHo", Message: "Hi, I am Jason Ho.", Timestamp: time.Now()}, 
+		model.Tweet{ID: bson.NewObjectId(), From: "JasonHo", Message: "Hello from Jason Ho.", Timestamp: time.Now()}, 
+		model.Tweet{ID: bson.NewObjectId(), From: "JasonHo", Message: "Hello world!", Timestamp: time.Now()}, 
+		model.Tweet{ID: bson.NewObjectId(), From: "MarsLee", Message: "Hi, I am Chih-Yin Lee.", Timestamp: time.Now()}, 
+		model.Tweet{ID: bson.NewObjectId(), From: "MarsLee", Message: "Hello from Chih-Yin Lee.", Timestamp: time.Now()}, 
+		model.Tweet{ID: bson.NewObjectId(), From: "JasonHe", Message: "Hi, I am Jason He.", Timestamp: time.Now()}, 
+		model.Tweet{ID: bson.NewObjectId(), From: "JasonHe", Message: "Hello from Jason He.", Timestamp: time.Now()}, 
+		model.Tweet{ID: bson.NewObjectId(), From: "DianeLin", Message: "Hi, I am Diane Lin.", Timestamp: time.Now()}, 
+		model.Tweet{ID: bson.NewObjectId(), From: "DianeLin", Message: "Hello from Diane Lin.", Timestamp: time.Now()}}
 
 	for i := 0; i < len(tweets); i++ {
 		err := tweetC.Insert(tweets[i])

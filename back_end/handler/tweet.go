@@ -3,11 +3,15 @@ package handler
 import (
 	"fmt"
 	"net/http"
-	//"gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
 	"github.com/labstack/echo"
 	"model"
 )
+
+type tweetContainer struct {
+		Content 	string	`json:"content"`
+   		Timestamp 	string	`json:"timestamp"`
+}
 
 /*func (h *Handler) CreateTweet(c echo.Context) (err error) {
 	
@@ -27,8 +31,6 @@ func (h *Handler) FetchOwnTweets (c echo.Context) (err error) {
 		limit = 100
 	}*/
 
-	fmt.Println("Receive request.")
-
 	userID := c.Param("user")
 
 	// Retrieve tweets from database
@@ -40,21 +42,12 @@ func (h *Handler) FetchOwnTweets (c echo.Context) (err error) {
 		return
 	}
 	defer db.Close()
-
-	type container struct {
-		content 	string
-   		timestamp 	string
-	} 
-	//temp := []container {container{content: tweets[0].Message, timestamp: tweets[0].Timestamp}}
-	//temp := []container {container{content: "123", timestamp: tweets[0].Timestamp}}
-	//var temp = []*container{}
-	//temp = append(temp, &container{content: "123", timestamp: tweets[0].Timestamp})
-	//temp[0].content = tweets[0].Message
-	//temp[0].timestamp = tweets[0].Timestamp
-	//fmt.Println(temp[0])
-
-	//return c.JSON(http.StatusOK, temp)
 	
-	return c.JSON(http.StatusOK, tweets)
-	//return c.JSON(http.StatusOK, tweets[0])
+	res := []tweetContainer{}
+	for _, t := range tweets {
+		time := t.Timestamp
+		res = append(res, tweetContainer{Content: t.Message, Timestamp: fmt.Sprintf("%d-%d-%d", time.Year(), time.Month(), time.Day())})
+	}
+	
+	return c.JSON(http.StatusOK, res)
 }
