@@ -41,7 +41,7 @@ func TestFetchOwnTweets (t *testing.T) {
 		req := httptest.NewRequest(echo.GET, "/", nil)
 		rec := httptest.NewRecorder()
 		c := e.NewContext(req, rec)
-		c.SetPath("/api/v1/tweetlist")
+		c.SetPath("api/v1/tweetlist")
 		c.SetParamNames("user")
 		c.SetParamValues(rp)
 

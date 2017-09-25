@@ -51,7 +51,8 @@ func main() {
 
 	// Start server
 	e.HideBanner = true
-	e.Logger.Fatal(e.Start("127.0.0.1:1323"))
+	//e.Logger.Fatal(e.Start("127.0.0.1:1323"))
+	e.Logger.Fatal(e.Start("192.168.1.2:1323"))
 }
 
 func serverControl(e *echo.Echo, session *mgo.Session) {
