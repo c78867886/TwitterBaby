@@ -24,10 +24,14 @@ func DBInsert() {
 	userC := session.DB("se_avangers").C("users")
 
 	users := []model.User {
-		model.User{ID: bson.NewObjectId(), FirstName: "Jason", LastName: "Ho", Password: "test1", Email: "hojason117@gmail.com", Followers: nil, Followed: nil, Token: "", UserIDdev: "JasonHo"},
-		model.User{ID: bson.NewObjectId(), FirstName: "Chih-Yin", LastName: "Lee", Password: "test2", Email: "c788678867886@gmail.com", Followers: nil, Followed: nil, Token: "", UserIDdev: "MarsLee"},
-		model.User{ID: bson.NewObjectId(), FirstName: "Jason", LastName: "He", Password: "test3", Email: "hexing_h@hotmail.com", Followers: nil, Followed: nil, Token: "", UserIDdev: "JasonHe"},
-		model.User{ID: bson.NewObjectId(), FirstName: "Diane", LastName: "Lin", Password: "test4", Email: "diane@gmail.com", Followers: nil, Followed: nil, Token: "", UserIDdev: "DianeLin"}}
+		model.User{ID: bson.NewObjectId(), FirstName: "Jason", LastName: "Ho", Password: "test1", Email: "hojason117@gmail.com", Followers: nil, Followed: nil, 
+			Bio: "Hi everyone, this is Jason Ho.", Token: "", UserIDdev: "JasonHo"},
+		model.User{ID: bson.NewObjectId(), FirstName: "Chih-Yin", LastName: "Lee", Password: "test2", Email: "c788678867886@gmail.com", Followers: nil, Followed: nil, 
+			Bio: "Hi everyone, this is Mars Lee.", Token: "", UserIDdev: "MarsLee"},
+		model.User{ID: bson.NewObjectId(), FirstName: "Jason", LastName: "He", Password: "test3", Email: "hexing_h@hotmail.com", Followers: nil, Followed: nil, 
+			Bio: "Hi everyone, this is Jason He.", Token: "", UserIDdev: "JasonHe"},
+		model.User{ID: bson.NewObjectId(), FirstName: "Diane", LastName: "Lin", Password: "test4", Email: "diane@gmail.com", Followers: nil, Followed: nil, 
+			Bio: "Hi everyone, this is Diane Lin.", Token: "", UserIDdev: "DianeLin"}}
 	
 	for i := 0; i < len(users); i++ {
 		err := userC.Insert(users[i])
