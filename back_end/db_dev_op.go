@@ -2,7 +2,7 @@ package main
 
 import (
 	"gopkg.in/mgo.v2/bson"
-	//"fmt"
+	"fmt"
 	"gopkg.in/mgo.v2"
 	"model"
 )
@@ -38,10 +38,10 @@ func DBInsert() {
 	tweetC := session.DB("se_avangers").C("tweets")
 
 	tweets := []model.Tweet {
-		model.Tweet{ID: bson.NewObjectId(), From: "JasonHo", Message: "Hi, I am Jason Ho."}, 
-		model.Tweet{ID: bson.NewObjectId(), From: "MarsLee", Message: "Hi, I am Chih-Yin Lee."}, 
-		model.Tweet{ID: bson.NewObjectId(), From: "JasonHe", Message: "Hi, I am Jason He."}, 
-		model.Tweet{ID: bson.NewObjectId(), From: "DianeLin", Message: "Hi, I am Diane Lin."}}
+		model.Tweet{ID: bson.NewObjectId(), From: "JasonHo", Message: "Hi, I am Jason Ho.", Timestamp: "2017.1.1"}, 
+		model.Tweet{ID: bson.NewObjectId(), From: "MarsLee", Message: "Hi, I am Chih-Yin Lee.", Timestamp: "2017.2.4"}, 
+		model.Tweet{ID: bson.NewObjectId(), From: "JasonHe", Message: "Hi, I am Jason He.", Timestamp: "2017.3.6"}, 
+		model.Tweet{ID: bson.NewObjectId(), From: "DianeLin", Message: "Hi, I am Diane Lin.", Timestamp: "2017.4.8"}}
 
 	for i := 0; i < len(tweets); i++ {
 		err := tweetC.Insert(tweets[i])
@@ -55,14 +55,28 @@ func DBInsert() {
 
 func DBFind() {
 	session := DBConnect()
-	collect := session.DB("se_avangers").C("users")
+	
+	/*collect := session.DB("se_avangers").C("users")
 
-	firstName := "Jason"
+	userIDdev := "JasonHo"
 	var result model.User
-	err := collect.Find(bson.M{"name": firstName}).One(&result)
+	err := collect.Find(bson.M{"useriddev": userIDdev}).One(&result)
 	if err != nil {
 		panic(err)
 	}
+
+	fmt.Println(result.ID)*/
+
+	collect := session.DB("se_avangers").C("tweets")
+
+	from := "JasonHo"
+	var result model.User
+	err := collect.Find(bson.M{"from": from}).One(&result)
+	if err != nil {
+		panic(err)
+	}
+
+	fmt.Println(result.ID)
 
 	session.Close()
 }

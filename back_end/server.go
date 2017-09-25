@@ -26,8 +26,9 @@ func main() {
 		},
 	}))*/
 
-	DBDrop()
-	DBInsert()
+	//DBDrop()
+	//DBInsert()
+	//DBFind()
 
 	// Database connection
 	session, err := mgo.Dial("mongodb://SEavanger:SEavanger@ds139964.mlab.com:39964/se_avangers")
@@ -40,7 +41,10 @@ func main() {
 	h := &handler.Handler{DB: session}
 
 	// Routes
-	e.GET("/tweets", h.FetchOwnTweets)
+	e.GET("api/v1/tweetlist", h.FetchOwnTweets)
+
+	// CORS config
+	e.Use(middleware.CORS())
 
 	// initiate parallel server control
 	go serverControl(e, session)
