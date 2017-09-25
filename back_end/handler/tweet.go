@@ -31,7 +31,8 @@ func (h *Handler) FetchOwnTweets (c echo.Context) (err error) {
 		limit = 100
 	}*/
 
-	userID := c.Param("user")
+	//userID := c.Param("user")
+	userID := c.QueryParam("user")
 
 	// Retrieve tweets from database
 	tweets := []*model.Tweet{}
@@ -43,10 +44,11 @@ func (h *Handler) FetchOwnTweets (c echo.Context) (err error) {
 	}
 	defer db.Close()
 	
-	res := []tweetContainer{}
+	fmt.Println(userID)
+	res := []*tweetContainer{}
 	for _, t := range tweets {
 		time := t.Timestamp
-		res = append(res, tweetContainer{Content: t.Message, Timestamp: fmt.Sprintf("%d-%d-%d", time.Year(), time.Month(), time.Day())})
+		res = append(res, &tweetContainer{Content: t.Message, Timestamp: fmt.Sprintf("%d-%d-%d", time.Year(), time.Month(), time.Day())})
 	}
 	
 	return c.JSON(http.StatusOK, res)
