@@ -27,8 +27,10 @@ func (h *Handler) FetchOwnTweets (c echo.Context) (err error) {
 		limit = 100
 	}*/
 
-	userID := c.Get("user")
-	fmt.Println(userID)
+	fmt.Println("Receive request.")
+
+	userID := c.Param("user")
+
 	// Retrieve tweets from database
 	tweets := []*model.Tweet{}
 	db := h.DB.Clone()
@@ -38,7 +40,21 @@ func (h *Handler) FetchOwnTweets (c echo.Context) (err error) {
 		return
 	}
 	defer db.Close()
-	fmt.Println("success")
-	fmt.Println(tweets[0].Message)
+
+	type container struct {
+		content 	string
+   		timestamp 	string
+	} 
+	//temp := []container {container{content: tweets[0].Message, timestamp: tweets[0].Timestamp}}
+	//temp := []container {container{content: "123", timestamp: tweets[0].Timestamp}}
+	//var temp = []*container{}
+	//temp = append(temp, &container{content: "123", timestamp: tweets[0].Timestamp})
+	//temp[0].content = tweets[0].Message
+	//temp[0].timestamp = tweets[0].Timestamp
+	//fmt.Println(temp[0])
+
+	//return c.JSON(http.StatusOK, temp)
+	
 	return c.JSON(http.StatusOK, tweets)
+	//return c.JSON(http.StatusOK, tweets[0])
 }
