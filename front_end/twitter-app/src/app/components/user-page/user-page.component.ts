@@ -7,20 +7,9 @@ import { ActivatedRoute } from "@angular/router";
   styleUrls: ['./user-page.component.css']
 })
 export class UserPageComponent implements OnInit {
-  list: Tweet[] = [
-    {
-      content: "This is a test contentThis is a test contentThis is a test content",
-      timestamp: "2012-12-02"
-    },
-    {
-      content: "This is a test contentThis is a test contentThis is a test content",
-      timestamp: "2012-12-03"
-    },
-    {
-      content: "This is a test contentThis is a test content",
-      timestamp: "2012-12-04"
-    }
-  ]
+  list: Tweet[];
+  username: string;
+  bio: string;
   constructor(private route: ActivatedRoute,
     @Inject('data') private data) { }
 
@@ -29,7 +18,9 @@ export class UserPageComponent implements OnInit {
       this.data.getTweetList(params["id"])
         .then(list => 
           {
-            this.list = list;
+            this.list = list.tweets;
+            this.username = list.firstname + ' ' + list.lastname;
+            this.bio = list.bio;
           }
         );
     });

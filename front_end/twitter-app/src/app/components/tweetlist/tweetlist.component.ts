@@ -7,6 +7,7 @@ import { Tweet } from '../../models/tweet.model';
 })
 export class TweetlistComponent implements OnInit {
   @Input() tweetlist: Tweet[];
+  @Input() username: string;
   constructor() { }
 
   ngOnInit() {

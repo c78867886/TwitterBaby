@@ -23,7 +23,6 @@ import { UserInfoComponent } from './components/user-info/user-info.component';
 import { TweetlistComponent } from './components/tweetlist/tweetlist.component';
 import { PostareaComponent } from './components/postarea/postarea.component';
 import { LoginComponent } from './components/login/login.component';
-import { SignupComponent } from './components/signup/signup.component';
 import { UserPageComponent } from './components/user-page/user-page.component';
 @NgModule({
   declarations: [
@@ -33,7 +32,6 @@ import { UserPageComponent } from './components/user-page/user-page.component';
     TweetlistComponent,
     PostareaComponent,
     LoginComponent,
-    SignupComponent,
     UserPageComponent
   ],
   imports: [
