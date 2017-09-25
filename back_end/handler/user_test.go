@@ -40,7 +40,7 @@ func TestFetchUserInfo (t *testing.T) {
 		rec := httptest.NewRecorder()
 		c := e.NewContext(req, rec)
 		// Set the registered path for the handler.
-		c.SetPath("/api/v1/tweetlist")
+		c.SetPath("/api/v1/UserInfolist")
 		// Set path parameter names.
 		c.SetParamNames("user")
 		// Set path parameter values.
