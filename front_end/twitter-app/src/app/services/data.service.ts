@@ -7,7 +7,7 @@ export class DataService {
 
   constructor(private http: Http) { }
   getTweetList(id: string): Promise<Tweet[]> {
-    return this.http.get(`api/v1/tweetlist/${id}`)
+    return this.http.get(`http://localhost:1323/api/v1/tweetlist?user=${id}`)
                       .toPromise()
                       .then((res: Response) => res.json())
                       .catch(this.handleError);
