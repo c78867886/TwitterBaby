@@ -43,14 +43,14 @@ func DBInsert() {
 	tweetC := session.DB("se_avangers").C("tweets")
 
 	tweets := []model.Tweet {
-		model.Tweet{ID: bson.NewObjectId(), From: "JasonHo", Message: "Hi, I am Jason Ho.", Timestamp: time.Now()}, 
+		model.Tweet{ID: bson.NewObjectId(), From: "JasonHo", Message: "Hi, I am Jason Ho. Weather sucks.", Timestamp: time.Now()}, 
 		model.Tweet{ID: bson.NewObjectId(), From: "JasonHo", Message: "Hello from Jason Ho.", Timestamp: time.Now()}, 
 		model.Tweet{ID: bson.NewObjectId(), From: "JasonHo", Message: "Hello world!", Timestamp: time.Now()}, 
-		model.Tweet{ID: bson.NewObjectId(), From: "MarsLee", Message: "Hi, I am Chih-Yin Lee.", Timestamp: time.Now()}, 
+		model.Tweet{ID: bson.NewObjectId(), From: "MarsLee", Message: "Hi, I am Chih-Yin Lee. Weather sucks.", Timestamp: time.Now()}, 
 		model.Tweet{ID: bson.NewObjectId(), From: "MarsLee", Message: "Hello from Chih-Yin Lee.", Timestamp: time.Now()}, 
-		model.Tweet{ID: bson.NewObjectId(), From: "JasonHe", Message: "Hi, I am Jason He.", Timestamp: time.Now()}, 
+		model.Tweet{ID: bson.NewObjectId(), From: "JasonHe", Message: "Hi, I am Jason He. Weather sucks.", Timestamp: time.Now()}, 
 		model.Tweet{ID: bson.NewObjectId(), From: "JasonHe", Message: "Hello from Jason He.", Timestamp: time.Now()}, 
-		model.Tweet{ID: bson.NewObjectId(), From: "DianeLin", Message: "Hi, I am Diane Lin.", Timestamp: time.Now()}, 
+		model.Tweet{ID: bson.NewObjectId(), From: "DianeLin", Message: "Hi, I am Diane Lin. Weather sucks.", Timestamp: time.Now()}, 
 		model.Tweet{ID: bson.NewObjectId(), From: "DianeLin", Message: "Hello from Diane Lin.", Timestamp: time.Now()}}
 
 	for i := 0; i < len(tweets); i++ {
