@@ -30,10 +30,10 @@ func TestFetchOwnTweets (t *testing.T) {
 		"DianeLin"}
 
 	expectedJSON := []string {
-		`[{"content":"Hi, I am Jason Ho.","timestamp":"2017-9-25"},{"content":"Hello from Jason Ho.","timestamp":"2017-9-25"},{"content":"Hello world!","timestamp":"2017-9-25"}]`, 
-		`[{"content":"Hi, I am Jason He.","timestamp":"2017-9-25"},{"content":"Hello from Jason He.","timestamp":"2017-9-25"}]`, 
-		`[{"content":"Hi, I am Chih-Yin Lee.","timestamp":"2017-9-25"},{"content":"Hello from Chih-Yin Lee.","timestamp":"2017-9-25"}]`, 
-		`[{"content":"Hi, I am Diane Lin.","timestamp":"2017-9-25"},{"content":"Hello from Diane Lin.","timestamp":"2017-9-25"}]`}
+		`{"firstname":"Jason","lastname":"Ho","bio":"Hi everyone, this is Jason Ho.","tweets":[{"content":"Hi, I am Jason Ho. Weather sucks.","timestamp":"2017-9-25"},{"content":"Hello from Jason Ho.","timestamp":"2017-9-25"},{"content":"Hello world!","timestamp":"2017-9-25"}]}`, 
+		`{"firstname":"Jason","lastname":"He","bio":"Hi everyone, this is Jason He.","tweets":[{"content":"Hi, I am Jason He. Weather sucks.","timestamp":"2017-9-25"},{"content":"Hello from Jason He.","timestamp":"2017-9-25"}]}`, 
+		`{"firstname":"Chih-Yin","lastname":"Lee","bio":"Hi everyone, this is Mars Lee.","tweets":[{"content":"Hi, I am Chih-Yin Lee. Weather sucks.","timestamp":"2017-9-25"},{"content":"Hello from Chih-Yin Lee.","timestamp":"2017-9-25"}]}`, 
+		`{"firstname":"Diane","lastname":"Lin","bio":"Hi everyone, this is Diane Lin.","tweets":[{"content":"Hi, I am Diane Lin. Weather sucks.","timestamp":"2017-9-25"},{"content":"Hello from Diane Lin.","timestamp":"2017-9-25"}]}`}
 
 	// Run
 	for i, rp := range requestParam {

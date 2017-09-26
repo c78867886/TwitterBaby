@@ -41,7 +41,7 @@ func main() {
 	h := &handler.Handler{DB: session}
 
 	// Routes
-	e.GET("api/v1/tweetlist", h.FetchOwnTweets)
+	e.GET("api/v1/tweetlist/:user", h.FetchOwnTweets)
 
 	// CORS config
 	e.Use(middleware.CORS())
@@ -58,7 +58,7 @@ func serverControl(e *echo.Echo, session *mgo.Session) {
 	var op string
 	
 	for {
-		fmt.Print("Option('q' to quit): ")
+		fmt.Println("Option('q' to quit): ")
 		fmt.Scanln(&op)
 		if op == "q" {
 			fmt.Println("Shutting down server.")

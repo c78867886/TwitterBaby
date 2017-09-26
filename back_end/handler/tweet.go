@@ -20,11 +20,12 @@ type tweetContainer struct {
    	Timestamp 	string	`json:"timestamp"`
 }
 
-
 /*func (h *Handler) CreateTweet(c echo.Context) (err error) {
 	
 }*/
 
+// FetchOwnTweets : Handle requests asking for a list of tweets posted by a specific user, 
+//					and	reponse with that list along with some info about that user
 func (h *Handler) FetchOwnTweets (c echo.Context) (err error) {
 	//userID := userIDFromToken(c)
 
@@ -39,14 +40,12 @@ func (h *Handler) FetchOwnTweets (c echo.Context) (err error) {
 		limit = 100
 	}*/
 
-	//userID := c.Param("user")
-	userID := c.QueryParam("user")
+	userID := c.Param("user")
 
 	db := h.DB.Clone()
 	
 	// Retrieve user info from database
 	user := model.User{}
-
 	err = db.DB("se_avangers").C("users").Find(bson.M{"useriddev": userID}).One(&user)
 	if err != nil {
 		return
@@ -54,7 +53,6 @@ func (h *Handler) FetchOwnTweets (c echo.Context) (err error) {
 
 	// Retrieve tweets from database
 	tweets := []*model.Tweet{}
-
 	err = db.DB("se_avangers").C("tweets").Find(bson.M{"from": userID}).All(&tweets)
 	if err != nil {
 		return
