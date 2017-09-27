@@ -8,52 +8,55 @@ import (
 	"model"
 )
 
-func DBDrop() {
-	session := DBConnect()
-	err := session.DB("se_avengers").DropDatabase()
+func dbDrop(db *mgo.Session) {
+	err := db.DB("se_avengers").DropDatabase()
 	if err != nil {
 		panic(err)
 	}
 
-	session.Close()
+	db.Close()
 }
 
-func DBInsert() {
-	session := DBConnect()
+func dbReinsert(db *mgo.Session) {
+	dbDrop(db.Clone())
 
-	userC := session.DB("se_avengers").C("users")
+	userC := db.DB("se_avengers").C("users")
 
 	users := []model.User {
-		model.User{ID: bson.NewObjectId(), FirstName: "Jason", LastName: "Ho", Password: "test1", Email: "hojason117@gmail.com", Followers: nil, Followed: nil, 
-			Bio: "Hi everyone, this is Jason Ho.", Token: "", UserIDdev: "JasonHo"},
-		model.User{ID: bson.NewObjectId(), FirstName: "Chih-Yin", LastName: "Lee", Password: "test2", Email: "c788678867886@gmail.com", Followers: nil, Followed: nil, 
-			Bio: "Hi everyone, this is Mars Lee.", Token: "", UserIDdev: "MarsLee"},
-		model.User{ID: bson.NewObjectId(), FirstName: "Jason", LastName: "He", Password: "test3", Email: "hexing_h@hotmail.com", Followers: nil, Followed: nil, 
-			Bio: "Hi everyone, this is Jason He.", Token: "", UserIDdev: "JasonHe"},
-		model.User{ID: bson.NewObjectId(), FirstName: "Diane", LastName: "Lin", Password: "test4", Email: "diane@gmail.com", Followers: nil, Followed: nil, 
-			Bio: "Hi everyone, this is Diane Lin.", Token: "", UserIDdev: "DianeLin"}, 
-		model.User{ID: bson.NewObjectId(), FirstName: "Tom", LastName: "Riddle", Password: "test5", Email: "triddle@gmail.com", Followers: nil, Followed: nil, 
-			Bio: "Hi everyone, this is Lord Voldemort.", Token: "", UserIDdev: "TomRiddle"}}
+		model.User{FirstName: "Jason", LastName: "Ho", Password: "test1", Email: "hojason117@gmail.com", Followers: []string{}, Following: []string{}, 
+			Bio: "Hi everyone, this is Jason Ho.", Token: ""},
+		model.User{FirstName: "Chih-Yin", LastName: "Lee", Password: "test2", Email: "c788678867886@gmail.com", Followers: []string{}, Following: []string{}, 
+			Bio: "Hi everyone, this is Mars Lee.", Token: ""},
+		model.User{FirstName: "Jason", LastName: "He", Password: "test3", Email: "hexing_h@hotmail.com", Followers: []string{}, Following: []string{}, 
+			Bio: "Hi everyone, this is Jason He.", Token: ""},
+		model.User{FirstName: "Diane", LastName: "Lin", Password: "test4", Email: "diane@gmail.com", Followers: []string{}, Following: []string{}, 
+			Bio: "Hi everyone, this is Diane Lin.", Token: ""}, 
+		model.User{FirstName: "Tom", LastName: "Riddle", Password: "test5", Email: "triddle@gmail.com", Followers: []string{}, Following: []string{}, 
+			Bio: "Hi everyone, this is Lord Voldemort.", Token: ""}}
 	
-	for _, u:= range users {
+	userIDs := []bson.ObjectId{}
+
+	for _, u:= range users { 
+		u.ID = bson.NewObjectId()
+		userIDs = append(userIDs, u.ID)
 		err := userC.Insert(u)
 		if err != nil {
 			panic(err)
 		}
 	}
 
-	tweetC := session.DB("se_avengers").C("tweets")
+	tweetC := db.DB("se_avengers").C("tweets")
 
 	tweets := []model.Tweet {
-		model.Tweet{ID: bson.NewObjectId(), From: "JasonHo", Message: "Hi, I am Jason Ho. Weather sucks.", Timestamp: time.Now()}, 
-		model.Tweet{ID: bson.NewObjectId(), From: "JasonHo", Message: "Hello from Jason Ho.", Timestamp: time.Now()}, 
-		model.Tweet{ID: bson.NewObjectId(), From: "JasonHo", Message: "Hello world!", Timestamp: time.Now()}, 
-		model.Tweet{ID: bson.NewObjectId(), From: "MarsLee", Message: "Hi, I am Chih-Yin Lee. Weather sucks.", Timestamp: time.Now()}, 
-		model.Tweet{ID: bson.NewObjectId(), From: "MarsLee", Message: "Hello from Chih-Yin Lee.", Timestamp: time.Now()}, 
-		model.Tweet{ID: bson.NewObjectId(), From: "JasonHe", Message: "Hi, I am Jason He. Weather sucks.", Timestamp: time.Now()}, 
-		model.Tweet{ID: bson.NewObjectId(), From: "JasonHe", Message: "Hello from Jason He.", Timestamp: time.Now()}, 
-		model.Tweet{ID: bson.NewObjectId(), From: "DianeLin", Message: "Hi, I am Diane Lin. Weather sucks.", Timestamp: time.Now()}, 
-		model.Tweet{ID: bson.NewObjectId(), From: "DianeLin", Message: "Hello from Diane Lin.", Timestamp: time.Now()}}
+		model.Tweet{ID: bson.NewObjectId(), Owner: userIDs[0].Hex(), Message: "Hi, I am Jason Ho. Weather sucks.", Timestamp: time.Now()}, 
+		model.Tweet{ID: bson.NewObjectId(), Owner: userIDs[0].Hex(), Message: "Hello from Jason Ho.", Timestamp: time.Now()}, 
+		model.Tweet{ID: bson.NewObjectId(), Owner: userIDs[0].Hex(), Message: "Hello world!", Timestamp: time.Now()}, 
+		model.Tweet{ID: bson.NewObjectId(), Owner: userIDs[1].Hex(), Message: "Hi, I am Chih-Yin Lee. Weather sucks.", Timestamp: time.Now()}, 
+		model.Tweet{ID: bson.NewObjectId(), Owner: userIDs[1].Hex(), Message: "Hello from Chih-Yin Lee.", Timestamp: time.Now()}, 
+		model.Tweet{ID: bson.NewObjectId(), Owner: userIDs[2].Hex(), Message: "Hi, I am Jason He. Weather sucks.", Timestamp: time.Now()}, 
+		model.Tweet{ID: bson.NewObjectId(), Owner: userIDs[2].Hex(), Message: "Hello from Jason He.", Timestamp: time.Now()}, 
+		model.Tweet{ID: bson.NewObjectId(), Owner: userIDs[3].Hex(), Message: "Hi, I am Diane Lin. Weather sucks.", Timestamp: time.Now()}, 
+		model.Tweet{ID: bson.NewObjectId(), Owner: userIDs[3].Hex(), Message: "Hello from Diane Lin.", Timestamp: time.Now()}}
 
 	for _, t := range tweets {
 		err := tweetC.Insert(t)
@@ -62,24 +65,11 @@ func DBInsert() {
 		}
 	}
 
-	session.Close()
+	db.Close()
 }
 
-func DBFind() {
-	session := DBConnect()
-	
-	/*collect := session.DB("se_avangers").C("users")
-
-	userIDdev := "JasonHo"
-	var result model.User
-	err := collect.Find(bson.M{"useriddev": userIDdev}).One(&result)
-	if err != nil {
-		panic(err)
-	}
-
-	fmt.Println(result.ID)*/
-
-	collect := session.DB("se_avengers").C("tweets")
+func dbFind(db *mgo.Session) {
+	collect := db.DB("se_avengers").C("tweets")
 
 	from := "JasonHo"
 	var result model.User
@@ -90,14 +80,5 @@ func DBFind() {
 
 	fmt.Println(result.ID)
 
-	session.Close()
-}
-
-func DBConnect() *mgo.Session {
-	session, err := mgo.Dial("mongodb://SEavenger:SEavenger@ds149324.mlab.com:49324/se_avengers")
-	if err != nil {
-		panic(err)
-	}
-
-	return session
+	db.Close()
 }

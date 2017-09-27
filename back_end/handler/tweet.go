@@ -2,29 +2,19 @@ package handler
 
 import (
 	"gopkg.in/mgo.v2"
-	"fmt"
+	"time"
 	"net/http"
 	"gopkg.in/mgo.v2/bson"
 	"github.com/labstack/echo"
 	"model"
 )
 
-type ownTweetContainer struct {
-		FirstName 	string				`json:"firstname" bson:"firstname"`
-		LastName	string				`json:"lastname,omitempty"`
-		Bio			string				`json:"bio,omitempty"`
-		Tweets		[]tweetContainer	`json:"tweets,omitempty"`
-}
-
-type tweetContainer struct {
-	Content 	string	`json:"content"`
-   	Timestamp 	string	`json:"timestamp"`
-}
-
 // FetchOwnTweets : Handle requests asking for a list of tweets posted by a specific user, and respond with that list along with some user info.
-func (h *Handler) FetchOwnTweets (c echo.Context) (err error) {
-	//userID := userIDFromToken(c)
-
+//					Return 200 OK on success.
+// 					Return 400 Bad Request if user ID is malformed.
+//					Return 404 Not Found if the user is not in the database.
+//					Request format: GET "api/v1/tweetlist/:user"
+func (h *Handler) FetchTweets (c echo.Context) (err error) {
 	/*page, _ := strconv.Atoi(c.QueryParam("page"))
 	limit, _ := strconv.Atoi(c.QueryParam("limit"))
 
@@ -37,77 +27,89 @@ func (h *Handler) FetchOwnTweets (c echo.Context) (err error) {
 	}*/
 
 	userID := c.Param("user")
-	if !bson.IsObjectIdHex(userID) {
-		//return c.JSON(http.StatusBadRequest, "Malformed user ID.")
-	}
 
 	db := h.DB.Clone()
+	defer db.Close()
 	
 	// Retrieve user info from database
 	user := model.User{}
-	//err = db.DB("se_avengers").C("users").Find(bson.M{"_id": bson.ObjectIdHex(userID)}).One(&user)
-	err = db.DB("se_avengers").C("users").Find(bson.M{"useriddev": userID}).One(&user)
+	err = db.DB("se_avengers").C("users").FindId(bson.ObjectIdHex(userID)).One(&user)
 	if err != nil {
 		if err == mgo.ErrNotFound {
-			return c.JSON(http.StatusNotFound, "User does not exist.")
+			return &echo.HTTPError{Code: http.StatusNotFound, Message: "User does not exist."}
 		}
+		return
 	}
 
 	// Retrieve tweets from database
-	tweets := []*model.Tweet{}
-	//err = db.DB("se_avengers").C("tweets").Find(bson.M{"owner": bson.ObjectIdHex(userID)}).All(&tweets)
-	err = db.DB("se_avengers").C("tweets").Find(bson.M{"from": userID}).All(&tweets)
+	tweets := []model.Tweet{}
+	err = db.DB("se_avengers").C("tweets").Find(bson.M{"owner": userID}).All(&tweets)
+	if err != nil {
+		return
+	}
+	
+	return c.JSON(http.StatusOK, &tweets)
+}
+
+// NewTweet : Add one tweet for a specific user.
+//			  Return 201 Created on success
+func (h *Handler) NewTweet(c echo.Context) (err error) {
+	userID := userIDFromToken(c)
+
+	db := h.DB.Clone()
+	defer db.Close()
+
+	// Retrieve user info from database
+	user := model.User{}
+	err = db.DB("se_avengers").C("users").FindId(bson.ObjectIdHex(userID)).One(&user)
+	if err != nil {
+		if err == mgo.ErrNotFound {
+			return &echo.HTTPError{Code: http.StatusNotFound, Message: "User does not exist."}
+		}
+		return
+	}
+
+	tweet := &model.Tweet{ID: bson.NewObjectId(), Owner: userID, Timestamp: time.Now()}
+	if err = c.Bind(tweet); err != nil {
+		return
+	}
+	
+	// Validation
+	if tweet.Message == "" {
+		return &echo.HTTPError{Code: http.StatusBadRequest, Message: "Message cannot be empty."}
+	}
+
+	// Save tweet in database
+	err = db.DB("se_avengers").C("tweets").Insert(tweet)
 	if err != nil {
 		return
 	}
 
-	defer db.Close()
-
-	res := ownTweetContainer{FirstName: user.FirstName, LastName: user.LastName, Bio: user.Bio, Tweets: []tweetContainer{}}
-	for _, t := range tweets {
-		time := t.Timestamp
-		res.Tweets = append(res.Tweets, tweetContainer{Content: t.Message, Timestamp: fmt.Sprintf("%d-%d-%d", time.Year(), time.Month(), time.Day())})
-	}
-	
-	return c.JSON(http.StatusOK, res)
-}
-
-// NewTweet : Add one tweet for a specific user.
-func (h *Handler) NewTweet(c echo.Context) (err error) {
-	userID := c.Param("user")
-	if !bson.IsObjectIdHex(userID) {
-		return c.JSON(http.StatusBadRequest, "Malformed user ID.")
-	}
-
-	db := h.DB.Clone()
-
-
-
-	defer db.Close()
-
-
-
-	//return c.JSON(http.StatusOK, )
-	return c.NoContent(http.StatusNotImplemented)
+	return c.JSON(http.StatusCreated, tweet)
 }
 
 // DeleteTweet : Delete a specific tweet.
+//				 Return 204 No Content on success.
+// 				 Return 400 Bad Request if tweet ID is malformed.
+//				 Return 404 Not Found if the tweet is not in the database.
+//				 Request format: DELETE "api/v1/deleteTweet/:tweet"
 func (h *Handler) DeleteTweet(c echo.Context) (err error) {
 	tweetID := c.Param("tweet")
+
 	if !bson.IsObjectIdHex(tweetID) {
-		return c.JSON(http.StatusBadRequest, "Malformed tweet ID.")
+		return &echo.HTTPError{Code: http.StatusBadRequest, Message: "Malformed tweet ID."}
 	}
 
 	db := h.DB.Clone()
+	defer db.Close()
 
-	err = db.DB("se_avengers").C("tweets").Remove(bson.M{"_id": bson.ObjectIdHex(tweetID)})
+	err = db.DB("se_avengers").C("tweets").RemoveId(bson.ObjectIdHex(tweetID))
 	if err != nil {
 		if err == mgo.ErrNotFound {
-			return c.JSON(http.StatusNotFound, "Tweet does not exist.")
+			return &echo.HTTPError{Code: http.StatusNotFound, Message: "Tweet does not exist."}
 		}
+		return
 	}
-
-	defer db.Close()
 
 	return c.NoContent(http.StatusNoContent)
 }
