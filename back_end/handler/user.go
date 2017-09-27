@@ -10,6 +10,11 @@ import (
 	"model"
 )
 
+// Signup : Add a specific user to the current user's following set.
+//			URL: "/api/v1/signup"
+//			Method: POST
+//			Return 201 Created on success, along with the user data.
+//			Return 400 Bad Request if one of firstname, email, password is empty.
 func (h *Handler) Signup(c echo.Context) (err error) {
 	// Bind
 	u := &model.User{}
@@ -41,6 +46,11 @@ func (h *Handler) Signup(c echo.Context) (err error) {
 	return c.JSON(http.StatusCreated, u)
 }
 
+// Login : Login to an account associated with the email address and the password.
+//		   URL: "/api/v1/login"
+//		   Method: POST
+//		   Return 200 OK on success, along with the user data, which now contains a token.
+//		   Return 401 Unauthorized if an account associated with the email address and password is not found.
 func (h *Handler) Login(c echo.Context) (err error) {
 	// Bind
 	u := new(model.User)
@@ -82,6 +92,11 @@ func (h *Handler) Login(c echo.Context) (err error) {
 	return c.JSON(http.StatusOK, u)
 }
 
+// FetchUserInfo : Return user info for a specific user.
+//				   URL: "/api/v1/userInfo/:user"
+//				   Method: GET
+//				   Return 200 OK on success.
+//				   Return 404 Not Found if the user is not in the database.
 func (h *Handler) FetchUserInfo (c echo.Context) (err error) {
 	userID := c.Param("user")
 
@@ -133,7 +148,11 @@ func (h *Handler) UpdateUserInfo (c echo.Context) (err error) {
 	return c.NoContent(http.StatusNotImplemented)
 }
 
-// Follow : Add a specific user to the current user's following set
+// Follow : Add a specific user to the current user's following set.
+//			URL: "/api/v1/follow/:id"
+//			Method: POST
+//			Return 200 OK on success, along with the user's following list.
+//			Return 404 Not Found if the user is not in the database.
 func (h *Handler) Follow(c echo.Context) (err error) {
 	userID := userIDFromToken(c)
 	id := c.Param("id")
