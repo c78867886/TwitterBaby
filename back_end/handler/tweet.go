@@ -9,11 +9,11 @@ import (
 	"model"
 )
 
-// FetchOwnTweets : Handle requests asking for a list of tweets posted by a specific user, and respond with that list along with some user info.
+// FetchTweets : Handle requests asking for a list of tweets posted by a specific user.
+//					URL: "/api/v1/tweetlist/:user"
+//					Method: GET
 //					Return 200 OK on success.
-// 					Return 400 Bad Request if user ID is malformed.
 //					Return 404 Not Found if the user is not in the database.
-//					Request format: GET "api/v1/tweetlist/:user"
 func (h *Handler) FetchTweets (c echo.Context) (err error) {
 	/*page, _ := strconv.Atoi(c.QueryParam("page"))
 	limit, _ := strconv.Atoi(c.QueryParam("limit"))
@@ -52,7 +52,11 @@ func (h *Handler) FetchTweets (c echo.Context) (err error) {
 }
 
 // NewTweet : Add one tweet for a specific user.
-//			  Return 201 Created on success
+//			  URL: "/api/v1/newTweet"
+//			  Method: POST
+//			  Return 201 Created on success, along with the tweet data.
+//			  Return 404 Not Found if the user is not in the database.
+//			  Return 400 Bad Request if the content of the tweet is empty.
 func (h *Handler) NewTweet(c echo.Context) (err error) {
 	userID := userIDFromToken(c)
 
@@ -89,10 +93,11 @@ func (h *Handler) NewTweet(c echo.Context) (err error) {
 }
 
 // DeleteTweet : Delete a specific tweet.
+//				 URL: "/api/v1/deleteTweet/:tweet"
+//				 Method: DELETE
 //				 Return 204 No Content on success.
 // 				 Return 400 Bad Request if tweet ID is malformed.
 //				 Return 404 Not Found if the tweet is not in the database.
-//				 Request format: DELETE "api/v1/deleteTweet/:tweet"
 func (h *Handler) DeleteTweet(c echo.Context) (err error) {
 	tweetID := c.Param("tweet")
 
