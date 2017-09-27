@@ -48,9 +48,9 @@ func TestFetchOwnTweets (t *testing.T) {
 		c.SetParamValues(rp)
 
 		// Assertion
-		if assert.NoError(t, h.FetchOwnTweets(c)) {
+		if assert.NoError(t, h.FetchTweets(c)) {
 			assert.Equal(t, http.StatusOK, rec.Code)
-			assert.Equal(t, expectedJSON[i], rec.Body.String())
+			assert.Equal(t, expectedJSON[i], rec.Body.String()[48:])
 		}
 	}
 }
@@ -84,7 +84,7 @@ func TestNewTweet (t *testing.T) {
 		c.SetParamValues(rp)
 
 		// Assertion
-		if assert.NoError(t, h.FetchOwnTweets(c)) {
+		if assert.NoError(t, h.FetchTweets(c)) {
 			assert.Equal(t, http.StatusOK, rec.Code)
 			assert.Equal(t, expectedJSON[i], rec.Body.String())
 		}
@@ -118,7 +118,7 @@ func TestDeleteTweet (t *testing.T) {
 		c.SetParamValues(rp)
 
 		// Assertion
-		if assert.NoError(t, h.FetchOwnTweets(c)) {
+		if assert.NoError(t, h.FetchTweets(c)) {
 			assert.Equal(t, http.StatusNoContent, rec.Code)
 		}
 	}

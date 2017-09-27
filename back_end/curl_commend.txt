@@ -1,0 +1,23 @@
+Signup
+curl -X POST http://127.0.0.1:1323/api/v1/signup -H 'Content-Type: application/json' -d '{"firstname":"Evelyn","password":"pass","email":"eve@gmail.com"}'
+
+Login
+curl -X POST http://127.0.0.1:1323/api/v1/login -H 'Content-Type: application/json' -d '{"email":"hojason117@gmail.com","password":"test1"}'
+
+NewTweet
+curl -X POST http://127.0.0.1:1323/api/v1/newTweet -H 'Content-Type: application/json' -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MDY1OTA3MTUsImlkIjoiNTljYjY5Y2NhNTRkNzU3YThlMzljOTc0In0.8A8hQQtbZeYBT3LDmOu_-OnrmRsfSby-KZw0eAMJ06s' -d '{"message":"First tweet!"}'
+
+FetchTweets
+curl -X GET http://127.0.0.1:1323/api/v1/tweetlist/59cb69cca54d757a8e39c974 -H 'Content-Type: application/json' -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MDY1OTA3MTUsImlkIjoiNTljYjY5Y2NhNTRkNzU3YThlMzljOTc0In0.8A8hQQtbZeYBT3LDmOu_-OnrmRsfSby-KZw0eAMJ06s'
+
+DeleteTweet
+curl -X DELETE http://127.0.0.1:1323/api/v1/deleteTweet/59cb6e9ba54d757d12f0b0bf -H 'Content-Type: application/json' -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MDY1OTA3MTUsImlkIjoiNTljYjY5Y2NhNTRkNzU3YThlMzljOTc0In0.8A8hQQtbZeYBT3LDmOu_-OnrmRsfSby-KZw0eAMJ06s'
+
+FetchUserInfo
+curl -X GET http://127.0.0.1:1323/api/v1/userInfo/59cb69cca54d757a8e39c974 -H 'Content-Type: application/json' -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MDY1OTA3MTUsImlkIjoiNTljYjY5Y2NhNTRkNzU3YThlMzljOTc0In0.8A8hQQtbZeYBT3LDmOu_-OnrmRsfSby-KZw0eAMJ06s'
+
+Follow
+curl -X POST http://127.0.0.1:1323/api/v1/follow/59cb6e6ca54d757d12f0b0be -H 'Content-Type: application/json' -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MDY1OTA3MTUsImlkIjoiNTljYjY5Y2NhNTRkNzU3YThlMzljOTc0In0.8A8hQQtbZeYBT3LDmOu_-OnrmRsfSby-KZw0eAMJ06s'
+
+UpdateUserInfo
+curl -X POST http://127.0.0.1:1323/api/v1/updateUserInfo -H 'Content-Type: application/json' -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MDY1OTA3MTUsImlkIjoiNTljYjY5Y2NhNTRkNzU3YThlMzljOTc0In0.8A8hQQtbZeYBT3LDmOu_-OnrmRsfSby-KZw0eAMJ06s' -d '{"message":"First tweet!"}'
