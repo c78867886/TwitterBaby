@@ -7,7 +7,15 @@ import (
 	"gopkg.in/mgo.v2/bson"
 	"github.com/labstack/echo"
 	"model"
+	"strconv"
+	"fmt"
 )
+type resultTweetList struct {
+	page int 
+	totalPage int 
+	totalTweets int 
+	tweetList []model.Tweet
+}
 
 // FetchTweets : Handle requests asking for a list of tweets posted by a specific user.
 //				 URL: "/api/v1/tweetlist/:user"
@@ -27,11 +35,18 @@ func (h *Handler) FetchTweets (c echo.Context) (err error) {
 	}*/
 
 	userID := c.Param("user")
+	fmt.Println(userID)
+	page, err := strconv.Atoi(c.QueryParam("page"))
+	perpage, err := strconv.Atoi(c.QueryParam("perpage"))
+	fmt.Println(page)
+	fmt.Println(perpage)
+	
 
 	db := h.DB.Clone()
 	defer db.Close()
 	
 	// Retrieve user info from database
+	/*
 	user := model.User{}
 	err = db.DB("se_avengers").C("users").FindId(bson.ObjectIdHex(userID)).One(&user)
 	if err != nil {
@@ -40,13 +55,26 @@ func (h *Handler) FetchTweets (c echo.Context) (err error) {
 		}
 		return
 	}
+	*/
 
 	// Retrieve tweets from database
 	tweets := []model.Tweet{}
-	err = db.DB("se_avengers").C("tweets").Find(bson.M{"owner": userID}).All(&tweets)
+	err = db.DB("se_avangers").C("tweets").Find(bson.M{"from": userID}).Sort("timestamp").All(&tweets)
+	//totalTweets := len(tweets)
+	//totalPage := totalTweets/perpage +1
 	if err != nil {
 		return
 	}
+	
+	//tweetList := tweets[perpage*(page-1):perpage*page]
+	//tweetList := tweets[:]
+	/*
+	result := resultTweetList{
+		page: page,
+		totalPage: totalPage,
+		totalTweets: totalTweets,  
+		tweetList: tweetList,
+	}*/
 	
 	return c.JSON(http.StatusOK, &tweets)
 }
