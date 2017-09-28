@@ -7,9 +7,12 @@ import { Component, OnInit, Inject } from '@angular/core';
 })
 export class NavBarComponent implements OnInit {
   username: string = "";
+  loginName: string = "";
   constructor(@Inject('data') private data) { }
 
   ngOnInit() {
+    let userinfo = JSON.parse(localStorage.getItem("user_info_object"));
+    this.loginName = userinfo.firstname + ' ' + userinfo.lastname;
   }
 
   onSubmit(): void {

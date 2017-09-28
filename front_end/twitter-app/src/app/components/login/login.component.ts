@@ -29,14 +29,19 @@ export class LoginComponent implements OnInit {
     @Inject('data') private data) { }
 
   ngOnInit() {
-      this.data.getTweetList('JasonHo')
-        .then(list => 
-          {
-            this.list = list.tweets;
-            this.username = list.firstname + ' ' + list.lastname;
-            this.bio = list.bio;
-          }
-        );
+    this.data.mockLogin()
+          .then(() => {
+            let userinfo = JSON.parse(localStorage.getItem("user_info_object"));
+            this.username = userinfo.firstname + ' ' + userinfo.lastname;
+            this.bio = userinfo.bio;
+          });
+    
+    this.data.getTweetList('JasonHo')
+    .then(list => 
+      {
+        this.list = list.tweets;
+      }
+    );
   }
 
 }

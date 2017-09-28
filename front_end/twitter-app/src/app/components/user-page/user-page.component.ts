@@ -15,14 +15,22 @@ export class UserPageComponent implements OnInit {
 
   ngOnInit() {
     this.route.params.subscribe(params => {
-      this.data.getTweetList(params["id"])
-        .then(list => 
-          {
-            this.list = list.tweets;
-            this.username = list.firstname + ' ' + list.lastname;
-            this.bio = list.bio;
-          }
-        );
+      
+      this.data.getUserInfo(params["id"])
+      .then(userinfo => 
+        {
+          console.log(userinfo);
+        }
+      );
+
+      // this.data.getTweetList(params["id"])
+      //   .then(list => 
+      //     {
+      //       this.list = list.tweets;
+      //       this.username = list.firstname + ' ' + list.lastname;
+      //       this.bio = list.bio;
+      //     }
+      //   );
     });
   }
 
