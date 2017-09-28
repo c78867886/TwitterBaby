@@ -41,10 +41,13 @@ func main() {
 	e.POST("/api/v1/login", h.Login)
 	e.POST("/api/v1/follow/:id", h.Follow)
 	e.GET("/api/v1/tweetlist/:user", h.FetchTweets)
-	e.GET("/api/v1/userInfo/:user", h.FetchUserInfo)
+	e.GET("/api/v1/userInfo/:id", h.FetchUserInfo)
+	e.GET("/api/v1/userInfo", h.FetchUserInfo)
 	e.POST("/api/v1/newTweet", h.NewTweet)
 	e.DELETE("/api/v1/deleteTweet/:tweet", h.DeleteTweet)
 	e.POST("/api/v1/updateUserInfo", h.UpdateUserInfo)
+	e.GET("/api/v1/showFollower/:id", h.ShowFollower)
+	e.GET("/api/v1/showFollowing/:id", h.ShowFollowing)
 
 	// CORS config
 	e.Use(middleware.CORS())
