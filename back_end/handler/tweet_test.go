@@ -10,7 +10,7 @@ import (
 )
 
 func TestFetchOwnTweets (t *testing.T) {
-	session, err := mgo.Dial("mongodb://SEavanger:SEavanger@ds139964.mlab.com:39964/se_avangers")
+	session, err := mgo.Dial("mongodb://SEavenger:SEavenger@ds149324.mlab.com:49324/se_avengers")
 	if err != nil {
 		panic(err)
 	}
@@ -24,7 +24,7 @@ func TestFetchOwnTweets (t *testing.T) {
 
 	// test cases
 	requestParam := []string {
-		"JasonHe",}
+		"JasonHo",}
 		//"JasonHe", 
 		//"MarsLee", 
 		//"DianeLin", 
@@ -40,7 +40,7 @@ func TestFetchOwnTweets (t *testing.T) {
 	// Run
 	for i, rp := range requestParam {
 		// Setup
-		req := httptest.NewRequest(echo.GET, "/?page=1&perpage=1", nil)
+		req := httptest.NewRequest(echo.GET, "/?page=12&perpage=10", nil)
 		rec := httptest.NewRecorder()
 		c := e.NewContext(req, rec)
 		c.SetPath("api/v1/tweetlist")
@@ -57,7 +57,7 @@ func TestFetchOwnTweets (t *testing.T) {
 }
 
 func TestNewTweet (t *testing.T) {
-	session, err := mgo.Dial("mongodb://SEavanger:SEavanger@ds139964.mlab.com:39964/se_avangers")
+	session, err := mgo.Dial("mongodb://SEavenger:SEavenger@ds149324.mlab.com:49324/se_avengers")
 	if err != nil {
 		panic(err)
 	}
@@ -71,7 +71,7 @@ func TestNewTweet (t *testing.T) {
 
 	// test cases
 	requestParam := []string {
-		"DianeLin",
+		"MarsLee",
 	}
 
 	expectedJSON := []string {

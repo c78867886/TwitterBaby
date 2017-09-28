@@ -1,7 +1,6 @@
 package handler
 
 import (
-	"fmt"
 	"gopkg.in/mgo.v2"
 	"time"
 	"net/http"
@@ -10,7 +9,6 @@ import (
 	"model"
 	//"github.com/dgrijalva/jwt-go"
 	"strconv"
-	"math"
 	"math/rand"
 	//"fmt"
 )
@@ -22,15 +20,13 @@ import (
 //				 Return 404 Not Found if the user is not in the database.
 func (h *Handler) FetchTweets (c echo.Context) (err error) {
 	userID := c.Param("user")
-	page, err := strconv.Atoi(c.QueryParam("page"))
-	perpage, err := strconv.Atoi(c.QueryParam("perpage"))
-	
+
 	db := h.DB.Clone()
 	defer db.Close()
 
 	// Retrieve tweets from database
 	tweets := []model.Tweet{}
-	err = db.DB("se_avangers").C("tweets").Find(bson.M{"owner": userID}).Sort("timestamp").All(&tweets)
+	err = db.DB("se_avengers").C("tweets").Find(bson.M{"owner": userID}).Sort("timestamp").All(&tweets)
 
 	if err != nil {
 		if err == mgo.ErrNotFound {
@@ -39,30 +35,7 @@ func (h *Handler) FetchTweets (c echo.Context) (err error) {
 		return
 	}
 
-	totalTweets := len(tweets)
-	fmt.Println(totalTweets)
-	totalPage := int(math.Ceil(float64(totalTweets)/float64(perpage)))
-
-	var tweetList [] model.Tweet
-	if page == totalPage{
-		tweetList = tweets[perpage*(page-1):]
-	}else{
-		tweetList = tweets[perpage*(page-1):perpage*page]
-	}
-
-	var container struct {
-		Page	int	`json:"page"`
-		TotalPage	int	`json:"totalPage"`
-		TotalTweets	int	`json:"totalTweets"`
-		TweetList []model.Tweet `json:"tweetList"`
-	}
-	container.Page = page
-	container.TotalPage = totalPage
-	container.TotalTweets = totalTweets
-	container.TweetList = tweetList
-	
-	return c.JSON(http.StatusOK, container)
-	//return c.JSON(http.StatusOK, &tweets)
+	return c.JSON(http.StatusOK, &tweets)
 	
 }
 
@@ -93,8 +66,8 @@ func (h *Handler) NewTweet(c echo.Context) (err error) {
 	var tweet *model.Tweet
 	s1 := rand.NewSource(time.Now().UnixNano())
 	r1 := rand.New(s1)
-	for i := 0; i < 124; i++{
-		tweet := &model.Tweet{ID: bson.NewObjectId(), Owner: userID, Timestamp: time.Now(), Message: "Rock the world lol! #"+strconv.Itoa(r1.Intn(1000))}
+	for i := 0; i < 104; i++{
+		tweet := &model.Tweet{ID: bson.NewObjectId(), Owner: userID, Timestamp: time.Now(), Message: "I hate taro lol! #"+strconv.Itoa(r1.Intn(1000))}
 		if err = c.Bind(tweet); err != nil {
 			return
 		}
@@ -105,7 +78,7 @@ func (h *Handler) NewTweet(c echo.Context) (err error) {
 		}
 	
 		// Save tweet in database
-		err = db.DB("se_avangers").C("tweets").Insert(tweet)
+		err = db.DB("se_avengers").C("tweets").Insert(tweet)
 		if err != nil {
 			return
 		}
