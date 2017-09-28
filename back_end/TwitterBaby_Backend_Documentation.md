@@ -73,7 +73,8 @@ func (h *Handler) FetchTweets(c echo.Context) (err error)
 ```go
 func (h *Handler) FetchUserInfo(c echo.Context) (err error)
 ```
-> FetchUserInfo : Return user info for a specific user.
+> FetchUserInfo : Return user info for a specific user, and whether it is followed by the current user.
+> \# Response does not include the full list of followers and following, only the counts.
 > URL: "/api/v1/userInfo/:user"
 > Method: GET
 > Return 200 OK on success.
@@ -83,7 +84,7 @@ func (h *Handler) FetchUserInfo(c echo.Context) (err error)
 ```go
 func (h *Handler) Follow(c echo.Context) (err error)
 ```
-> Follow : Add a specific user to the current user's following set.
+> Follow : Add a specific user ID to the current user's following set, and add current user to that user's follower list.
 > URL: "/api/v1/follow/:id"
 > Method: POST
 > Return 200 OK on success, along with the user's following list.
@@ -110,6 +111,26 @@ func (h *Handler) NewTweet(c echo.Context) (err error)
 > Return 404 Not Found if the user is not in the database.
 > Return 400 Bad Request if the content of the tweet is empty.
 > Sample call: curl -X POST http://127.0.0.1:1323/api/v1/newTweet -H 'Content-Type: application/json' -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MDY1OTA3MTUsImlkIjoiNTljYjY5Y2NhNTRkNzU3YThlMzljOTc0In0.8A8hQQtbZeYBT3LDmOu_-OnrmRsfSby-KZw0eAMJ06s' -d '{"message":"First tweet!"}'
+
+```go
+func (h *Handler) ShowFollower(c echo.Context) (err error)
+```
+> ShowFollower : Return the follower list for a specific user.
+> URL: "/api/v1/showFollower/:id"
+> Method: GET
+> Return 200 OK on success.
+> Return 404 Not Found if the user is not in the database.
+> Sample call: curl -X GET http://127.0.0.1:1323/api/v1/showFollower/59cb69cca54d757a8e39c974 -H 'Content-Type: application/json' -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MDY1OTA3MTUsImlkIjoiNTljYjY5Y2NhNTRkNzU3YThlMzljOTc0In0.8A8hQQtbZeYBT3LDmOu_-OnrmRsfSby-KZw0eAMJ06s'
+
+```go
+func (h *Handler) ShowFollowing(c echo.Context) (err error)
+```
+> ShowFollowing : Return the following list for a specific user.
+> URL: "/api/v1/showFollowing/:id"
+> Method: GET
+> Return 200 OK on success.
+> Return 404 Not Found if the user is not in the database.
+> Sample call: curl -X GET http://127.0.0.1:1323/api/v1/showFollowing/59cb69cca54d757a8e39c974 -H 'Content-Type: application/json' -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MDY1OTA3MTUsImlkIjoiNTljYjY5Y2NhNTRkNzU3YThlMzljOTc0In0.8A8hQQtbZeYBT3LDmOu_-OnrmRsfSby-KZw0eAMJ06s'
 
 ```go
 func (h *Handler) Signup(c echo.Context) (err error)

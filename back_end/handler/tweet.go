@@ -10,10 +10,10 @@ import (
 )
 
 // FetchTweets : Handle requests asking for a list of tweets posted by a specific user.
-//					URL: "/api/v1/tweetlist/:user"
-//					Method: GET
-//					Return 200 OK on success.
-//					Return 404 Not Found if the user is not in the database.
+//				 URL: "/api/v1/tweetlist/:user"
+//				 Method: GET
+//				 Return 200 OK on success.
+//				 Return 404 Not Found if the user is not in the database.
 func (h *Handler) FetchTweets (c echo.Context) (err error) {
 	/*page, _ := strconv.Atoi(c.QueryParam("page"))
 	limit, _ := strconv.Atoi(c.QueryParam("limit"))
