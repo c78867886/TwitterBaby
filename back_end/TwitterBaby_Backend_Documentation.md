@@ -71,7 +71,7 @@ func (h *Handler) FetchTweets(c echo.Context) (err error)
 > Return 200 OK on success.  
 > Return 404 Not Found if the user is not in the database.  
 > Sample call:  
-> curl -X GET http://127.0.0.1:1323/api/v1/tweetlist/59cb69cca54d757a8e39c974 -H 'Content-Type: application/json' -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MDY1OTA3MTUsImlkIjoiNTljYjY5Y2NhNTRkNzU3YThlMzljOTc0In0.8A8hQQtbZeYBT3LDmOu_-OnrmRsfSby-KZw0eAMJ06s'
+> curl -X GET http://127.0.0.1:1323/api/v1/tweetlist/JasonHo -H 'Content-Type: application/json'
 
 ```go
 func (h *Handler) FetchUserInfo(c echo.Context) (err error)
