@@ -10,7 +10,6 @@ import (
 )
 
 func TestFetchOwnTweets (t *testing.T) {
-	//session, err := mgo.Dial("mongodb://SEavenger:SEavenger@ds149324.mlab.com:49324/se_avengers")
 	session, err := mgo.Dial("mongodb://SEavanger:SEavanger@ds139964.mlab.com:39964/se_avangers")
 	if err != nil {
 		panic(err)
@@ -58,7 +57,7 @@ func TestFetchOwnTweets (t *testing.T) {
 }
 
 func TestNewTweet (t *testing.T) {
-	session, err := mgo.Dial("mongodb://SEavenger:SEavenger@ds149324.mlab.com:49324/se_avengers")
+	session, err := mgo.Dial("mongodb://SEavanger:SEavanger@ds139964.mlab.com:39964/se_avangers")
 	if err != nil {
 		panic(err)
 	}
@@ -71,10 +70,14 @@ func TestNewTweet (t *testing.T) {
 	//c.SetParamValues("")
 
 	// test cases
-	requestParam := []string {}
+	requestParam := []string {
+		"DianeLin",
+	}
 
-	expectedJSON := []string {}
-
+	expectedJSON := []string {
+		"JasonHe",
+	}
+	
 	// Run
 	for i, rp := range requestParam {
 		// Setup
@@ -86,7 +89,7 @@ func TestNewTweet (t *testing.T) {
 		c.SetParamValues(rp)
 
 		// Assertion
-		if assert.NoError(t, h.FetchTweets(c)) {
+		if assert.NoError(t, h.NewTweet(c)) {
 			assert.Equal(t, http.StatusOK, rec.Code)
 			assert.Equal(t, expectedJSON[i], rec.Body.String())
 		}
