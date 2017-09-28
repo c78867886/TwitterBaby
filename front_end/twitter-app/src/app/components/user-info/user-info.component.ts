@@ -6,12 +6,14 @@ import { Component, OnInit, Input } from '@angular/core';
   styleUrls: ['./user-info.component.css']
 })
 export class UserInfoComponent implements OnInit {
+  @Input() isHost: boolean;
   @Input() username: string;
   @Input() bio: string;
   url: string = 'http://s7d2.scene7.com/is/image/PetSmart/PB1201_STORY_CARO-Authority-HealthyOutside-DOG-20160818?$PB1201$';
   constructor() { }
 
-  ngOnInit() {
+  ngOnInit(
+  ) {
   }
 
 }

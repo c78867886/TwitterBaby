@@ -11,7 +11,7 @@
       {{bio}}
     </p>
   </md-card-content>
-  <md-card-actions>
+  <md-card-actions *ngIf="!isHost">
     <button md-raised-button class="followbtn"  color="accent">Follow</button>
   </md-card-actions>
 </md-card>
