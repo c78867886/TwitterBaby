@@ -1,21 +1,19 @@
 package handler
 
 import (
+	"fmt"
 	"gopkg.in/mgo.v2"
 	"time"
 	"net/http"
 	"gopkg.in/mgo.v2/bson"
 	"github.com/labstack/echo"
 	"model"
+	//"github.com/dgrijalva/jwt-go"
 	"strconv"
-	"fmt"
+	"math"
+	"math/rand"
+	//"fmt"
 )
-type resultTweetList struct {
-	page int 
-	totalPage int 
-	totalTweets int 
-	tweetList []model.Tweet
-}
 
 // FetchTweets : Handle requests asking for a list of tweets posted by a specific user.
 //				 URL: "/api/v1/tweetlist/:user"
@@ -23,60 +21,49 @@ type resultTweetList struct {
 //				 Return 200 OK on success.
 //				 Return 404 Not Found if the user is not in the database.
 func (h *Handler) FetchTweets (c echo.Context) (err error) {
-	/*page, _ := strconv.Atoi(c.QueryParam("page"))
-	limit, _ := strconv.Atoi(c.QueryParam("limit"))
-
-	// Defaults
-	if page == 0 {
-		page = 1
-	}
-	if limit == 0 {
-		limit = 100
-	}*/
-
 	userID := c.Param("user")
-	fmt.Println(userID)
 	page, err := strconv.Atoi(c.QueryParam("page"))
 	perpage, err := strconv.Atoi(c.QueryParam("perpage"))
-	fmt.Println(page)
-	fmt.Println(perpage)
 	
-
 	db := h.DB.Clone()
 	defer db.Close()
-	
-	// Retrieve user info from database
-	/*
-	user := model.User{}
-	err = db.DB("se_avengers").C("users").FindId(bson.ObjectIdHex(userID)).One(&user)
-	if err != nil {
-		if err == mgo.ErrNotFound {
-			return &echo.HTTPError{Code: http.StatusNotFound, Message: "User does not exist."}
-		}
-		return
-	}
-	*/
 
 	// Retrieve tweets from database
 	tweets := []model.Tweet{}
-	err = db.DB("se_avangers").C("tweets").Find(bson.M{"from": userID}).Sort("timestamp").All(&tweets)
-	//totalTweets := len(tweets)
-	//totalPage := totalTweets/perpage +1
+	err = db.DB("se_avangers").C("tweets").Find(bson.M{"owner": userID}).Sort("timestamp").All(&tweets)
+
 	if err != nil {
+		if err == mgo.ErrNotFound {
+			return &echo.HTTPError{Code: http.StatusNotFound, Message: "Can not find and Tweet from this user."}
+		}
 		return
 	}
+
+	totalTweets := len(tweets)
+	fmt.Println(totalTweets)
+	totalPage := int(math.Ceil(float64(totalTweets)/float64(perpage)))
+
+	var tweetList [] model.Tweet
+	if page == totalPage{
+		tweetList = tweets[perpage*(page-1):]
+	}else{
+		tweetList = tweets[perpage*(page-1):perpage*page]
+	}
+
+	var container struct {
+		Page	int	`json:"page"`
+		TotalPage	int	`json:"totalPage"`
+		TotalTweets	int	`json:"totalTweets"`
+		TweetList []model.Tweet `json:"tweetList"`
+	}
+	container.Page = page
+	container.TotalPage = totalPage
+	container.TotalTweets = totalTweets
+	container.TweetList = tweetList
 	
-	//tweetList := tweets[perpage*(page-1):perpage*page]
-	//tweetList := tweets[:]
-	/*
-	result := resultTweetList{
-		page: page,
-		totalPage: totalPage,
-		totalTweets: totalTweets,  
-		tweetList: tweetList,
-	}*/
+	return c.JSON(http.StatusOK, container)
+	//return c.JSON(http.StatusOK, &tweets)
 	
-	return c.JSON(http.StatusOK, &tweets)
 }
 
 // NewTweet : Add one tweet for a specific user.
@@ -86,12 +73,14 @@ func (h *Handler) FetchTweets (c echo.Context) (err error) {
 //			  Return 404 Not Found if the user is not in the database.
 //			  Return 400 Bad Request if the content of the tweet is empty.
 func (h *Handler) NewTweet(c echo.Context) (err error) {
-	userID := userIDFromToken(c)
+	//userID := userIDFromToken(c)
+	userID := c.Param("user")
 
 	db := h.DB.Clone()
 	defer db.Close()
 
 	// Retrieve user info from database
+	/*
 	user := model.User{}
 	err = db.DB("se_avengers").C("users").FindId(bson.ObjectIdHex(userID)).One(&user)
 	if err != nil {
@@ -99,22 +88,27 @@ func (h *Handler) NewTweet(c echo.Context) (err error) {
 			return &echo.HTTPError{Code: http.StatusNotFound, Message: "User does not exist."}
 		}
 		return
-	}
+	}*/
 
-	tweet := &model.Tweet{ID: bson.NewObjectId(), Owner: userID, Timestamp: time.Now()}
-	if err = c.Bind(tweet); err != nil {
-		return
-	}
+	var tweet *model.Tweet
+	s1 := rand.NewSource(time.Now().UnixNano())
+	r1 := rand.New(s1)
+	for i := 0; i < 124; i++{
+		tweet := &model.Tweet{ID: bson.NewObjectId(), Owner: userID, Timestamp: time.Now(), Message: "Rock the world lol! #"+strconv.Itoa(r1.Intn(1000))}
+		if err = c.Bind(tweet); err != nil {
+			return
+		}
+		
+		// Validation
+		if tweet.Message == "" {
+			return &echo.HTTPError{Code: http.StatusBadRequest, Message: "Message cannot be empty."}
+		}
 	
-	// Validation
-	if tweet.Message == "" {
-		return &echo.HTTPError{Code: http.StatusBadRequest, Message: "Message cannot be empty."}
-	}
-
-	// Save tweet in database
-	err = db.DB("se_avengers").C("tweets").Insert(tweet)
-	if err != nil {
-		return
+		// Save tweet in database
+		err = db.DB("se_avangers").C("tweets").Insert(tweet)
+		if err != nil {
+			return
+		}
 	}
 
 	return c.JSON(http.StatusCreated, tweet)
@@ -146,3 +140,4 @@ func (h *Handler) DeleteTweet(c echo.Context) (err error) {
 
 	return c.NoContent(http.StatusNoContent)
 }
+
