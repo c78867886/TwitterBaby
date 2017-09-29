@@ -247,7 +247,7 @@ var LoginComponent = (function () {
         });
         this.data.getTweetList('JasonHo')
             .then(function (list) {
-            _this.list = list.tweets;
+            _this.list = list;
         });
     };
     return LoginComponent;
@@ -422,7 +422,7 @@ module.exports = module.exports.toString();
 /***/ "../../../../../src/app/components/tweetlist/tweetlist.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<md-card *ngFor=\"let tweet of tweetlist\" class=\"example-card\">\n  <md-card-header>\n    <div md-card-avatar class=\"header-image\"></div>\n    <md-card-title>{{ username }}</md-card-title>\n    <md-card-subtitle>{{ tweet.timestamp }}</md-card-subtitle>\n  </md-card-header>\n  <md-card-content>\n    <p>\n      {{ tweet.content }}\n    </p>\n  </md-card-content>\n  <md-card-actions class=\"action\">\n    <button md-raised-button color=\"accent\">LIKE</button>\n    <button md-raised-button color=\"accent\">SHARE</button>\n  </md-card-actions>\n</md-card>"
+module.exports = "<md-card *ngFor=\"let tweet of tweetlist\" class=\"example-card\">\n  <md-card-header>\n    <div md-card-avatar class=\"header-image\"></div>\n    <md-card-title>{{ tweet.owner }}</md-card-title>\n    <md-card-subtitle>{{ tweet.timestamp }}</md-card-subtitle>\n  </md-card-header>\n  <md-card-content>\n    <p>\n      {{ tweet.message }}\n    </p>\n  </md-card-content>\n  <md-card-actions class=\"action\">\n    <button md-raised-button color=\"accent\">LIKE</button>\n    <button md-raised-button color=\"accent\">SHARE</button>\n  </md-card-actions>\n</md-card>"
 
 /***/ }),
 
@@ -602,14 +602,11 @@ var UserPageComponent = (function () {
                 .then(function (userinfo) {
                 console.log(userinfo);
             });
-            // this.data.getTweetList(params["id"])
-            //   .then(list => 
-            //     {
-            //       this.list = list.tweets;
-            //       this.username = list.firstname + ' ' + list.lastname;
-            //       this.bio = list.bio;
-            //     }
-            //   );
+            _this.data.getTweetList(params["id"])
+                .then(function (list) {
+                console.log(list);
+                _this.list = list;
+            });
         });
     };
     return UserPageComponent;
@@ -655,18 +652,18 @@ var DataService = (function () {
         this.http = http;
     }
     DataService.prototype.getTweetList = function (id) {
-        var auth = { Authorization: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MDY1OTA3MTUsImlkIjoiNTljYjY5Y2NhNTRkNzU3YThlMzljOTc0In0.8A8hQQtbZeYBT3LDmOu_-OnrmRsfSby-KZw0eAMJ06s" };
-        return this.http.get("http://localhost:1323/api/v1/tweetlist/" + id, auth)
+        //let auth: Object = {Authorization: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MDY1OTA3MTUsImlkIjoiNTljYjY5Y2NhNTRkNzU3YThlMzljOTc0In0.8A8hQQtbZeYBT3LDmOu_-OnrmRsfSby-KZw0eAMJ06s"};
+        return this.http.get("http://localhost:1323/api/v1/tweetlist/" + id)
             .toPromise()
             .then(function (res) { return res.json(); })
             .catch(this.handleError);
     };
     DataService.prototype.getUserInfo = function (id) {
-        var headers = new __WEBPACK_IMPORTED_MODULE_1__angular_http__["a" /* Headers */]();
-        headers.append('Access-Control-Expose-Headers', 'Authorization');
-        headers.append('Authorization', 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MDY2NTc1MjYsImlkIjoiNTljYjY5Y2NhNTRkNzU3YThlMzljOTc0In0.RJjUkREgw-zpxUjVxc9-gn2gb5nRBb2IA0jud_GfByw');
-        var options = new __WEBPACK_IMPORTED_MODULE_1__angular_http__["d" /* RequestOptions */]({ headers: headers });
-        return this.http.get("http://127.0.0.1:1323/api/v1/userInfo?username=" + id, options)
+        //let headers: Headers = new Headers();
+        //headers.append('Access-Control-Expose-Headers', 'Authorization');
+        //headers.append('Authorization', 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MDY2NTc1MjYsImlkIjoiNTljYjY5Y2NhNTRkNzU3YThlMzljOTc0In0.RJjUkREgw-zpxUjVxc9-gn2gb5nRBb2IA0jud_GfByw');
+        //let options: RequestOptions = new RequestOptions({ headers: headers });
+        return this.http.get("http://localhost:1323/api/v1/userInfo?username=" + id)
             .toPromise()
             .then(function (res) { return res.json(); })
             .catch(this.handleError);

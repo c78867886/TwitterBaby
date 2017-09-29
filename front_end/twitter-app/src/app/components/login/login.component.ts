@@ -39,7 +39,7 @@ export class LoginComponent implements OnInit {
     this.data.getTweetList('JasonHo')
     .then(list => 
       {
-        this.list = list.tweets;
+        this.list = list;
       }
     );
   }

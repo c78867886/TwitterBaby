@@ -23,14 +23,14 @@ export class UserPageComponent implements OnInit {
         }
       );
 
-      // this.data.getTweetList(params["id"])
-      //   .then(list => 
-      //     {
-      //       this.list = list.tweets;
-      //       this.username = list.firstname + ' ' + list.lastname;
-      //       this.bio = list.bio;
-      //     }
-      //   );
+      this.data.getTweetList(params["id"])
+        .then(list => 
+          {
+            console.log(list);
+            this.list = list;
+          }
+       );
+
     });
   }
 
