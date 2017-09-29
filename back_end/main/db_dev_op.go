@@ -50,8 +50,8 @@ func dbReinsert(db *mgo.Session) {
 	tweetC := db.DB("se_avengers").C("tweets")
 
 	tweets := []model.Tweet {
-		model.Tweet{ID: bson.NewObjectId(), Owner: userIDs[0].Hex(), Message: "Hi, I am Jason Ho. Weather sucks.", Timestamp: time.Now()}, 
-		model.Tweet{ID: bson.NewObjectId(), Owner: userIDs[0].Hex(), Message: "Hello from Jason Ho.", Timestamp: time.Now()}, 
+		model.Tweet{ID: bson.NewObjectId(), Owner: "JasonHo", Message: "Hi, I am Jason Ho. Weather sucks.", Timestamp: time.Now()}, 
+		model.Tweet{ID: bson.NewObjectId(), Owner: "JasonHo", Message: "Hello from Jason Ho.", Timestamp: time.Now()}, 
 		model.Tweet{ID: bson.NewObjectId(), Owner: userIDs[0].Hex(), Message: "Hello world!", Timestamp: time.Now()}, 
 		model.Tweet{ID: bson.NewObjectId(), Owner: userIDs[0].Hex(), Message: "Harvest Moon: All you need to know It's the full moon closest to Sept equinox - coming up Oct 5.", Timestamp: time.Now()}, 
 		model.Tweet{ID: bson.NewObjectId(), Owner: userIDs[0].Hex(), Message: "Hey yo!!", Timestamp: time.Now()}, 
