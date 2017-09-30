@@ -183,7 +183,7 @@ func (h *Handler) Follow(c echo.Context) (err error) {
 	return c.JSON(http.StatusOK, user.Following)
 }
 
-// ShowFollower : Return the follower list for a specific user.
+// ShowFollower : Return the follower list for a specific user, along with some followers info.
 //				  URL: "/api/v1/showFollower/:id"
 //				  Method: GET
 //				  Return 200 OK on success.
@@ -204,10 +204,28 @@ func (h *Handler) ShowFollower(c echo.Context) (err error) {
 		return
 	}
 
-	return c.JSON(http.StatusOK, user.Followers)
+	type followerData struct {
+		ID			bson.ObjectId	`json:"id" bson:"_id"`
+		Username	string			`json:"username" bson:"username"`
+		FirstName	string			`json:"firstname" bson:"firstname"`
+		LastName	string			`json:"lastname,omitempty" bson:"lastname,omitempty"`
+		Bio			string			`json:"bio,omitempty" bson:"bio,omitempty"`
+	}
+	container := []followerData{}
+
+	for _, f := range user.Followers {
+		follower := followerData{}
+		err = db.DB("se_avengers").C("users").FindId(bson.ObjectIdHex(f)).One(&follower)
+		if err != nil {
+			return
+		}
+		container = append(container, follower)
+	}
+
+	return c.JSON(http.StatusOK, &container)
 }
 
-// ShowFollowing : Return the following list for a specific user.
+// ShowFollowing : Return the following list for a specific user, along with some followings info.
 //				   URL: "/api/v1/showFollowing/:id"
 //				   Method: GET
 //				   Return 200 OK on success.
@@ -228,7 +246,25 @@ func (h *Handler) ShowFollowing(c echo.Context) (err error) {
 		return
 	}
 
-	return c.JSON(http.StatusOK, user.Following)
+	type followingData struct {
+		ID			bson.ObjectId	`json:"id" bson:"_id"`
+		Username	string			`json:"username" bson:"username"`
+		FirstName	string			`json:"firstname" bson:"firstname"`
+		LastName	string			`json:"lastname,omitempty" bson:"lastname,omitempty"`
+		Bio			string			`json:"bio,omitempty" bson:"bio,omitempty"`
+	}
+	container := []followingData{}
+
+	for _, f := range user.Following {
+		following := followingData{}
+		err = db.DB("se_avengers").C("users").FindId(bson.ObjectIdHex(f)).One(&following)
+		if err != nil {
+			return
+		}
+		container = append(container, following)
+	}
+
+	return c.JSON(http.StatusOK, &container)
 }
 
 
