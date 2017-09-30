@@ -8,22 +8,8 @@ import { ActivatedRoute } from "@angular/router";
 })
 export class LoginComponent implements OnInit {
   list: Tweet[];
-  username: string;
-  bio: string;
-  // list: Tweet[] = [
-  //   {
-  //     content: "This is a test content",
-  //     timestamp: "2012-12-01"
-  //   },
-  //   {
-  //     content: "This is a test content",
-  //     timestamp: "2012-12-01"
-  //   },
-  //   {
-  //     content: "This is a test content",
-  //     timestamp: "2012-12-01"
-  //   }
-  // ]
+  username: string = "";
+  userInfo: object = null;
   constructor(
     private route: ActivatedRoute,
     @Inject('data') private data) { }
@@ -32,16 +18,26 @@ export class LoginComponent implements OnInit {
     this.data.mockLogin()
           .then(() => {
             let userinfo = JSON.parse(localStorage.getItem("user_info_object"));
-            this.username = userinfo.firstname + ' ' + userinfo.lastname;
-            this.bio = userinfo.bio;
+            this.username = userinfo.username;
+            return this.username;
+          }).then((username) => {
+            
+            this.data.getUserInfo(username)
+            .then(userinfo => 
+              {
+                this.userInfo = userinfo;
+              }
+            );
+
+            this.data.getTweetList(username)
+            .then(list => 
+              {
+                this.list = list;
+              }
+            );
           });
     
-    this.data.getTweetList('JasonHo')
-    .then(list => 
-      {
-        this.list = list;
-      }
-    );
+    
   }
 
 }

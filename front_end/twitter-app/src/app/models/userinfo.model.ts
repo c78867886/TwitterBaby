@@ -1,0 +1,17 @@
+import {Tweet} from "./tweet.model";
+export interface UserInfo {
+    followingcount: number;
+    followercount: number;
+    followed: boolean;
+    userinfo: userinfo;
+}
+
+
+interface userinfo {
+    bio: string;
+    email: string;
+    firstname: string;
+    id: string;
+    lastname: string;
+    username: string;
+}

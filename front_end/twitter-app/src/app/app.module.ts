@@ -17,7 +17,9 @@ import { MdToolbarModule,
          MdIconModule, 
          MdButtonModule, 
          MdCardModule, 
-         MdExpansionModule } from '@angular/material';
+         MdExpansionModule,
+         MdProgressSpinnerModule,
+         MdChipsModule } from '@angular/material';
 
 import { UserInfoComponent } from './components/user-info/user-info.component';
 import { TweetlistComponent } from './components/tweetlist/tweetlist.component';
@@ -46,6 +48,8 @@ import { UserPageComponent } from './components/user-page/user-page.component';
     MdButtonModule,
     MdCardModule,
     MdExpansionModule,
+    MdProgressSpinnerModule,
+    MdChipsModule,
     rooting
   ],
   providers: [
