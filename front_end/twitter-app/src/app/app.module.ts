@@ -9,7 +9,7 @@ import { NavBarComponent } from './components/nav-bar/nav-bar.component';
 
 import { DataService } from './services/data.service';
 
-import { rooting } from './app.router';
+import { routing } from './app.router';
 
 import { MdToolbarModule, 
          MdInputModule, 
@@ -24,6 +24,7 @@ import { TweetlistComponent } from './components/tweetlist/tweetlist.component';
 import { PostareaComponent } from './components/postarea/postarea.component';
 import { LoginComponent } from './components/login/login.component';
 import { UserPageComponent } from './components/user-page/user-page.component';
+import { UserloginComponent } from './components/userlogin/userlogin.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -32,7 +33,8 @@ import { UserPageComponent } from './components/user-page/user-page.component';
     TweetlistComponent,
     PostareaComponent,
     LoginComponent,
-    UserPageComponent
+    UserPageComponent,
+    UserloginComponent
   ],
   imports: [
     BrowserModule,
@@ -46,7 +48,7 @@ import { UserPageComponent } from './components/user-page/user-page.component';
     MdButtonModule,
     MdCardModule,
     MdExpansionModule,
-    rooting
+    routing
   ],
   providers: [
     { provide: 'data', useClass: DataService}],
