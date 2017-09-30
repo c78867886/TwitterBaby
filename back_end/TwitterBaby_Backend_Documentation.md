@@ -139,7 +139,7 @@ func (h *Handler) ShowFollowing(c echo.Context) (err error)
 > Return 200 OK on success.  
 > Return 404 Not Found if the user is not in the database.  
 > Sample call:  
-> curl -X GET http://127.0.0.1:1323/api/v1/showFollowing/59cb69cca54d757a8e39c974 -H 'Content-Type: application/json' -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MDY1OTA3MTUsImlkIjoiNTljYjY5Y2NhNTRkNzU3YThlMzljOTc0In0.8A8hQQtbZeYBT3LDmOu_-OnrmRsfSby-KZw0eAMJ06s'
+> curl -X GET http://127.0.0.1:1323/api/v1/showFollowing/59cc8c95a54d75d5c8be3aa7 -H 'Content-Type: application/json' -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MDcwMDQ3ODYsImlkIjoiNTljYzhjOTVhNTRkNzVkNWM4YmUzYWE3In0.4m-C5cQ6wOgK_aPe8XiYXS5-CR3bZJgG-am1rGZUIgU'
 
 ```go
 func (h *Handler) Signup(c echo.Context) (err error)

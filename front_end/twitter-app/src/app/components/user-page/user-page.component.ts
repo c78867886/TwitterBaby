@@ -8,10 +8,10 @@ import { ActivatedRoute } from "@angular/router";
 })
 export class UserPageComponent implements OnInit {
   list: Tweet[];
+  userInfo: object = null;
   username: string;
-  bio: string;
   constructor(private route: ActivatedRoute,
-    @Inject('data') private data) { }
+  @Inject('data') private data) { }
 
   ngOnInit() {
     this.route.params.subscribe(params => {
@@ -20,17 +20,19 @@ export class UserPageComponent implements OnInit {
       .then(userinfo => 
         {
           console.log(userinfo);
+          this.userInfo = userinfo;
+          this.username = userinfo.userinfo.username;
         }
       );
 
-      // this.data.getTweetList(params["id"])
-      //   .then(list => 
-      //     {
-      //       this.list = list.tweets;
-      //       this.username = list.firstname + ' ' + list.lastname;
-      //       this.bio = list.bio;
-      //     }
-      //   );
+      this.data.getTweetList(params["id"])
+        .then(list => 
+          {
+            console.log(list);
+            this.list = list;
+          }
+       );
+
     });
   }
 
