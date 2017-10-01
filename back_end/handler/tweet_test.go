@@ -24,7 +24,7 @@ func TestFetchOwnTweets (t *testing.T) {
 
 	// test cases
 	requestParam := []string {
-		"JasonHo",}
+		"MarsLee",}
 		//"JasonHe", 
 		//"MarsLee", 
 		//"DianeLin", 

@@ -85,6 +85,7 @@ func (h *Handler) Login(c echo.Context) (err error) {
 	claims := token.Claims.(jwt.MapClaims)
 	claims["id"] = u.ID
 	claims["exp"] = time.Now().Add(time.Hour * 72).Unix()
+	claims["username"] = u.Username
 
 	// Generate encoded token and send it as response
 	u.Token, err = token.SignedString([]byte(Key))
