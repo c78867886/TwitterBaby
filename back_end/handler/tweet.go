@@ -8,9 +8,8 @@ import (
 	"github.com/labstack/echo"
 	"model"
 	"github.com/dgrijalva/jwt-go"
-	//"strconv"
-	//"math/rand"
-	//"fmt"
+	"math"
+	"strconv"
 )
 
 // FetchTweets : Handle requests asking for a list of tweets posted by a specific user.
@@ -19,8 +18,13 @@ import (
 //				 Return 200 OK on success.
 //				 Return 404 Not Found if the user is not in the database.
 func (h *Handler) FetchTweets (c echo.Context) (err error) {
-	//username := c.Param("username")
 	username := userNameFromToken(c)
+	t := new(model.Tweet)
+	if err = c.Bind(t); err != nil {
+		return
+	}
+	page, err := strconv.Atoi(t.Page)
+	perpage, err := strconv.Atoi(t.Perpage)
 
 	db := h.DB.Clone()
 	defer db.Close()
@@ -30,7 +34,7 @@ func (h *Handler) FetchTweets (c echo.Context) (err error) {
 	err = db.DB("se_avengers").C("users").Find(bson.M{"username": username}).One(&user)
 	if err != nil {
 		if err == mgo.ErrNotFound {
-			return &echo.HTTPError{Code: http.StatusNotFound, Message: "User does not exist."}
+			return &echo.HTTPError{Code: http.StatusNotFound, Message: "User "+username+" does not exist."}
 		}
 		return
 	}
@@ -47,7 +51,30 @@ func (h *Handler) FetchTweets (c echo.Context) (err error) {
 		return 
 	}
 
-	return c.JSON(http.StatusOK, &tweets)
+	totalTweets := len(tweets)
+	totalPage := int(math.Ceil(float64(totalTweets)/float64(perpage)))
+
+	var tweetList [] model.Tweet
+	if page == totalPage{
+		tweetList = tweets[perpage*(page-1):]
+	}else{
+		tweetList = tweets[perpage*(page-1):perpage*page]
+	}
+
+	var container struct {
+		Page	string	`json:"page"`
+		TotalPage	string	`json:"totalpage"`
+		TotalTweets	string	`json:"totaltweets"`
+		TweetList []model.Tweet `json:"tweetlist"`
+	}
+	container.Page = strconv.Itoa(page)
+	container.TotalPage = strconv.Itoa(totalPage)
+	container.TotalTweets = strconv.Itoa(totalTweets)
+	container.TweetList = tweetList
+	
+
+	return c.JSON(http.StatusOK, container)
+	//return c.JSON(http.StatusOK, &tweets)
 }
 
 // NewTweet : Add one tweet for a specific user.
@@ -58,7 +85,6 @@ func (h *Handler) FetchTweets (c echo.Context) (err error) {
 //			  Return 400 Bad Request if the content of the tweet is empty.
 func (h *Handler) NewTweet(c echo.Context) (err error) {
 	userID := userIDFromToken(c)
-	//userID := c.Param("user")
 
 	db := h.DB.Clone()
 	defer db.Close()
