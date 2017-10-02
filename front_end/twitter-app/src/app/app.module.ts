@@ -26,6 +26,8 @@ import { TweetlistComponent } from './components/tweetlist/tweetlist.component';
 import { PostareaComponent } from './components/postarea/postarea.component';
 import { LoginComponent } from './components/login/login.component';
 import { UserPageComponent } from './components/user-page/user-page.component';
+import { FollowlistComponent } from './components/followlist/followlist.component';
+import { FollowerlistComponent } from './components/followerlist/followerlist.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -34,7 +36,9 @@ import { UserPageComponent } from './components/user-page/user-page.component';
     TweetlistComponent,
     PostareaComponent,
     LoginComponent,
-    UserPageComponent
+    UserPageComponent,
+    FollowlistComponent,
+    FollowerlistComponent
   ],
   imports: [
     BrowserModule,

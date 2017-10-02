@@ -7,6 +7,7 @@ export class DataService {
   localhost = "http://localhost:1323";
   constructor(private http: Http) { }
 
+  // Create the header for http request
   getHeader(): RequestOptions {
     let access_token: string = localStorage.getItem("access_token");
     let headers: Headers = new Headers();
@@ -14,6 +15,8 @@ export class DataService {
     return new RequestOptions({ headers: headers });
   }
 
+
+  // Get the tweetlist. This method will be changed to return Observable
   getTweetList(id: string): Promise<Tweet[]> {
     let options: RequestOptions = this.getHeader();
     return this.http.get(this.localhost +`/api/v1/tweetlist/${id}`, options)
@@ -29,7 +32,8 @@ export class DataService {
                       .then((res: Response) => res.json())
                       .catch(this.handleError);
   }
-
+  
+  // Follow and unfollow part
   followUser(mongoid: string): Promise<Object> {
     let post = {};
     let options: RequestOptions = this.getHeader();
@@ -41,7 +45,23 @@ export class DataService {
     
   }
 
+  showFollower(mongoid: string): Promise<object> {
+    let options: RequestOptions = this.getHeader();
+    return this.http.get(this.localhost + `/api/v1/showFollower/${mongoid}`, options)
+                      .toPromise()
+                      .then((res: Response) => res.json())
+                      .catch(this.handleError);
+  }
 
+  showFollowing(mongoid: string): Promise<object> {
+    let options: RequestOptions = this.getHeader();
+    return this.http.get(this.localhost + `/api/v1/showFollowing/${mongoid}`, options)
+                      .toPromise()
+                      .then((res: Response) => res.json())
+                      .catch(this.handleError);
+  }
+
+  //MockLogin only for development
   mockLogin(): Promise<Object> {
     let loginfo: object = {email:"hojason117@gmail.com", password:"test1"};
     let headers: Headers = new Headers({ 'content-type': 'application/json'});

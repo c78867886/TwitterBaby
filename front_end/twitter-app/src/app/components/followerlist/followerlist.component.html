@@ -1,0 +1,12 @@
+<md-spinner *ngIf="!followerList" class="spinner"></md-spinner>
+<md-card *ngFor='let follower of followerList' class="example-card" [routerLink]="['/user/', follower.username]">
+  <md-card-header>
+    <div md-card-avatar class="header-image"></div>
+    <md-card-title>{{ follower.username }}</md-card-title>
+  </md-card-header>
+  <md-card-content>
+    <p>
+      {{ follower.bio }}
+    </p>
+  </md-card-content>
+</md-card>
