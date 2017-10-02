@@ -10,6 +10,4 @@ type Tweet struct {
 	From 		string			`json:"from,omitempty" bson:"from,omitempty"`
 	Message 	string			`json:"message" bson:"message"`
 	Timestamp	time.Time		`json:"timestamp,omitempty" bson:"timestamp"`
-	Page		string			`json:"page" bson:"page"`
-	Perpage		string			`json:"perpage" bson:"perpage"`
 }

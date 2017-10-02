@@ -19,12 +19,14 @@ import (
 //				 Return 404 Not Found if the user is not in the database.
 func (h *Handler) FetchTweets (c echo.Context) (err error) {
 	username := userNameFromToken(c)
+	/*
 	t := new(model.Tweet)
 	if err = c.Bind(t); err != nil {
 		return
 	}
-	page, err := strconv.Atoi(t.Page)
-	perpage, err := strconv.Atoi(t.Perpage)
+	*/
+	page, err := strconv.Atoi(c.QueryParam("page"))
+	perpage, err := strconv.Atoi(c.QueryParam("perpage"))
 
 	db := h.DB.Clone()
 	defer db.Close()
