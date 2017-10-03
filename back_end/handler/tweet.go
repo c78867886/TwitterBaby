@@ -138,6 +138,63 @@ func (h *Handler) DeleteTweet(c echo.Context) (err error) {
 	return c.NoContent(http.StatusNoContent)
 }
 
+func (h *Handler) FetchTweetTimeLine (c echo.Context) (err error) {
+	username := userNameFromToken(c)
+	
+	page, err := strconv.Atoi(c.QueryParam("page"))
+	perpage, err := strconv.Atoi(c.QueryParam("perpage"))
+
+	db := h.DB.Clone()
+	defer db.Close()
+
+	// Retrieve user info from database by username
+	user := model.User{}
+	err = db.DB("se_avengers").C("users").Find(bson.M{"username": username}).One(&user)
+	if err != nil {
+		if err == mgo.ErrNotFound {
+			return &echo.HTTPError{Code: http.StatusNotFound, Message: "User "+username+" does not exist."}
+		}
+		return
+	}
+	//id := user.ID.Hex()
+	following := user.Following
+
+	// Retrieve tweets from database
+	tweets := []model.Tweet{}
+	err = db.DB("se_avengers").C("tweets").Find(bson.M{"owner": bson.M{"$in": following}}).Sort("timestamp").All(&tweets)
+	if err != nil {
+		if err == mgo.ErrNotFound {
+			return &echo.HTTPError{Code: http.StatusNotFound, Message: "Can not find any Tweet from this user."}
+		}
+		return 
+	}
+
+	totalTweets := len(tweets)
+	totalPage := int(math.Ceil(float64(totalTweets)/float64(perpage)))
+
+	var tweetList [] model.Tweet
+	if page == totalPage{
+		tweetList = tweets[perpage*(page-1):]
+	}else{
+		tweetList = tweets[perpage*(page-1):perpage*page]
+	}
+
+	var container struct {
+		Page	string	`json:"page"`
+		TotalPage	string	`json:"totalpage"`
+		TotalTweets	string	`json:"totaltweets"`
+		TweetList []model.Tweet `json:"tweetlist"`
+	}
+	container.Page = strconv.Itoa(page)
+	container.TotalPage = strconv.Itoa(totalPage)
+	container.TotalTweets = strconv.Itoa(totalTweets)
+	container.TweetList = tweetList
+	
+
+	return c.JSON(http.StatusOK, container)
+	//return c.JSON(http.StatusOK, &tweets)
+}
+
 func userNameFromToken(c echo.Context) string {
 	user := c.Get("user").(*jwt.Token)
 	claims := user.Claims.(jwt.MapClaims)
