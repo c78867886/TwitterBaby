@@ -156,12 +156,13 @@ func (h *Handler) FetchTweetTimeLine (c echo.Context) (err error) {
 		}
 		return
 	}
-	//id := user.ID.Hex()
+	//Get the user list of tweet timeline.
 	following := user.Following
+	timeLineTweetList := append(following, user.ID.Hex())
 
 	// Retrieve tweets from database
 	tweets := []model.Tweet{}
-	err = db.DB("se_avengers").C("tweets").Find(bson.M{"owner": bson.M{"$in": following}}).Sort("timestamp").All(&tweets)
+	err = db.DB("se_avengers").C("tweets").Find(bson.M{"owner": bson.M{"$in": timeLineTweetList}}).Sort("timestamp").All(&tweets)
 	if err != nil {
 		if err == mgo.ErrNotFound {
 			return &echo.HTTPError{Code: http.StatusNotFound, Message: "Can not find any Tweet from this user."}
