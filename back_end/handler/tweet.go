@@ -63,6 +63,11 @@ func (h *Handler) FetchTweets (c echo.Context) (err error) {
 		tweetList = tweets[perpage*(page-1):perpage*page]
 	}
 
+	// Change id to username
+	for i := range tweetList {
+		tweetList[i].Owner = user.Username
+	}
+
 	var container struct {
 		Page	string	`json:"page"`
 		TotalPage	string	`json:"totalpage"`
@@ -156,13 +161,21 @@ func (h *Handler) FetchTweetTimeLine (c echo.Context) (err error) {
 		}
 		return
 	}
-	//Get the user list of tweet timeline.
+	// Get the user list of tweet timeline.
 	following := user.Following
-	timeLineTweetList := append(following, user.ID.Hex())
+	timeLineUserList := append(following, user.ID.Hex())
+
+	// Map between ID and username
+	mapIDandUsername := make(map[string]string)
+	for i := range timeLineUserList{
+		tempUser := model.User{}
+		err = db.DB("se_avengers").C("users").FindId(bson.ObjectIdHex(timeLineUserList[i])).One(&tempUser)
+		mapIDandUsername[tempUser.ID.Hex()] = tempUser.Username
+	}
 
 	// Retrieve tweets from database
 	tweets := []model.Tweet{}
-	err = db.DB("se_avengers").C("tweets").Find(bson.M{"owner": bson.M{"$in": timeLineTweetList}}).Sort("timestamp").All(&tweets)
+	err = db.DB("se_avengers").C("tweets").Find(bson.M{"owner": bson.M{"$in": timeLineUserList}}).Sort("timestamp").All(&tweets)
 	if err != nil {
 		if err == mgo.ErrNotFound {
 			return &echo.HTTPError{Code: http.StatusNotFound, Message: "Can not find any Tweet from this user."}
@@ -178,6 +191,11 @@ func (h *Handler) FetchTweetTimeLine (c echo.Context) (err error) {
 		tweetList = tweets[perpage*(page-1):]
 	}else{
 		tweetList = tweets[perpage*(page-1):perpage*page]
+	}
+
+	// Change id to username
+	for i := range tweetList {
+		tweetList[i].Owner = mapIDandUsername[tweetList[i].Owner]
 	}
 
 	var container struct {
