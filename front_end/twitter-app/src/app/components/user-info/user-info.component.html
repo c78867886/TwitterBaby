@@ -1,23 +1,23 @@
-<md-card class="userInfo" *ngIf="userInfo !== null">
-  <md-card-header class="header">
-    <img class="image" md-card-sm-image [src] = "url">
+<mat-card class="userInfo" *ngIf="userInfo !== null">
+  <mat-card-header class="header">
+    <img class="image" mat-card-sm-image [src] = "url">
     <div>
-        <md-card-title>{{userInfo.userinfo.username}}</md-card-title>
-        <md-card-subtitle>Dog Breed</md-card-subtitle>
+        <mat-card-title>{{userInfo.userinfo.username}}</mat-card-title>
+        <mat-card-subtitle>Dog Breed</mat-card-subtitle>
     </div>
-  </md-card-header>
-  <md-card-content>
+  </mat-card-header>
+  <mat-card-content>
     <p>
       {{userInfo.userinfo.bio}}
     </p>
-  </md-card-content>
-  <md-chip-list>
-    <md-chip [routerLink]="['/user/following/', userInfo.userinfo.id]">Following: {{userInfo.followingcount}}</md-chip>
-    <md-chip [routerLink]="['/user/follower/', userInfo.userinfo.id]">Followers: {{userInfo.followercount}}</md-chip>
-  </md-chip-list>
-  <md-card-actions *ngIf="!isHost">
-    <button md-raised-button class="followbtn" color="accent" (click)="followFunc()">
+  </mat-card-content>
+  <mat-chip-list>
+    <mat-chip [routerLink]="['/user/following/', userInfo.userinfo.id]">Following: {{userInfo.followingcount}}</mat-chip>
+    <mat-chip [routerLink]="['/user/follower/', userInfo.userinfo.id]">Followers: {{userInfo.followercount}}</mat-chip>
+  </mat-chip-list>
+  <mat-card-actions *ngIf="!isHost">
+    <button mat-raised-button class="followbtn" color="accent" (click)="followFunc()">
       {{ (userInfo.followed) ? "Following" : "Follow" }}
     </button>
-  </md-card-actions>
-</md-card>
+  </mat-card-actions>
+</mat-card>

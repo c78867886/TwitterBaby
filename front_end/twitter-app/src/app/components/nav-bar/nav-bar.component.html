@@ -1,20 +1,20 @@
-<md-toolbar color="primary">
-  <button md-button routerLink="/home" class="brand">BabyTwitter</button>
+<mat-toolbar color="primary">
+  <button mat-button routerLink="/home" class="brand">BabyTwitter</button>
   <span class="example-spacer"></span>
 
   <form class="form" (submit)="onSubmit()">
-    <md-form-field class="search">
-      <input name="search" mdInput placeholder="Search a friend" class="input" [(ngModel)]='username'>
-    </md-form-field>
+    <mat-form-field class="search">
+      <input name="search" matInput placeholder="Search a friend" class="input" [(ngModel)]='username'>
+    </mat-form-field>
     <button type='submit' [routerLink]="['/user', username]" style="display:none"></button>
   </form>
 
-  <button class="button" md-icon-button [mdMenuTriggerFor]="menu">
-    <md-icon>account_box</md-icon>
+  <button class="button" mat-icon-button [matMenuTriggerFor]="menu">
+    <mat-icon>account_box</mat-icon>
     <span>{{loginName}}</span>
   </button>
-  <md-menu #menu="mdMenu">
-    <button md-menu-item><md-icon>account_circle</md-icon>Profile</button>
-    <button md-menu-item><md-icon>clear</md-icon>Logout</button>
-  </md-menu>
-</md-toolbar>
+  <mat-menu #menu="matMenu">
+    <button mat-menu-item><mat-icon>account_circle</mat-icon>Profile</button>
+    <button mat-menu-item><mat-icon>clear</mat-icon>Logout</button>
+  </mat-menu>
+</mat-toolbar>
