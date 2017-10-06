@@ -10,6 +10,7 @@ export class UserPageComponent implements OnInit {
   list: Tweet[];
   userInfo: object = null;
   username: string;
+  isHost: boolean;
   constructor(private route: ActivatedRoute,
   @Inject('data') private data) { }
 
@@ -22,6 +23,8 @@ export class UserPageComponent implements OnInit {
           console.log(userinfo);
           this.userInfo = userinfo;
           this.username = userinfo.userinfo.username;
+          let userInfo = JSON.parse(localStorage.getItem("user_info_object"));
+          this.isHost = this.username === userInfo.username ? true : false;
         }
       );
 
@@ -29,7 +32,7 @@ export class UserPageComponent implements OnInit {
         .then(list => 
           {
             console.log(list);
-            this.list = list;
+            this.list = list.tweetlist;
           }
        );
 

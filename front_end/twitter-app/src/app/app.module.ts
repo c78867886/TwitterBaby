@@ -28,6 +28,7 @@ import { LoginComponent } from './components/login/login.component';
 import { UserPageComponent } from './components/user-page/user-page.component';
 import { FollowlistComponent } from './components/followlist/followlist.component';
 import { FollowerlistComponent } from './components/followerlist/followerlist.component';
+import { PageSplitComponent } from './components/page-split/page-split.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -38,7 +39,8 @@ import { FollowerlistComponent } from './components/followerlist/followerlist.co
     LoginComponent,
     UserPageComponent,
     FollowlistComponent,
-    FollowerlistComponent
+    FollowerlistComponent,
+    PageSplitComponent
   ],
   imports: [
     BrowserModule,
