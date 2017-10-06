@@ -1,17 +1,17 @@
-<md-spinner *ngIf="!tweetlist" class="spinner"></md-spinner>
-<md-card *ngFor="let tweet of tweetlist" class="example-card">
-  <md-card-header>
-    <div md-card-avatar class="header-image"></div>
-    <md-card-title>{{ tweet.owner }}</md-card-title>
-    <md-card-subtitle>{{ tweet.timestamp | date: 'short'}}</md-card-subtitle>
-  </md-card-header>
-  <md-card-content>
+<mat-spinner *ngIf="!tweetlist" class="spinner"></mat-spinner>
+<mat-card *ngFor="let tweet of tweetlist" class="example-card">
+  <mat-card-header>
+    <div mat-card-avatar class="header-image"></div>
+    <mat-card-title>{{ tweet.owner }}</mat-card-title>
+    <mat-card-subtitle>{{ tweet.timestamp | date: 'short'}}</mat-card-subtitle>
+  </mat-card-header>
+  <mat-card-content>
     <p>
       {{ tweet.message }}
     </p>
-  </md-card-content>
-  <md-card-actions class="action">
-    <button md-raised-button color="accent">LIKE</button>
-    <button md-raised-button color="accent">SHARE</button>
-  </md-card-actions>
-</md-card>
+  </mat-card-content>
+  <mat-card-actions class="action">
+    <button mat-raised-button color="accent">LIKE</button>
+    <button mat-raised-button color="accent">SHARE</button>
+  </mat-card-actions>
+</mat-card>

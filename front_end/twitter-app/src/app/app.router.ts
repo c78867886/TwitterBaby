@@ -16,4 +16,4 @@ const appRoutes: Routes = [
     { path: 'user/following/:id', component: FollowlistComponent},
     { path: '**', redirectTo: 'home' }
 ];
-export const routing = RouterModule.forRoot(appRoutes);
+export const rooting = RouterModule.forRoot(appRoutes);
