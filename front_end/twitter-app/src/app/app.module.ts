@@ -11,15 +11,15 @@ import { DataService } from './services/data.service';
 
 import { rooting } from './app.router';
 
-import { MdToolbarModule, 
-         MdInputModule, 
-         MdMenuModule, 
-         MdIconModule, 
-         MdButtonModule, 
-         MdCardModule, 
-         MdExpansionModule,
-         MdProgressSpinnerModule,
-         MdChipsModule } from '@angular/material';
+import { MatToolbarModule, 
+         MatInputModule, 
+         MatMenuModule, 
+         MatIconModule, 
+         MatButtonModule, 
+         MatCardModule, 
+         MatExpansionModule,
+         MatProgressSpinnerModule,
+         MatChipsModule } from '@angular/material';
 
 import { UserInfoComponent } from './components/user-info/user-info.component';
 import { TweetlistComponent } from './components/tweetlist/tweetlist.component';
@@ -47,15 +47,15 @@ import { PageSplitComponent } from './components/page-split/page-split.component
     BrowserAnimationsModule,
     HttpModule,
     FormsModule,
-    MdToolbarModule,
-    MdInputModule,
-    MdMenuModule,
-    MdIconModule,
-    MdButtonModule,
-    MdCardModule,
-    MdExpansionModule,
-    MdProgressSpinnerModule,
-    MdChipsModule,
+    MatToolbarModule,
+    MatInputModule,
+    MatMenuModule,
+    MatIconModule,
+    MatButtonModule,
+    MatCardModule,
+    MatExpansionModule,
+    MatProgressSpinnerModule,
+    MatChipsModule,
     rooting
   ],
   providers: [
