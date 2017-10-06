@@ -17,9 +17,17 @@ export class DataService {
 
 
   // Get the tweetlist. This method will be changed to return Observable
-  getTweetList(id: string): Promise<Tweet[]> {
+  getTweetList(id: string): Promise<object> {
     let options: RequestOptions = this.getHeader();
-    return this.http.get(this.localhost +`/api/v1/tweetlist/${id}`, options)
+    return this.http.get(this.localhost +`/api/v1/tweetlist/${id}?perpage=10&page=1`, options)
+                      .toPromise()
+                      .then((res: Response) => res.json())
+                      .catch(this.handleError);
+  }
+  // Get the timeline of host.
+  getTweetListTimeLine(id: string): Promise<object> {
+    let options: RequestOptions = this.getHeader();
+    return this.http.get(this.localhost +`/api/v1/tweettimeline/${id}?perpage=10&page=1`, options)
                       .toPromise()
                       .then((res: Response) => res.json())
                       .catch(this.handleError);
@@ -59,6 +67,17 @@ export class DataService {
                       .toPromise()
                       .then((res: Response) => res.json())
                       .catch(this.handleError);
+  }
+
+  //Create new tweet
+  postTweet(mongoid: string, content: string): Promise<Object>{
+    let options: RequestOptions = this.getHeader();
+    let message: object = {message: content};
+    return this.http.post(`http://127.0.0.1:1323/api/v1/newTweet/${mongoid}`, message, options)
+            .toPromise()
+            .then((res: Response) => res.json())
+            .catch(this.handleError);
+
   }
 
   //MockLogin only for development

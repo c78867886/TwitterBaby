@@ -29,10 +29,11 @@ export class LoginComponent implements OnInit {
               }
             );
 
-            this.data.getTweetList(username)
+            this.data.getTweetListTimeLine(username)
             .then(list => 
               {
-                this.list = list;
+                this.list = list.tweetlist;
+                console.log(list);
               }
             );
           });
