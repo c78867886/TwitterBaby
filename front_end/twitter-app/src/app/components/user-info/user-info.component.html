@@ -1,17 +1,23 @@
-<md-card class="userInfo">
+<md-card class="userInfo" *ngIf="userInfo !== null">
   <md-card-header class="header">
     <img class="image" md-card-sm-image [src] = "url">
     <div>
-        <md-card-title>{{username}}</md-card-title>
+        <md-card-title>{{userInfo.userinfo.username}}</md-card-title>
         <md-card-subtitle>Dog Breed</md-card-subtitle>
     </div>
   </md-card-header>
   <md-card-content>
     <p>
-      {{bio}}
+      {{userInfo.userinfo.bio}}
     </p>
   </md-card-content>
-  <md-card-actions>
-    <button md-raised-button class="followbtn"  color="accent">Follow</button>
+  <md-chip-list>
+    <md-chip [routerLink]="['/user/following/', userInfo.userinfo.id]">Following: {{userInfo.followingcount}}</md-chip>
+    <md-chip [routerLink]="['/user/follower/', userInfo.userinfo.id]">Followers: {{userInfo.followercount}}</md-chip>
+  </md-chip-list>
+  <md-card-actions *ngIf="!isHost">
+    <button md-raised-button class="followbtn" color="accent" (click)="followFunc()">
+      {{ (userInfo.followed) ? "Following" : "Follow" }}
+    </button>
   </md-card-actions>
 </md-card>

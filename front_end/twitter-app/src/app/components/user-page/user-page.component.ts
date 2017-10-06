@@ -8,21 +8,34 @@ import { ActivatedRoute } from "@angular/router";
 })
 export class UserPageComponent implements OnInit {
   list: Tweet[];
+  userInfo: object = null;
   username: string;
-  bio: string;
+  isHost: boolean;
   constructor(private route: ActivatedRoute,
-    @Inject('data') private data) { }
+  @Inject('data') private data) { }
 
   ngOnInit() {
     this.route.params.subscribe(params => {
+      
+      this.data.getUserInfo(params["id"])
+      .then(userinfo => 
+        {
+          console.log(userinfo);
+          this.userInfo = userinfo;
+          this.username = userinfo.userinfo.username;
+          let userInfo = JSON.parse(localStorage.getItem("user_info_object"));
+          this.isHost = this.username === userInfo.username ? true : false;
+        }
+      );
+
       this.data.getTweetList(params["id"])
         .then(list => 
           {
-            this.list = list.tweets;
-            this.username = list.firstname + ' ' + list.lastname;
-            this.bio = list.bio;
+            console.log(list);
+            this.list = list.tweetlist;
           }
-        );
+       );
+
     });
   }
 
