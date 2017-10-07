@@ -19,6 +19,7 @@ import (
 //				 Return 404 Not Found if the user is not in the database.
 func (h *Handler) FetchTweets (c echo.Context) (err error) {
 	username := userNameFromToken(c)
+	username = c.Param("username")
 	/*
 	t := new(model.Tweet)
 	if err = c.Bind(t); err != nil {
@@ -145,6 +146,7 @@ func (h *Handler) DeleteTweet(c echo.Context) (err error) {
 
 func (h *Handler) FetchTweetTimeLine (c echo.Context) (err error) {
 	username := userNameFromToken(c)
+	username = c.Param("username")
 	
 	page, err := strconv.Atoi(c.QueryParam("page"))
 	perpage, err := strconv.Atoi(c.QueryParam("perpage"))
