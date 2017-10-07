@@ -1,6 +1,7 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { Tweet } from '../../models/tweet.model';
 import { ActivatedRoute } from "@angular/router";
+import { Subscription } from 'rxjs/Subscription';
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
@@ -10,6 +11,7 @@ export class LoginComponent implements OnInit {
   list: Tweet[];
   username: string = "";
   userInfo: object = null;
+  subscriptionTweets: Subscription;
   constructor(
     private route: ActivatedRoute,
     @Inject('data') private data) { }
@@ -29,11 +31,11 @@ export class LoginComponent implements OnInit {
               }
             );
 
-            this.data.getTweetListTimeLine(username)
-            .then(list => 
+            this.subscriptionTweets = this.data.getTweetListTimeLine(username)
+            .subscribe(list => 
               {
                 this.list = list.tweetlist;
-                console.log(list);
+                //console.log(list);
               }
             );
           });
