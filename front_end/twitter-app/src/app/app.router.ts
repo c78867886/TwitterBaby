@@ -6,6 +6,9 @@ import { UserPageComponent } from './components/user-page/user-page.component';
 import { FollowerlistComponent } from './components/followerlist/followerlist.component';
 import { FollowlistComponent } from './components/followlist/followlist.component';
 
+//Diane:
+import { UserloginComponent } from './components/userlogin/userlogin.component';
+
 const appRoutes: Routes = [
     { path: 'home', component:  LoginComponent},
     { path: 'user/:id', component: UserPageComponent},
