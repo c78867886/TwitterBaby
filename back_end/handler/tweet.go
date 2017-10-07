@@ -44,7 +44,7 @@ func (h *Handler) FetchTweets (c echo.Context) (err error) {
 
 	// Retrieve tweets from database
 	tweets := []model.Tweet{}
-	err = db.DB("se_avengers").C("tweets").Find(bson.M{"owner": id}).Sort("timestamp").All(&tweets)
+	err = db.DB("se_avengers").C("tweets").Find(bson.M{"owner": id}).Sort("-timestamp").All(&tweets)
 
 	if err != nil {
 		if err == mgo.ErrNotFound {
@@ -175,7 +175,7 @@ func (h *Handler) FetchTweetTimeLine (c echo.Context) (err error) {
 
 	// Retrieve tweets from database
 	tweets := []model.Tweet{}
-	err = db.DB("se_avengers").C("tweets").Find(bson.M{"owner": bson.M{"$in": timeLineUserList}}).Sort("timestamp").All(&tweets)
+	err = db.DB("se_avengers").C("tweets").Find(bson.M{"owner": bson.M{"$in": timeLineUserList}}).Sort("-timestamp").All(&tweets)
 	if err != nil {
 		if err == mgo.ErrNotFound {
 			return &echo.HTTPError{Code: http.StatusNotFound, Message: "Can not find any Tweet from this user."}
