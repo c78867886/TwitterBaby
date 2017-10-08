@@ -14,7 +14,7 @@ export class PostareaComponent implements OnInit {
   }
 
   postTweet(): void {
-    this.data.postTweet(localStorage.getItem('id') ,this.content)
+    this.data.postTweet(localStorage.getItem('id'), JSON.parse(localStorage.getItem("user_info_object")).username, this.content)
       .then(tweet => {
         this.content = "";
         console.log(tweet);

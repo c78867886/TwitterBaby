@@ -76,14 +76,14 @@ export class DataService {
   }
 
   //Create new tweet
-  postTweet(mongoid: string, content: string): Promise<Object>{
+  postTweet(mongoid: string, id: string, content: string): Promise<Object>{
     let options: RequestOptions = this.getHeader();
     let message: object = {message: content};
     //console.log(message);
     return this.http.post(`http://127.0.0.1:1323/api/v1/newTweet/${mongoid}`, message, options)
             .toPromise()
             .then((res: Response) => {
-              this.getTweetListTimeLine(mongoid, 1);
+              this.getTweetListTimeLine(id, 1);
               return res.json();
             })
             .catch(this.handleError);
