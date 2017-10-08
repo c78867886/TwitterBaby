@@ -17,7 +17,11 @@ export class PageSplitComponent implements OnInit {
   nextPage(): void {
     if (this.index != this.totalPage) {
       this.index < this.totalPage ? this.index++ : this.index;
-      this.data.getTweetListTimeLine(this.mongoid, this.index);
+      this.data.getTweetListTimeLine(this.mongoid, this.index)
+      .subscribe(res => {
+        this.index = res.page;
+        this.totalPage = res.totalpage;
+      });
       window.scrollTo(0,-10);
     }
   }
@@ -25,7 +29,11 @@ export class PageSplitComponent implements OnInit {
   prePage(): void {
     if (this.index != 1) {
       this.index > 1 ? this.index-- : this.index;
-      this.data.getTweetListTimeLine(this.mongoid, this.index);
+      this.data.getTweetListTimeLine(this.mongoid, this.index)
+      .subscribe(res => {
+        this.index = res.page;
+        this.totalPage = res.totalpage;
+      });
       window.scrollTo(0,-10);
     }
   }
