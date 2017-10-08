@@ -1,17 +1,24 @@
 
-<body>
+<body background="assets/images/cartoonpeople.jpg">
   <div class="container" >
-      <img src="./assets/twitter_round.png">
-      <form>
+      <img src="assets/images/twitterround.png">
+      <form (ngSubmit)='login()'>
           <div class="form-input">
-            <input type="text" name="username" placeholder="Enter Username">
+            <input type="text" name="username" placeholder="Enter Email/Username" [(ngModel)]='credentials.username'>
           </div>
           <div class="form-input">
-            <input type="text" name="password" placeholder="Enter Password">
+            <input type="password" name="password" placeholder="Enter Password" flex layout-align="center center" 
+            [(ngModel)]='credentials.password'>
           </div>
-          <input type="submit" name="submit" value="LOGIN" class="btn-login">
-        <br>
-          <a href="#">Forget password?</a>
+          <div class="form-group">
+            <button type="submit" class="btn btn-info">Log In</button>
+          </div>
+          <!-- <input type="submit" name="submit" value="Log In" class="btn-login"> -->
+          <a class = "loginlink" href="#"><u>Forgot Your Password?</u></a>
+          <br>
+          <a class = "loginlink" href="#"><u>No account? Please register!</u></a>
+          <div *ngIf="successMessage" class="alert alert-success">{{successMessage}})</div>
+          <div *ngIf="errorMessage" class="alert alert-danger">{{errorMessage}}</div>
       </form>
   </div>
 </body>

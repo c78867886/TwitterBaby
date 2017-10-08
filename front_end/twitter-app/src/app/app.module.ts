@@ -19,7 +19,8 @@ import { MatToolbarModule,
          MatCardModule, 
          MatExpansionModule,
          MatProgressSpinnerModule,
-         MatChipsModule } from '@angular/material';
+         MatChipsModule,
+         } from '@angular/material';
 
 import { UserInfoComponent } from './components/user-info/user-info.component';
 import { TweetlistComponent } from './components/tweetlist/tweetlist.component';
@@ -30,6 +31,7 @@ import { FollowlistComponent } from './components/followlist/followlist.componen
 import { FollowerlistComponent } from './components/followerlist/followerlist.component';
 import { PageSplitComponent } from './components/page-split/page-split.component';
 import { UserloginComponent } from './components/userlogin/userlogin.component';
+import { AuthService } from './services/auth.service';
 
 @NgModule({
   declarations: [
@@ -62,7 +64,9 @@ import { UserloginComponent } from './components/userlogin/userlogin.component';
     rooting
   ],
   providers: [
-    { provide: 'data', useClass: DataService}],
+    { provide: 'data', useClass: DataService},
+    AuthService
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

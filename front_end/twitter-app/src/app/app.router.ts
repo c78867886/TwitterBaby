@@ -5,8 +5,6 @@ import { TweetlistComponent } from './components/tweetlist/tweetlist.component';
 import { UserPageComponent } from './components/user-page/user-page.component';
 import { FollowerlistComponent } from './components/followerlist/followerlist.component';
 import { FollowlistComponent } from './components/followlist/followlist.component';
-
-//Diane:
 import { UserloginComponent } from './components/userlogin/userlogin.component';
 
 const appRoutes: Routes = [
@@ -14,6 +12,8 @@ const appRoutes: Routes = [
     { path: 'user/:id', component: UserPageComponent},
     { path: 'user/follower/:id', component: FollowerlistComponent},
     { path: 'user/following/:id', component: FollowlistComponent},
-    { path: '**', redirectTo: 'home' }
+    { path: '**', redirectTo: '/home' },
+    { path:'login', component: UserloginComponent},
 ];
+
 export const rooting = RouterModule.forRoot(appRoutes);
