@@ -14,8 +14,11 @@ export class PostareaComponent implements OnInit {
   }
 
   postTweet(): void {
-    this.data.postTweet(localStorage.getItem('id') ,this.content);
-    this.content = "";
+    this.data.postTweet(localStorage.getItem('id') ,this.content)
+      .then(tweet => {
+        this.content = "";
+        console.log(tweet);
+      });
   }
 
 }
