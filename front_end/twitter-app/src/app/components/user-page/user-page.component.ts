@@ -11,6 +11,8 @@ export class UserPageComponent implements OnInit {
   userInfo: object = null;
   username: string;
   isHost: boolean;
+  page: number;
+  totalPage: number;
   constructor(private route: ActivatedRoute,
   @Inject('data') private data) { }
 
@@ -25,18 +27,28 @@ export class UserPageComponent implements OnInit {
           this.username = userinfo.userinfo.username;
           let userInfo = JSON.parse(localStorage.getItem("user_info_object"));
           this.isHost = this.username === userInfo.username ? true : false;
+        }     
+      )
+      .catch(err => {
+        if(err.status === 404) {
+          console.log("404");
         }
-      );
+      });;
 
       this.data.getTweetList(params["id"])
         .then(list => 
           {
             console.log(list);
             this.list = list.tweetlist;
+            this.page = list.page;
+            this.totalPage = list.totalPage;
+          })
+        .catch(err => {
+          if(err.status === 404) {
+            console.log("404");
+            this.list = [];
           }
-       );
-
-    });
-  }
-
+        });
+      });
+    }
 }
