@@ -28,9 +28,10 @@ export class DataService {
                       .catch(this.handleError);
   }
   // Get the timeline of host.
-  getTweetListTimeLine(id: string): Observable<object> {
+  getTweetListTimeLine(id: string, page: number): Observable<object> {
     let options: RequestOptions = this.getHeader();
-    this.http.get(this.localhost +`/api/v1/tweettimeline/${id}?perpage=200&page=1`, options)
+    this.timelineSource.next([]);
+    this.http.get(this.localhost +`/api/v1/tweettimeline/${id}?perpage=15&page=${page}`, options)
                       .toPromise()
                       .then((res: Response) => this.timelineSource.next(res.json()))
                       .catch(this.handleError);
@@ -50,7 +51,8 @@ export class DataService {
     let post = {};
     let options: RequestOptions = this.getHeader();
     return this.http.post(`http://127.0.0.1:1323/api/v1/follow/${mongoid}`, post, options)
-      .toPromise();
+      .toPromise()
+      .catch(this.handleError);
   }
 
   unfollowUser(mongoid: string): void {
@@ -81,7 +83,7 @@ export class DataService {
     return this.http.post(`http://127.0.0.1:1323/api/v1/newTweet/${mongoid}`, message, options)
             .toPromise()
             .then((res: Response) => {
-              this.getTweetListTimeLine(mongoid);
+              this.getTweetListTimeLine(mongoid, 1);
               return res.json();
             })
             .catch(this.handleError);

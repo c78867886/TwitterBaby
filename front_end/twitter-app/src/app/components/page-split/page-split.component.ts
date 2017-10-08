@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input, Inject } from '@angular/core';
 
 @Component({
   selector: 'app-page-split',
@@ -7,18 +7,27 @@ import { Component, OnInit } from '@angular/core';
 })
 export class PageSplitComponent implements OnInit {
   index: number = 1;
-  totalPage: number = 3;
-  constructor() { }
+  @Input() totalPage: number;
+  @Input() mongoid: string;
+  constructor(@Inject('data') private data) { }
 
   ngOnInit() {
   }
   
   nextPage(): void {
-    this.index < this.totalPage ? this.index++ : this.index;
+    if (this.index != this.totalPage) {
+      this.index < this.totalPage ? this.index++ : this.index;
+      this.data.getTweetListTimeLine(this.mongoid, this.index);
+      window.scrollTo(0,-10);
+    }
   }
 
   prePage(): void {
-    this.index > 1 ? this.index-- : this.index;
+    if (this.index != 1) {
+      this.index > 1 ? this.index-- : this.index;
+      this.data.getTweetListTimeLine(this.mongoid, this.index);
+      window.scrollTo(0,-10);
+    }
   }
 
 }

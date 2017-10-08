@@ -1,0 +1,11 @@
+.example-card {
+    margin: 10px auto;
+    width: 60%;
+    outline:none;
+}
+
+.spinner {
+    position: absolute;
+    margin-left: 40%;
+    margin-top: 10%;
+}

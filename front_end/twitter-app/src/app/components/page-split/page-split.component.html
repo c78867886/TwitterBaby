@@ -1,4 +1,4 @@
-<div class="pageSplit">
+<div *ngIf='totalPage' class="pageSplit">
   <button mat-button color="primary" (click)="prePage()">Previous</button>
   <p>
     {{ index }} / {{ totalPage }}
