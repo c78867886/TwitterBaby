@@ -12,7 +12,7 @@ const appRoutes: Routes = [
     { path: 'user/:id', component: UserPageComponent},
     { path: 'user/follower/:id', component: FollowerlistComponent},
     { path: 'user/following/:id', component: FollowlistComponent},
-    { path: '**', redirectTo: '/login' },
+    { path: '**', redirectTo: '/home' },
     { path:'login', component: UserloginComponent},
 ];
 
