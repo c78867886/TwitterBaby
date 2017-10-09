@@ -1,0 +1,99 @@
+ .container{
+    width: 500px;
+    height: 500px;
+    text-align: center;
+    margin: 0 auto;
+    background-color: rgba(52, 94, 88, 0.8); 
+    border-radius: 8px;
+    margin: 0 auto;
+    margin-top: 60px;
+
+}
+h1{
+    color: #fff;
+    margin-top: 100px;
+    margin-bottom: 0px;
+    text-align: center;
+    /* font-family: fantasy; */
+    text-shadow:5px 5px 10px gray;
+}
+.container img{
+    width: 120px;
+    height: 129px;
+    margin-top: -60px;
+    margin-bottom: 15px;
+}
+
+input[type="text"],[type="password"],[type="email"]{
+    height: 30px;
+    width: 300px;
+    border-radius: 4px;
+    border: none;
+    font-size: 14px;
+    margin-bottom: 15px;
+    background-color: #fff;
+    padding-left: 10px;    
+}
+.biography{
+    height: 60px;
+    width: 300px;
+    border-radius: 4px;
+    border: none;
+    font-size: 14px;
+    margin-bottom: 10px;
+    background-color: #fff;
+    padding-left: 10px;  
+}
+
+#First_Name{
+  height: 30px;
+  width: 148px;
+  border-radius: 4px;
+  border: none;
+  font-size: 14px;
+  margin-bottom: 20px;
+  background-color: #fff;
+  padding-left: 10px;    
+}
+#Last_Name{
+  height: 30px;
+  width: 148px;
+  border-radius: 4px;
+  border: none;
+  font-size: 14px;
+  margin-bottom: 20px;
+  background-color: #fff;
+  padding-left: 10px;    
+}
+
+.form-input::before{    
+    position: absolute;
+    font-family: "FontAwesome";
+    color: #9B59B6;
+    font-size: 30px;
+    padding-left: 5px;
+    padding-top: 5px;
+}
+
+a{
+    color: #fff;
+}
+label{
+  color: #fff;
+  font-size: 13px;
+  font-family: Arial;
+  padding-left: 5px;
+}
+
+.btn {
+  width: 200px;
+  height: 35px;
+  border-radius: 4px;
+  color:#fff;
+  font-size: 18px;
+  background-color: rgb(117, 217, 245);
+}
+.error{
+  color:rgb(221, 36, 36);
+}
+

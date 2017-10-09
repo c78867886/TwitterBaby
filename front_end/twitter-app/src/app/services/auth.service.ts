@@ -35,7 +35,6 @@ export class AuthService{
             let loginfo: object = {email:username, password:password};
             let headers: Headers = new Headers({'content-type': 'application/json'});
             let options: RequestOptions = new RequestOptions({ headers: headers });
-            console.log(`${this.authUrl}/login`, loginfo, options);
             return this.http.post(`${this.authUrl}/login`, loginfo, options)
                 .map(res => res.json())
                 .do(res => {
@@ -49,8 +48,29 @@ export class AuthService{
                 .catch(this.handleError);
             
       }
+    
+    /**
+    * SignUp service
+    * @param userInputInfo 
+    */
+    signUp(userInputInfo): Observable<string> {
+        let signUpUserInfo: object = {username:userInputInfo.username, password:userInputInfo.password, 
+                               firstname: userInputInfo.firstname, lastname:userInputInfo.lastname,
+                               email: userInputInfo.emailAddr};
+        let headers: Headers = new Headers({'content-type': 'application/json'});
+        let options: RequestOptions = new RequestOptions({ headers: headers });
+        console.log(`${this.authUrl}/signup`, signUpUserInfo, options);
+        return this.http.post(`${this.authUrl}/signup`,signUpUserInfo, options)
+            .map(res => res.json())
+            .do(res => {
+                if(res.token) {
+                    console.log(res);
+                }
+            })
+            .catch(this.handleError);
+      }
 
-      private handleError(err){
+    private handleError(err){
           let errMessage: string;
           
           if (err instanceof Response){
@@ -62,5 +82,5 @@ export class AuthService{
               errMessage = err.message ? err.message : err.toString();
           }
           return Observable.throw(errMessage);
-      }
+    }
 }
