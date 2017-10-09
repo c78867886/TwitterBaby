@@ -44,7 +44,10 @@ input[type="text"],[type="password"]{
 }
 
 a{
+    margin-top: 30px;
     color: #fff;
+    font-size: 13px;
+    font-family: Arial;
 }
 
 h1{
@@ -55,3 +58,11 @@ h1{
     /* font-family: fantasy; */
     text-shadow:5px 5px 10px gray;
 }
+.btn {
+    width: 200px;
+    height: 35px;
+
+    color:#fff;
+    font-size: 18px;
+    background-color: rgb(117, 217, 245);
+  }

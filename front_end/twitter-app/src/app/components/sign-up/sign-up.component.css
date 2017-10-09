@@ -34,16 +34,6 @@ input[type="text"],[type="password"],[type="email"]{
     background-color: #fff;
     padding-left: 10px;    
 }
-.biography{
-    height: 60px;
-    width: 300px;
-    border-radius: 4px;
-    border: none;
-    font-size: 14px;
-    margin-bottom: 10px;
-    background-color: #fff;
-    padding-left: 10px;  
-}
 
 #First_Name{
   height: 30px;
@@ -75,9 +65,14 @@ input[type="text"],[type="password"],[type="email"]{
     padding-top: 5px;
 }
 
+
 a{
+    margin-top: 30px;
     color: #fff;
+    font-size: 13px;
+    font-family: Arial;
 }
+
 label{
   color: #fff;
   font-size: 13px;
@@ -88,11 +83,11 @@ label{
 .btn {
   width: 200px;
   height: 35px;
-  border-radius: 4px;
   color:#fff;
   font-size: 18px;
   background-color: rgb(117, 217, 245);
 }
+
 .error{
   color:rgb(221, 36, 36);
 }

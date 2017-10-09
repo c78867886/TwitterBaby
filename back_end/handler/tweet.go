@@ -19,6 +19,7 @@ import (
 //				 Return 404 Not Found if the user is not in the database.
 func (h *Handler) FetchTweets (c echo.Context) (err error) {
 	username := userNameFromToken(c)
+	username = c.Param("username")
 	/*
 	t := new(model.Tweet)
 	if err = c.Bind(t); err != nil {
@@ -44,7 +45,7 @@ func (h *Handler) FetchTweets (c echo.Context) (err error) {
 
 	// Retrieve tweets from database
 	tweets := []model.Tweet{}
-	err = db.DB("se_avengers").C("tweets").Find(bson.M{"owner": id}).Sort("timestamp").All(&tweets)
+	err = db.DB("se_avengers").C("tweets").Find(bson.M{"owner": id}).Sort("-timestamp").All(&tweets)
 
 	if err != nil {
 		if err == mgo.ErrNotFound {
@@ -145,6 +146,7 @@ func (h *Handler) DeleteTweet(c echo.Context) (err error) {
 
 func (h *Handler) FetchTweetTimeLine (c echo.Context) (err error) {
 	username := userNameFromToken(c)
+	username = c.Param("username")
 	
 	page, err := strconv.Atoi(c.QueryParam("page"))
 	perpage, err := strconv.Atoi(c.QueryParam("perpage"))
@@ -175,7 +177,7 @@ func (h *Handler) FetchTweetTimeLine (c echo.Context) (err error) {
 
 	// Retrieve tweets from database
 	tweets := []model.Tweet{}
-	err = db.DB("se_avengers").C("tweets").Find(bson.M{"owner": bson.M{"$in": timeLineUserList}}).Sort("timestamp").All(&tweets)
+	err = db.DB("se_avengers").C("tweets").Find(bson.M{"owner": bson.M{"$in": timeLineUserList}}).Sort("-timestamp").All(&tweets)
 	if err != nil {
 		if err == mgo.ErrNotFound {
 			return &echo.HTTPError{Code: http.StatusNotFound, Message: "Can not find any Tweet from this user."}

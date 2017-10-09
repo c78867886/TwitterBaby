@@ -1,10 +1,13 @@
 import { Injectable } from '@angular/core';
 import { Tweet } from '../models/tweet.model';
 import { Http, Response, Headers, RequestOptions } from '@angular/http';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { Observable } from 'rxjs/Rx';
 import 'rxjs/add/operator/toPromise';
 @Injectable()
 export class DataService {
   localhost = "http://localhost:1323";
+  private timelineSource = new BehaviorSubject<object>([]);
   constructor(private http: Http) { }
 
   // Create the header for http request
@@ -19,18 +22,19 @@ export class DataService {
   // Get the tweetlist. This method will be changed to return Observable
   getTweetList(id: string): Promise<object> {
     let options: RequestOptions = this.getHeader();
-    return this.http.get(this.localhost +`/api/v1/tweetlist/${id}?perpage=10&page=1`, options)
+    return this.http.get(this.localhost +`/api/v1/tweetlist/${id}?perpage=100&page=1`, options)
                       .toPromise()
                       .then((res: Response) => res.json())
                       .catch(this.handleError);
   }
   // Get the timeline of host.
-  getTweetListTimeLine(id: string): Promise<object> {
+  getTweetListTimeLine(id: string): Observable<object> {
     let options: RequestOptions = this.getHeader();
-    return this.http.get(this.localhost +`/api/v1/tweettimeline/${id}?perpage=10&page=1`, options)
+    this.http.get(this.localhost +`/api/v1/tweettimeline/${id}?perpage=200&page=1`, options)
                       .toPromise()
-                      .then((res: Response) => res.json())
+                      .then((res: Response) => this.timelineSource.next(res.json()))
                       .catch(this.handleError);
+    return this.timelineSource.asObservable();
   }
 
   getUserInfo(id: string): Promise<Object> {
@@ -73,9 +77,13 @@ export class DataService {
   postTweet(mongoid: string, content: string): Promise<Object>{
     let options: RequestOptions = this.getHeader();
     let message: object = {message: content};
+    //console.log(message);
     return this.http.post(`http://127.0.0.1:1323/api/v1/newTweet/${mongoid}`, message, options)
             .toPromise()
-            .then((res: Response) => res.json())
+            .then((res: Response) => {
+              this.getTweetListTimeLine(mongoid);
+              return res.json();
+            })
             .catch(this.handleError);
 
   }
