@@ -25,14 +25,11 @@ export class UserloginComponent implements OnInit {
    * Login a user
    */
   login(){
-    let tag = 'loginpwd';
     this.service.login(this.credentials.username, this.credentials.password)
         .subscribe(
           //if success
           data => {
-            console.log(data);
             console.log("Login success! Navigating to your home webpage");
-            //this._route.navigateByUrl("https://www.google.com/" );
             this._route.navigate(['/home']);
           },
           //if error
@@ -43,12 +40,6 @@ export class UserloginComponent implements OnInit {
 
         )
   }
-
-  // resetPassword(){
-  //   this.loginForm.setValue({
-  //     passwordForm: '';
-  //   })
-  // }
 
 }
 

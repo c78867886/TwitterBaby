@@ -1,0 +1,39 @@
+
+<h1>Sign Up Twitter Baby Today!</h1>
+<div class="container" >
+    <img src="assets/images/twitterround.png">
+    <form (ngSubmit)='signUp(form.value)' [formGroup]="form">
+        <label>User Name </label>
+        <div class="form-input">
+          <input type="text" name="username" placeholder="Enter Username" 
+           formControlName="username">
+        </div>
+        <div *ngIf="form.controls.username.errors?.pattern" class="error">Username has invalid characters!</div>
+        
+        <label>Email </label>
+        <div class="form-input">
+          <input type="email" name="email" placeholder="Enter Email" formControlName="emailAddr">
+        </div>
+        <div class="firstName">
+              <label for="First_Name">First Name &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Last Name</label><br>
+              <input name="first_name" id="First_Name" type="text" placeholder="First Name" 
+               formControlName="firstname"/>
+              <input name="last_name" id="Last_Name" type="text" placeholder="Last Name" formControlName="lastname"/> 
+        </div>
+        <div *ngIf="form.controls.firstname.errors?.pattern" class="error">First name has invalid characters!</div>
+        <div class="form-input">
+          <label>Password</label><br>
+          <input type="password" name="password" placeholder="Enter Password" flex layout-align="center center" 
+           formControlName="password">
+        </div>
+        <div *ngIf="form.controls.password.errors?.pattern" class="error">Password must be at least 6 characters and less than 16 characters</div>
+        <div class="form-group">
+          <button mat-raised-button type="submit" class="btn" [disabled]="!form.valid">Sign Up</button>
+        </div>
+
+        <a class = "loginlink" href="/login"><u>Have an account? Sign In</u></a>
+        <br>
+        <div *ngIf="successMessage" class="alert alert-success">{{successMessage}})</div>
+        <div *ngIf="errorMessage" class="alert alert-danger">{{errorMessage}}</div>
+    </form>
+</div>
