@@ -9,6 +9,7 @@ import { UserloginComponent } from './components/userlogin/userlogin.component';
 import { SignUpComponent } from './components/sign-up/sign-up.component';
 
 const appRoutes: Routes = [
+    { path: 'login', component: UserloginComponent},
     { path: 'home', component:  LoginComponent},
     { path: 'user/:id', component: UserPageComponent},
     { path: 'user/follower/:id', component: FollowerlistComponent},
