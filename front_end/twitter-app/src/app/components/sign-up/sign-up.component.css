@@ -3,7 +3,7 @@
     height: 500px;
     text-align: center;
     margin: 0 auto;
-    background-color: rgba(52, 94, 88, 0.6); 
+    background-color: rgba(194, 67, 102, 0.6); 
     border-radius: 8px;
     margin: 0 auto;
     margin-top: 60px;
@@ -14,7 +14,6 @@ h1{
     margin-top: 100px;
     margin-bottom: 0px;
     text-align: center;
-    /* font-family: fantasy; */
     text-shadow:5px 5px 10px gray;
 }
 .container img{
@@ -35,19 +34,9 @@ input[type="text"],[type="password"],[type="email"]{
     padding-left: 10px;    
 }
 
-#First_Name{
+#First_Name, #Last_Name{
   height: 30px;
-  width: 148px;
-  border-radius: 4px;
-  border: none;
-  font-size: 14px;
-  margin-bottom: 20px;
-  background-color: #fff;
-  padding-left: 10px;    
-}
-#Last_Name{
-  height: 30px;
-  width: 148px;
+  width: 145px;
   border-radius: 4px;
   border: none;
   font-size: 14px;
