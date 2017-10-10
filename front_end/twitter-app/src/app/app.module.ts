@@ -2,13 +2,10 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FormsModule } from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
-
 import { AppComponent } from './app.component';
-import { NavBarComponent } from './components/nav-bar/nav-bar.component';
-
 import { DataService } from './services/data.service';
-
 import { rooting } from './app.router';
 
 import { MatToolbarModule, 
@@ -32,6 +29,8 @@ import { FollowerlistComponent } from './components/followerlist/followerlist.co
 import { PageSplitComponent } from './components/page-split/page-split.component';
 import { UserloginComponent } from './components/userlogin/userlogin.component';
 import { AuthService } from './services/auth.service';
+import { SignUpComponent } from './components/sign-up/sign-up.component';
+import { NavBarComponent } from './components/nav-bar/nav-bar.component';
 
 @NgModule({
   declarations: [
@@ -45,7 +44,8 @@ import { AuthService } from './services/auth.service';
     FollowlistComponent,
     FollowerlistComponent,
     PageSplitComponent,
-    UserloginComponent
+    UserloginComponent,
+    SignUpComponent
   ],
   imports: [
     BrowserModule,
@@ -61,7 +61,8 @@ import { AuthService } from './services/auth.service';
     MatExpansionModule,
     MatProgressSpinnerModule,
     MatChipsModule,
-    rooting
+    rooting,
+    ReactiveFormsModule
   ],
   providers: [
     { provide: 'data', useClass: DataService},

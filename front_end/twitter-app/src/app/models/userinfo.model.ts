@@ -15,3 +15,11 @@ interface userinfo {
     lastname: string;
     username: string;
 }
+
+export interface signUpUserInfo{
+    username: string;
+    firstname: string;
+    lastname: string;
+    email: string;
+    passwd: string;
+}
