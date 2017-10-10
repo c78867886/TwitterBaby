@@ -8,12 +8,12 @@ import { FollowlistComponent } from './components/followlist/followlist.componen
 import { UserloginComponent } from './components/userlogin/userlogin.component';
 
 const appRoutes: Routes = [
+    { path: 'login', component: UserloginComponent},
     { path: 'home', component:  LoginComponent},
     { path: 'user/:id', component: UserPageComponent},
     { path: 'user/follower/:id', component: FollowerlistComponent},
     { path: 'user/following/:id', component: FollowlistComponent},
     { path: '**', redirectTo: '/home' },
-    { path:'login', component: UserloginComponent},
 ];
 
 export const rooting = RouterModule.forRoot(appRoutes);
