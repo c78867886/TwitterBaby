@@ -16,7 +16,7 @@ const appRoutes: Routes = [
     { path: 'user/following/:id', component: FollowlistComponent},
     { path: 'login', component: UserloginComponent},
     { path: 'signup', component: SignUpComponent},
-    { path: '**', redirectTo: '/login' },
+    { path: '**', redirectTo: '/home' },
 ];
 
 export const rooting = RouterModule.forRoot(appRoutes);
