@@ -10,7 +10,7 @@ body{
     height: 345px;
     text-align: center;
     margin: 0 auto;
-    background-color: rgba(52, 94, 88, 0.6); 
+    background-color: rgba(194, 67, 102, 0.7); 
     border-radius: 8px;
     margin: 0 auto;
     margin-top: 70px;
@@ -51,18 +51,17 @@ a{
 }
 
 h1{
-    color: #fff;
+    color:#C24366;
     margin-top: 100px;
     margin-bottom: 0px;
     text-align: center;
-    /* font-family: fantasy; */
     text-shadow:5px 5px 10px gray;
 }
+
 .btn {
     width: 200px;
     height: 35px;
     color:#fff;
     font-size: 18px;
-    background-color: rgb(117, 217, 245);
-    
+    background-color:rgb(168,224, 186); 
   }

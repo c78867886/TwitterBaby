@@ -1,16 +1,16 @@
  .container{
     width: 500px;
-    height: 500px;
+    height: 450px;
     text-align: center;
     margin: 0 auto;
-    background-color: rgba(194, 67, 102, 0.6); 
+    background-color: rgba(194, 67, 102, 0.7); 
     border-radius: 8px;
     margin: 0 auto;
     margin-top: 60px;
 
 }
 h1{
-    color: #fff;
+    color:#C24366;
     margin-top: 100px;
     margin-bottom: 0px;
     text-align: center;
@@ -74,7 +74,7 @@ label{
   height: 35px;
   color:#fff;
   font-size: 18px;
-  background-color: rgb(117, 217, 245);
+  background-color:rgb(168,224, 186); 
 }
 
 .error{
