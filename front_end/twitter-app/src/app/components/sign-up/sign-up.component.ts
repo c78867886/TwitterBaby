@@ -1,10 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Inject } from '@angular/core';
 import { DomSanitizer} from '@angular/platform-browser';
 import { MatIconRegistry} from '@angular/material';
 import { FormGroup, FormControl, Validators} from '@angular/forms';
 import { Observable } from 'rxjs/Observable';
 import { Http, Response, Headers, RequestOptions } from '@angular/http';
-import { AuthService } from '../../services/auth.service';
 import { rooting } from '../../app.router';
 import { ActivatedRoute, Router } from '@angular/router';
 import  'rxjs/add/operator/map';
@@ -24,7 +23,7 @@ export class SignUpComponent implements OnInit {
   errorMessage: string = '';
   form;
 
-  constructor(private service: AuthService,
+  constructor(@Inject('auth') private service,
               private _route: Router) { }
 
   ngOnInit() {

@@ -19,30 +19,46 @@ export class LoginComponent implements OnInit {
     @Inject('data') private data) { }
 
   ngOnInit() {
-    this.data.mockLogin()
-          .then(() => {
-            let userinfo = JSON.parse(localStorage.getItem("user_info_object"));
-            this.username = userinfo.username;
-            return this.username;
-          }).then((username) => {
+    // this.data.mockLogin()
+    //       .then(() => {
+    //         let userinfo = JSON.parse(localStorage.getItem("user_info_object"));
+    //         this.username = userinfo.username;
+    //         return this.username;
+    //       }).then((username) => {
             
-            this.data.getUserInfo(username)
-            .then(userinfo => 
-              {
-                this.userInfo = userinfo;
-              }
-            );
+    //         this.data.getUserInfo(username)
+    //         .then(userinfo => 
+    //           {
+    //             this.userInfo = userinfo;
+    //           }
+    //         );
 
-            this.subscriptionTweets = this.data.getTweetListTimeLine(username, 1)
-            .subscribe(list => 
-              {
-                this.list = list.tweetlist;
-                this.totalPage = list.totalpage;
-                //console.log(list);
-              }
-            );
-          });
-    
+    //         this.subscriptionTweets = this.data.getTweetListTimeLine(username, 1)
+    //         .subscribe(list => 
+    //           {
+    //             this.list = list.tweetlist;
+    //             this.totalPage = list.totalpage;
+    //             //console.log(list);
+    //           }
+    //         );
+    //       });
+      let userinfo = JSON.parse(localStorage.getItem("user_info_object"));
+      this.username = userinfo.username;
+      this.data.getUserInfo(this.username)
+      .then(userinfo => 
+        {
+          this.userInfo = userinfo;
+        }
+      );
+
+      this.subscriptionTweets = this.data.getTweetListTimeLine(this.username, 1)
+      .subscribe(list => 
+        {
+          this.list = list.tweetlist;
+          this.totalPage = list.totalpage;
+          //console.log(list);
+        }
+      );
     
   }
 
