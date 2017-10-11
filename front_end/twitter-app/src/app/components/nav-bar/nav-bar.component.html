@@ -1,10 +1,10 @@
-<mat-toolbar class="navbar">
+<mat-toolbar *ngIf="shouldBeShowed" class="navbar">
   <button mat-button routerLink="/home" class="brand">BabyTwitter</button>
   <span class="example-spacer"></span>
 
   <form class="form" (submit)="onSubmit()">
     <mat-form-field class="search">
-      <input name="search" matInput placeholder="Search a friend" class="input" [(ngModel)]='username'>
+      <input name="search" matInput placeholder="Search a friend" class="input" id="input" [(ngModel)]='username'>
     </mat-form-field>
     <button type='submit' [routerLink]="['/user', username]" style="display:none"></button>
   </form>

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Inject } from '@angular/core';
 import { AuthService } from '../../services/auth.service';
 import { rooting } from '../../app.router';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -14,7 +14,7 @@ export class UserloginComponent implements OnInit {
   successMessage: string = '';
   errorMessage: string = '';
 
-  constructor(private service: AuthService,
+  constructor(@Inject('auth') private service: AuthService,
               private _route: Router) { }
 
 
@@ -30,6 +30,7 @@ export class UserloginComponent implements OnInit {
           //if success
           data => {
             console.log("Login success! Navigating to your home webpage");
+            console.log(this.service.isLoggedIn());
             this._route.navigate(['/home']);
           },
           //if error

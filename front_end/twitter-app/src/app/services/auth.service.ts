@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Http, Response, Headers, RequestOptions } from '@angular/http';
+import { tokenNotExpired } from 'angular2-jwt';
 import { Observable } from 'rxjs/Observable';
 import  'rxjs/add/operator/map';
 import  'rxjs/add/operator/do';
@@ -23,8 +24,8 @@ export class AuthService{
      * Check if the user is logged in
      */
 
-     isLoggedIn(){
-         return this.loggedIn;
+     isLoggedIn(): boolean {
+         return tokenNotExpired('access_token');
      }
 
 

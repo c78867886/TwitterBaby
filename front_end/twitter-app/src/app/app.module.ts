@@ -6,6 +6,8 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import { AppComponent } from './app.component';
 import { DataService } from './services/data.service';
+import { AuthService } from './services/auth.service';
+import { AuthGuardService } from './services/auth-guard.service';
 import { rooting } from './app.router';
 
 import { MatToolbarModule, 
@@ -28,7 +30,6 @@ import { FollowlistComponent } from './components/followlist/followlist.componen
 import { FollowerlistComponent } from './components/followerlist/followerlist.component';
 import { PageSplitComponent } from './components/page-split/page-split.component';
 import { UserloginComponent } from './components/userlogin/userlogin.component';
-import { AuthService } from './services/auth.service';
 import { SignUpComponent } from './components/sign-up/sign-up.component';
 import { NavBarComponent } from './components/nav-bar/nav-bar.component';
 
@@ -65,8 +66,9 @@ import { NavBarComponent } from './components/nav-bar/nav-bar.component';
     ReactiveFormsModule
   ],
   providers: [
-    { provide: 'data', useClass: DataService},
-    AuthService
+    { provide: 'data', useClass: DataService },
+    { provide: 'auth', useClass: AuthService },
+    AuthGuardService,
   ],
   bootstrap: [AppComponent]
 })

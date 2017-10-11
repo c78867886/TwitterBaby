@@ -8,14 +8,22 @@ import { Component, OnInit, Inject } from '@angular/core';
 export class NavBarComponent implements OnInit {
   username: string = "";
   loginName: string = "";
-  constructor(@Inject('data') private data) { }
+  shouldBeShowed: boolean;
+  constructor(@Inject('data') private data, @Inject('auth') private auth) { }
 
   ngOnInit() {
-    let userinfo = JSON.parse(localStorage.getItem("user_info_object"));
-    this.loginName = userinfo.firstname + ' ' + userinfo.lastname;
+    if(this.auth.isLoggedIn()) {
+      this.shouldBeShowed = true;
+      let userinfo = JSON.parse(localStorage.getItem("user_info_object"));
+      this.loginName = userinfo.firstname + ' ' + userinfo.lastname;
+    } else {
+      this.shouldBeShowed = false;
+    }
   }
 
   onSubmit(): void {
     this.username = '';
+    var input = document.getElementById("input");
+    input.blur();
   }
 }
