@@ -15,6 +15,6 @@
   </button>
   <mat-menu #menu="matMenu">
     <button mat-menu-item><mat-icon>account_circle</mat-icon>Profile</button>
-    <button mat-menu-item><mat-icon>clear</mat-icon>Logout</button>
+    <button mat-menu-item (click)='logout()'><mat-icon>clear</mat-icon>Logout</button>
   </mat-menu>
 </mat-toolbar>

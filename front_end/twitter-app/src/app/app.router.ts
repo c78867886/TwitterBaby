@@ -8,14 +8,15 @@ import { FollowlistComponent } from './components/followlist/followlist.componen
 import { UserloginComponent } from './components/userlogin/userlogin.component';
 import { SignUpComponent } from './components/sign-up/sign-up.component';
 import { AuthGuardService } from './services/auth-guard.service';
+import { AuthGuardLoggedService } from './services/auth-guard-logged.service';
 
 const appRoutes: Routes = [
     { path: 'home', component:  LoginComponent, canActivate: [AuthGuardService]},
     { path: 'user/:id', component: UserPageComponent, canActivate: [AuthGuardService]},
     { path: 'user/follower/:id', component: FollowerlistComponent, canActivate: [AuthGuardService]},
     { path: 'user/following/:id', component: FollowlistComponent, canActivate: [AuthGuardService]},
-    { path: 'login', component: UserloginComponent},
-    { path: 'signup', component: SignUpComponent},
+    { path: 'login', component: UserloginComponent, canActivate: [AuthGuardLoggedService]},
+    { path: 'signup', component: SignUpComponent, canActivate: [AuthGuardLoggedService]},
     { path: '**', redirectTo: '/home' },
 ];
 

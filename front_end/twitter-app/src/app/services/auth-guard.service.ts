@@ -7,7 +7,7 @@ export class AuthGuardService {
   constructor(@Inject('auth') private auth, private router: Router) { }
 
   canActivate() {
-    if(this.auth.isLoggedIn()) {
+    if(this.auth.isLoggedInSimple()) {
       return true;
     } else {
       this.router.navigateByUrl('/login');

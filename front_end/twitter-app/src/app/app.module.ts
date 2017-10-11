@@ -8,6 +8,7 @@ import { AppComponent } from './app.component';
 import { DataService } from './services/data.service';
 import { AuthService } from './services/auth.service';
 import { AuthGuardService } from './services/auth-guard.service';
+import { AuthGuardLoggedService } from './services/auth-guard-logged.service';
 import { rooting } from './app.router';
 
 import { MatToolbarModule, 
@@ -68,7 +69,7 @@ import { NavBarComponent } from './components/nav-bar/nav-bar.component';
   providers: [
     { provide: 'data', useClass: DataService },
     { provide: 'auth', useClass: AuthService },
-    AuthGuardService,
+    AuthGuardService, AuthGuardLoggedService
   ],
   bootstrap: [AppComponent]
 })
