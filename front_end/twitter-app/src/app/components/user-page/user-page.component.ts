@@ -1,6 +1,6 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { Tweet } from '../../models/tweet.model';
-import { ActivatedRoute } from "@angular/router";
+import { ActivatedRoute, Router } from "@angular/router";
 @Component({
   selector: 'app-user-page',
   templateUrl: './user-page.component.html',
@@ -14,7 +14,8 @@ export class UserPageComponent implements OnInit {
   page: number;
   totalPage: number;
   constructor(private route: ActivatedRoute,
-  @Inject('data') private data) { }
+    private _route: Router,
+    @Inject('data') private data) { }
 
   ngOnInit() {
     this.route.params.subscribe(params => {
@@ -31,7 +32,7 @@ export class UserPageComponent implements OnInit {
       )
       .catch(err => {
         if(err.status === 404) {
-          console.log("404");
+          this._route.navigateByUrl('/404');
         }
       });;
 
