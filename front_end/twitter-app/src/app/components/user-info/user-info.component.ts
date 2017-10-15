@@ -22,7 +22,7 @@ export class UserInfoComponent implements OnInit {
       this.userInfo.followed = false;
       this.userInfo.followercount--;
     }
-      
+
   }
 
 }

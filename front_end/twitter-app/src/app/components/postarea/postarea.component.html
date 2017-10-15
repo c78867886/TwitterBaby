@@ -10,7 +10,10 @@
   <mat-form-field class="example-full-width">
     <textarea matInput placeholder="Create A Tweet" [(ngModel)]="content"></textarea>
   </mat-form-field>
-  <button mat-raised-button color="primary" class="submitbtn" (click)="postTweet()">
+  <button mat-raised-button *ngIf="content === ''" disabled color="primary" class="submitbtn" (click)="postTweet()">
+    Tweet!
+  </button>
+  <button mat-raised-button *ngIf="content !== ''" color="primary" class="submitbtn" (click)="postTweet()">
     Tweet!
   </button>
 </mat-expansion-panel>

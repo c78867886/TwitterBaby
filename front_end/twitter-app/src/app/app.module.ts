@@ -33,6 +33,7 @@ import { PageSplitComponent } from './components/page-split/page-split.component
 import { UserloginComponent } from './components/userlogin/userlogin.component';
 import { SignUpComponent } from './components/sign-up/sign-up.component';
 import { NavBarComponent } from './components/nav-bar/nav-bar.component';
+import { NotfoundComponent } from './components/notfound/notfound.component';
 
 @NgModule({
   declarations: [
@@ -47,7 +48,8 @@ import { NavBarComponent } from './components/nav-bar/nav-bar.component';
     FollowerlistComponent,
     PageSplitComponent,
     UserloginComponent,
-    SignUpComponent
+    SignUpComponent,
+    NotfoundComponent
   ],
   imports: [
     BrowserModule,
