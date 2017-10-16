@@ -12,8 +12,8 @@
     </p>
   </mat-card-content>
   <mat-chip-list>
-    <mat-chip [routerLink]="['/user/following/', userInfo.userinfo.id]">Following: {{userInfo.followingcount}}</mat-chip>
-    <mat-chip [routerLink]="['/user/follower/', userInfo.userinfo.id]">Followers: {{userInfo.followercount}}</mat-chip>
+    <mat-chip class='following' [routerLink]="['/user/following/', userInfo.userinfo.id]">Following: {{userInfo.followingcount}}</mat-chip>
+    <mat-chip class='follower' [routerLink]="['/user/follower/', userInfo.userinfo.id]">Followers: {{userInfo.followercount}}</mat-chip>
   </mat-chip-list>
   <mat-card-actions *ngIf="!isHost">
     <button mat-raised-button class="followbtn" color="accent" (click)="followFunc()">
