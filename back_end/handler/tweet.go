@@ -54,17 +54,13 @@ func (h *Handler) FetchTweets (c echo.Context) (err error) {
 		TweetList []model.Tweet `json:"tweetlist"`
 	}
 
-	if err != nil {
-		if err == mgo.ErrNotFound {
-			container.Page = "0"
-			container.TotalPage = "0"
-			container.TotalTweets = "0"
-			container.TweetList = []model.Tweet{}
-			
+	if len(tweets) == 0 {
+		container.Page = "0"
+		container.TotalPage = "0"
+		container.TotalTweets = "0"
+		container.TweetList = []model.Tweet{}
 		
-			return c.JSON(http.StatusOK, container)
-		}
-		return 
+		return c.JSON(http.StatusOK, container) 
 	}
 
 	totalTweets := len(tweets)
@@ -193,17 +189,13 @@ func (h *Handler) FetchTweetTimeLine (c echo.Context) (err error) {
 		TweetList []model.Tweet `json:"tweetlist"`
 	}
 
-	if err != nil {
-		if err == mgo.ErrNotFound {
-			container.Page = "0"
-			container.TotalPage = "0"
-			container.TotalTweets = "0"
-			container.TweetList = []model.Tweet{}
-			
+	if len(tweets) == 0 {
+		container.Page = "0"
+		container.TotalPage = "0"
+		container.TotalTweets = "0"
+		container.TweetList = []model.Tweet{}
 		
-			return c.JSON(http.StatusOK, container)
-		}
-		return 
+		return c.JSON(http.StatusOK, container) 
 	}
 
 	totalTweets := len(tweets)
