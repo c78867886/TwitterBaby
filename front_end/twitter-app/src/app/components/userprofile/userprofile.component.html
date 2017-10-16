@@ -1,25 +1,62 @@
-<h1>Welcome to Twitter Baby!</h1>
-  <div class="container" >
-      <img src="assets/images/twitterround.png">
-      <form (ngSubmit)='login()'>
-          <div class="form-input">
-            <input type="text" name="username" placeholder="Enter Email/Username" [(ngModel)]='credentials.username'>
-          </div>
-          <div class="form-input">
-            <input type="password" name="password" placeholder="Enter Password" flex layout-align="center center" 
-            [(ngModel)]='credentials.password'>
-          </div>
-          <div class="form-group">
-            <button mat-raised-button type="submit" class="btn">Log In</button>
-          </div>
-          <!-- <input type="submit" name="submit" value="Log In" class="btn-login"> -->
-          <a class = "loginlink" href="#"><u>Forgot Your Password?</u></a>
-          <br>
-          <a class = "loginlink" href="/signup"><u>No account? Please Sign Up!</u></a>
-          <div *ngIf="successMessage" class="alert alert-success">{{successMessage}})</div>
-          <div *ngIf="errorMessage" class="alert alert-danger">{{errorMessage}}</div>
-      </form>
+<app-nav-bar></app-nav-bar>
+<div class="container">
+  <!-- Banner -->
+  <div class="banner">
+      <div id="banner_img">
+          <img id="profileheadimg" src="assets/images/angrycat.jpg">
+      </div>  
   </div>
+  <div class="banner_menu">
+      <div >
+          <nav class="nav">
+            <ul>
+                  <!-- <li><img class="logo" src="assets/images/twitterLogo.png"></li> -->
+                  <li><a href="javascript:myFunction('You clicked!')" (click)=onGetTweets()>Tweets</a></li>
+                  <li><a href="" click=getfollowing()>Following</a></li>
+                  <li><a href="">Moments</a></li>
+            </ul>
+          </nav>
+      </div>
+      <div class="banner_button"> 
+          <button id="profileButton">Edit Profile</button>
+      </div>   
+  </div>
+
+  <!-- Left Box -->
+  <div class="leftBox">
+    <div class="userInfo">
+        <label>User Name</label><br>
+        <label>Joined Date</label>
+    </div>
+    <div class="cardBox">
+        <mat-card  class="tofollow-card">
+            <mat-card-header>
+              <img class="headpotrait" mat-card-avatar src="assets/images/fubao1.jpeg" >
+              <mat-card-title>Display Name here</mat-card-title>
+              <mat-card-subtitle>Brief Dio</mat-card-subtitle>
+            </mat-card-header>
+            <mat-card-actions class="action">
+              <button class="card_button" mat-raised-button>Follow</button>
+            </mat-card-actions>
+          </mat-card>
+          <mat-card  class="tofollow-card">
+              <mat-card-header>
+                <img class="headpotrait" mat-card-avatar src="assets/images/fubao1.jpeg" >
+                <mat-card-title>Display Name here</mat-card-title>
+                <mat-card-subtitle>Brief Dio</mat-card-subtitle>
+              </mat-card-header>
+              <mat-card-actions class="action">
+                <button class="card_button" mat-raised-button>Follow</button>
+              </mat-card-actions>
+            </mat-card>
+      </div>
+
+  </div>
+
+  <div class="displayBody">
+  </div>
+</div>
+
 
 
 
