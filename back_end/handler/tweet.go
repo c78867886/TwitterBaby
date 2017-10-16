@@ -47,9 +47,22 @@ func (h *Handler) FetchTweets (c echo.Context) (err error) {
 	tweets := []model.Tweet{}
 	err = db.DB("se_avengers").C("tweets").Find(bson.M{"owner": id}).Sort("-timestamp").All(&tweets)
 
+	var container struct {
+		Page	string	`json:"page"`
+		TotalPage	string	`json:"totalpage"`
+		TotalTweets	string	`json:"totaltweets"`
+		TweetList []model.Tweet `json:"tweetlist"`
+	}
+
 	if err != nil {
 		if err == mgo.ErrNotFound {
-			return &echo.HTTPError{Code: http.StatusNotFound, Message: "Can not find any Tweet from this user."}
+			container.Page = "0"
+			container.TotalPage = "0"
+			container.TotalTweets = "0"
+			container.TweetList = []model.Tweet{}
+			
+		
+			return c.JSON(http.StatusOK, container)
 		}
 		return 
 	}
@@ -69,12 +82,6 @@ func (h *Handler) FetchTweets (c echo.Context) (err error) {
 		tweetList[i].Owner = user.Username
 	}
 
-	var container struct {
-		Page	string	`json:"page"`
-		TotalPage	string	`json:"totalpage"`
-		TotalTweets	string	`json:"totaltweets"`
-		TweetList []model.Tweet `json:"tweetlist"`
-	}
 	container.Page = strconv.Itoa(page)
 	container.TotalPage = strconv.Itoa(totalPage)
 	container.TotalTweets = strconv.Itoa(totalTweets)
@@ -178,9 +185,23 @@ func (h *Handler) FetchTweetTimeLine (c echo.Context) (err error) {
 	// Retrieve tweets from database
 	tweets := []model.Tweet{}
 	err = db.DB("se_avengers").C("tweets").Find(bson.M{"owner": bson.M{"$in": timeLineUserList}}).Sort("-timestamp").All(&tweets)
+	
+	var container struct {
+		Page	string	`json:"page"`
+		TotalPage	string	`json:"totalpage"`
+		TotalTweets	string	`json:"totaltweets"`
+		TweetList []model.Tweet `json:"tweetlist"`
+	}
+
 	if err != nil {
 		if err == mgo.ErrNotFound {
-			return &echo.HTTPError{Code: http.StatusNotFound, Message: "Can not find any Tweet from this user."}
+			container.Page = "0"
+			container.TotalPage = "0"
+			container.TotalTweets = "0"
+			container.TweetList = []model.Tweet{}
+			
+		
+			return c.JSON(http.StatusOK, container)
 		}
 		return 
 	}
@@ -200,12 +221,6 @@ func (h *Handler) FetchTweetTimeLine (c echo.Context) (err error) {
 		tweetList[i].Owner = mapIDandUsername[tweetList[i].Owner]
 	}
 
-	var container struct {
-		Page	string	`json:"page"`
-		TotalPage	string	`json:"totalpage"`
-		TotalTweets	string	`json:"totaltweets"`
-		TweetList []model.Tweet `json:"tweetlist"`
-	}
 	container.Page = strconv.Itoa(page)
 	container.TotalPage = strconv.Itoa(totalPage)
 	container.TotalTweets = strconv.Itoa(totalTweets)
