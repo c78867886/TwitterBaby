@@ -1,67 +1,131 @@
-body{
-    margin: 0 auto;
-    /* background-color: #009688; */
-    background-size: 100%;
-
-}
-
 .container{
-    width: 450px;
-    height: 345px;
-    text-align: center;
-    margin: 0 auto;
-    background-color: rgba(52, 94, 88, 0.7); 
-    border-radius: 8px;
-    margin: 0 auto;
-    margin-top: 70px;
+    width:70%;
+    height: 100%;
+    margin: auto;
+    font: 15px/1.5 Arial, Helvetica, sans-serif;
+    background-color: rgb(235, 231, 231);
 }
 
-.container img{
-    width: 120px;
-    height: 129px;
-    margin-top: -60px;
-    margin-bottom: 30px;
+/* Banner--------------- */
+.banner{
+    height: 160px;
+    background-color: rgba(0,173,167,0.6);
+}
+    .banner_headimg{
+        height: 190px;
+        width: 190px;
+        position: relative;
+        display: inline-block;
+    }
+    .banner_menu{
+        height:30px;
+        margin-left: 300px;
+    }
+    .banner_button{
+        margin-right: 5px; 
+       float: right;
+    }
+    #profileheadimg{
+        height: 180px;
+        width: 180px;
+        border-radius: 50%;   
+        background-color: white;
+        position: relative;
+        margin: auto;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        padding: 6px;  
+    }
+    .logo{
+        height: 30px;
+        width: 30px;
+    }
+    nav a{
+        color: #00ADA7;
+        text-decoration:none;
+        text-transform: uppercase;
+        font-size:12px;
+    }
+    nav a:hover{
+        font-weight: bold;
+        text-decoration: underline;
+    }
+    nav ul{
+        margin:0;
+        padding: 0;
+    }
+    nav li{
+        float: left;
+        display: inline;
+        padding: 0 20px 0 20px;
+    }
+    #profileButton{
+        margin-top:-5px;
+        margin-right: 10px;
+        height: 30px;
+        width: 80px;
+        border-radius: 15px;
+        background-color:white;
+        font-family: Arial, Helvetica, sans-serif;
+        color:#00ADA7;
+        border-color: #00ADA7;
+    }
+    .banner_button :hover{
+        font-weight: bold;
+        background-color: rgba(247, 247, 169, 0.856);   
+    }
+
+
+/* Left box--------------- */
+.leftBox{
+    height: 500px;
+    width: 38%;
+    border: solid;
+    border-color: rgba(0,173,167,0.6);
+    float: left;
+}
+    .userInfo{
+        width: 90%;
+        height: 70px;
+        border: solid;
+        border-color: rgba(0,173,167,0.6);
+        padding: 5px;
+    }
+    .cardBox{
+        width: 100%;
+    }
+    .tofollow-card{
+        width: 83%;
+        height: 100px;
+        border: solid;
+        border-color: rgba(0,173,167,0.6);
+    }
+    .headpotrait{
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        
+    }
+    .card_button{
+        width: 40px;
+        height: 30px;
+        text-align: center;
+    }
+
+/* Display Body--------------- */
+.displayBody{
+   width: 60%;
+   height: 500px;
+   float: right;
+   /* float: right; */
+   border: solid;
+   border-color: rgba(0,173,167,0.6);
 }
 
-input[type="text"],[type="password"]{
-    height: 40px;
-    width: 300px;
-    border-radius: 4px;
-    border: none;
-    font-size: 16px;
-    margin-bottom: 20px;
-    background-color: #fff;
-    padding-left: 10px;    
-}
 
-.form-input::before{    
-    position: absolute;
-    font-family: "FontAwesome";
-    color: #9B59B6;
-    font-size: 30px;
-    padding-left: 5px;
-    padding-top: 5px;
-}
 
-a{
-    margin-top: 30px;
-    color: #fff;
-    font-size: 13px;
-    font-family: Arial;
-}
 
-h1{
-    color: rgb(47, 137, 179);
-    margin-top: 100px;
-    margin-bottom: 0px;
-    text-align: center;
-    text-shadow:5px 5px 10px rgb(132, 160, 177);
-}
 
-.btn {
-    width: 200px;
-    height: 35px;
-    color:#fff;
-    font-size: 18px;
-    background-color:rgb(168,224, 186); 
-  }
+
