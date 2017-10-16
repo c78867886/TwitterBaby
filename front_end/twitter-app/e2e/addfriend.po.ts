@@ -16,4 +16,17 @@ export class FriendshipPage {
   getUserFollowing() {
     return element(by.css('.following'));
   }
+
+  getFriendCol() {
+    return element(by.css('mat-card'));
+  }
+
+  getNavRightButton() {
+    return element(by.css('.navRightButton'));
+  }
+
+  getLogoutButton() {
+    return element(by.css('.logoutBtn'));
+  }
+
 }

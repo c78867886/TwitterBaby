@@ -1,8 +1,9 @@
 import { LoginPage } from './login.po';
 
-describe('twitter-app login', () => {
+describe('twitter-app Login', () => {
   let page: LoginPage;
-  let username: string = "test5";
+  let username: string = "test11" + Math.floor(Math.random() * 101);
+
   beforeEach(() => {
     page = new LoginPage();
   });

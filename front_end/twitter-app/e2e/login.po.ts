@@ -5,14 +5,14 @@ export class LoginPage {
   sleep() {
     browser.sleep(3000);
   }
-
+  
   // Navigate
   navigateToLogin() { 
     return browser.get('/login');
   }
 
   navigateToSign() {
-    browser.driver.manage().window().setSize(1280, 1024);
+    //browser.driver.manage().window().setSize(1280, 1024);
     return browser.get('/signup');
   }
 
