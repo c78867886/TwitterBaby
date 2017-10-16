@@ -21,34 +21,37 @@ export class SignUpComponent implements OnInit {
 
   successMessage: string = '';
   errorMessage: string = '';
-  form;
+  form: FormGroup;
 
   constructor(@Inject('auth') private service,
-              private _route: Router) { }
+              private _route: Router,
+            ) { 
+              this.form = new FormGroup({
+                username: new FormControl('',Validators.compose([
+                  Validators.required,
+                  Validators.pattern('[\\w\\-\\s\\/]+$'),
+                ])),
+                firstname: new FormControl('',Validators.compose([
+                  Validators.required,
+                  Validators.pattern('[\\w\\-\\s\\/]+$'),
+                ])),
+                lastname: new FormControl(''),
+                password: new FormControl('', Validators.compose([
+                  Validators.required,
+                  Validators.minLength(6),
+                  Validators.maxLength(16),
+                  ,
+                ])),
+                emailAddr: new FormControl('', Validators.required),
+              });
+            }
 
   ngOnInit() {
     /**
      * Form control
      * handle with the username, password, first name's validations. 
      */
-    this.form = new FormGroup({
-      username: new FormControl('',Validators.compose([
-        Validators.required,
-        Validators.pattern('[\\w\\-\\s\\/]+$'),
-      ])),
-      firstname: new FormControl('',Validators.compose([
-        Validators.required,
-        Validators.pattern('[\\w\\-\\s\\/]+$'),
-      ])),
-      lastname: new FormControl(''),
-      password: new FormControl('', Validators.compose([
-        Validators.required,
-        Validators.minLength(6),
-        Validators.maxLength(16),
-        ,
-      ])),
-      emailAddr: new FormControl('',Validators.required),
-    });
+   
   }
 
   /**

@@ -31,6 +31,7 @@ export class UserloginComponent implements OnInit {
           data => {
             console.log("Login success! Navigating to your home webpage");
             console.log(this.service.isLoggedIn());
+            this.successMessage = "Login Successfully";
             this._route.navigate(['/home']);
           },
           //if error
