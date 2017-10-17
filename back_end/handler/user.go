@@ -35,13 +35,13 @@ func (h *Handler) Signup(c echo.Context) (err error) {
 	}
 
 	varify := &model.User{}
-	err = db.DB("se_avengers").C("users").Find(bson.M{"$or": []bson.M{bson.M{"username": u.Username}, bson.M{"email": u.Email}}}).One(varify)
+	err = db.DB(h.DBName).C("users").Find(bson.M{"$or": []bson.M{bson.M{"username": u.Username}, bson.M{"email": u.Email}}}).One(varify)
 	if err == nil {
 		return &echo.HTTPError{Code: http.StatusBadRequest, Message: "Username or email already used."}
 	}
 
 	// Save user
-	err = db.DB("se_avengers").C("users").Insert(u);
+	err = db.DB(h.DBName).C("users").Insert(u);
 	if err != nil {
 		return
 	}
@@ -68,7 +68,7 @@ func (h *Handler) Login(c echo.Context) (err error) {
 	db := h.DB.Clone()
 	defer db.Close()
 
-	err = db.DB("se_avengers").C("users").Find(bson.M{"email": u.Email, "password": u.Password}).One(u)
+	err = db.DB(h.DBName).C("users").Find(bson.M{"email": u.Email, "password": u.Password}).One(u)
 	if err != nil {
 		if err == mgo.ErrNotFound {
 			return &echo.HTTPError{Code: http.StatusUnauthorized, Message: "Invalid email or password."}
@@ -83,9 +83,8 @@ func (h *Handler) Login(c echo.Context) (err error) {
 
 	// Set claims
 	claims := token.Claims.(jwt.MapClaims)
-	claims["id"] = u.ID
-	claims["exp"] = time.Now().Add(time.Hour * 72).Unix()
 	claims["username"] = u.Username
+	claims["exp"] = time.Now().Add(time.Hour * 72).Unix()
 
 	// Generate encoded token and send it as response
 	u.Token, err = token.SignedString([]byte(Key))
@@ -101,23 +100,19 @@ func (h *Handler) Login(c echo.Context) (err error) {
 
 // FetchUserInfo : Return user info for a specific user, and whether it is followed by the current user.
 //				   # Response does not include the full list of followers and following, only the counts.
-//				   URL: "/api/v1/userInfo/:id", "/api/v1/userInfo?username=:username"
+//				   URL: "/api/v1/userInfo/:username"
 //				   Method: GET
 //				   Return 200 OK on success.
 //				   Return 404 Not Found if the user is not in the database.
 func (h *Handler) FetchUserInfo (c echo.Context) (err error) {
-	selfID := userIDFromToken(c)
+	selfUsername := usernameFromToken(c)
 
 	db := h.DB.Clone()
 	defer db.Close()
 
 	// Retrieve user info from database
 	user := model.User{}
-	if c.Path() == "/api/v1/userInfo/:id" {
-		err = db.DB("se_avengers").C("users").FindId(bson.ObjectIdHex(c.Param("id"))).One(&user)
-	} else {
-		err = db.DB("se_avengers").C("users").Find(bson.M{"username": c.QueryParam("username")}).One(&user)
-	}
+	err = db.DB(h.DBName).C("users").Find(bson.M{"username": c.Param("username")}).One(&user)
 	if err != nil {
 		if err == mgo.ErrNotFound {
 			return &echo.HTTPError{Code: http.StatusNotFound, Message: "User does not exist."}
@@ -140,7 +135,7 @@ func (h *Handler) FetchUserInfo (c echo.Context) (err error) {
 
 	container.Followed = false
 	for i := range user.Followers {
-		if user.Followers[i] == selfID {
+		if user.Followers[i] == selfUsername {
 			container.Followed = true
 			break
 		}
@@ -153,51 +148,52 @@ func (h *Handler) FetchUserInfo (c echo.Context) (err error) {
 }
 
 // Follow : Add a specific user ID to the current user's following set, and add current user to that user's follower list.
-//			URL: "/api/v1/follow/:id"
+//			URL: "/api/v1/follow/:username"
 //			Method: POST
 //			Return 200 OK on success, along with the user's following list.
-//			Return 404 Not Found if the user is not in the database.
+//			Return 404 Not Found if the followee is not in the database.
 func (h *Handler) Follow(c echo.Context) (err error) {
-	userID := userIDFromToken(c)
-	id := c.Param("id")
+	username := usernameFromToken(c)
+	followee := c.Param("username")
 
 	db := h.DB.Clone()
 	defer db.Close()
 
-	// Add id to self following list
-	err = db.DB("se_avengers").C("users").UpdateId(bson.ObjectIdHex(userID), bson.M{"$addToSet": bson.M{"following": id}})
+	// Add self to followee's follower list
+	err = db.DB(h.DBName).C("users").Update(bson.M{"username": followee}, bson.M{"$addToSet": bson.M{"followers": username}})
 	if err != nil {
 		if err == mgo.ErrNotFound {
 			return &echo.HTTPError{Code: http.StatusNotFound, Message: "User does not exist."}
 		}
+		return
 	}
 
-	// Add self to id's follower list
-	err = db.DB("se_avengers").C("users").UpdateId(bson.ObjectIdHex(id), bson.M{"$addToSet": bson.M{"followers": userID}})
+	// Add followee to self following list
+	err = db.DB(h.DBName).C("users").Update(bson.M{"username": username}, bson.M{"$addToSet": bson.M{"following": followee}})
 	if err != nil {
 		return
 	}
 	
 	user := model.User{}
-	err = db.DB("se_avengers").C("users").FindId(bson.ObjectIdHex(userID)).One(&user)
+	err = db.DB(h.DBName).C("users").Find(bson.M{"username": username}).One(&user)
 
 	return c.JSON(http.StatusOK, user.Following)
 }
 
 // ShowFollower : Return the follower list for a specific user, along with some followers info.
-//				  URL: "/api/v1/showFollower/:id"
+//				  URL: "/api/v1/showFollower/:username"
 //				  Method: GET
 //				  Return 200 OK on success.
 //				  Return 404 Not Found if the user is not in the database.
 func (h *Handler) ShowFollower(c echo.Context) (err error) {
-	userID := c.Param("id")
+	username := c.Param("username")
 
 	db := h.DB.Clone()
 	defer db.Close()
 
 	// Retrieve user info from database
 	user := model.User{}
-	err = db.DB("se_avengers").C("users").FindId(bson.ObjectIdHex(userID)).One(&user)
+	err = db.DB(h.DBName).C("users").Find(bson.M{"username": username}).One(&user)
 	if err != nil {
 		if err == mgo.ErrNotFound {
 			return &echo.HTTPError{Code: http.StatusNotFound, Message: "User does not exist."}
@@ -206,7 +202,6 @@ func (h *Handler) ShowFollower(c echo.Context) (err error) {
 	}
 
 	type followerData struct {
-		ID			bson.ObjectId	`json:"id" bson:"_id"`
 		Username	string			`json:"username" bson:"username"`
 		FirstName	string			`json:"firstname" bson:"firstname"`
 		LastName	string			`json:"lastname,omitempty" bson:"lastname,omitempty"`
@@ -216,7 +211,7 @@ func (h *Handler) ShowFollower(c echo.Context) (err error) {
 
 	for _, f := range user.Followers {
 		follower := followerData{}
-		err = db.DB("se_avengers").C("users").FindId(bson.ObjectIdHex(f)).One(&follower)
+		err = db.DB(h.DBName).C("users").Find(bson.M{"username": f}).One(&follower)
 		if err != nil {
 			return
 		}
@@ -227,19 +222,19 @@ func (h *Handler) ShowFollower(c echo.Context) (err error) {
 }
 
 // ShowFollowing : Return the following list for a specific user, along with some followings info.
-//				   URL: "/api/v1/showFollowing/:id"
+//				   URL: "/api/v1/showFollowing/:username"
 //				   Method: GET
 //				   Return 200 OK on success.
 //				   Return 404 Not Found if the user is not in the database.
 func (h *Handler) ShowFollowing(c echo.Context) (err error) {
-	userID := c.Param("id")
+	username := c.Param("username")
 	
 	db := h.DB.Clone()
 	defer db.Close()
 
 	// Retrieve user info from database
 	user := model.User{}
-	err = db.DB("se_avengers").C("users").FindId(bson.ObjectIdHex(userID)).One(&user)
+	err = db.DB(h.DBName).C("users").Find(bson.M{"username": username}).One(&user)
 	if err != nil {
 		if err == mgo.ErrNotFound {
 			return &echo.HTTPError{Code: http.StatusNotFound, Message: "User does not exist."}
@@ -248,7 +243,6 @@ func (h *Handler) ShowFollowing(c echo.Context) (err error) {
 	}
 
 	type followingData struct {
-		ID			bson.ObjectId	`json:"id" bson:"_id"`
 		Username	string			`json:"username" bson:"username"`
 		FirstName	string			`json:"firstname" bson:"firstname"`
 		LastName	string			`json:"lastname,omitempty" bson:"lastname,omitempty"`
@@ -258,7 +252,7 @@ func (h *Handler) ShowFollowing(c echo.Context) (err error) {
 
 	for _, f := range user.Following {
 		following := followingData{}
-		err = db.DB("se_avengers").C("users").FindId(bson.ObjectIdHex(f)).One(&following)
+		err = db.DB(h.DBName).C("users").Find(bson.M{"username": f}).One(&following)
 		if err != nil {
 			return
 		}
@@ -268,15 +262,8 @@ func (h *Handler) ShowFollowing(c echo.Context) (err error) {
 	return c.JSON(http.StatusOK, &container)
 }
 
-
-
-
-
-
-
-
 func (h *Handler) UpdateUserInfo (c echo.Context) (err error) {
-	userID := userIDFromToken(c)
+	username := usernameFromToken(c)
 
 	user := model.User{}
 	if err = c.Bind(user); err != nil {
@@ -290,7 +277,7 @@ func (h *Handler) UpdateUserInfo (c echo.Context) (err error) {
 	db := h.DB.Clone()
 	defer db.Close()
 
-	err = db.DB("twitter").C("users").UpdateId(bson.ObjectIdHex(userID), bson.M{"followers": userID})
+	err = db.DB("se_avengers").C("users").Update(bson.M{"username": username}, bson.M{"followers": username})
 	if err != nil {
 		if err == mgo.ErrNotFound {
 			return &echo.HTTPError{Code: http.StatusNotFound, Message: "User does not exist."}
@@ -304,9 +291,9 @@ func (h *Handler) UpdateUserInfo (c echo.Context) (err error) {
 	return c.NoContent(http.StatusNotImplemented)
 }
 
-func userIDFromToken(c echo.Context) string {
+func usernameFromToken(c echo.Context) string {
 	user := c.Get("user").(*jwt.Token)
 	claims := user.Claims.(jwt.MapClaims)
 
-	return claims["id"].(string)
+	return claims["username"].(string)
 }
