@@ -4,7 +4,7 @@ import "gopkg.in/mgo.v2/bson"
 
 // User : Data structure that holds a single user.
 type User struct {
-	ID        	bson.ObjectId 	`json:"id" bson:"_id"`
+	ID        	bson.ObjectId 	`json:"-" bson:"_id"`
 	Username	string			`json:"username" bson:"username"`						// unique
 	FirstName 	string			`json:"firstname" bson:"firstname"`
 	LastName	string			`json:"lastname,omitempty" bson:"lastname,omitempty"`

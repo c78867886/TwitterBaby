@@ -1,4 +1,4 @@
-package main
+package server
 
 import (
 	"fmt"
@@ -207,4 +207,34 @@ func dbFind(db *mgo.Session) {
 	fmt.Println(result.ID)
 
 	db.Close()
+}
+
+func reconstructTestDB() {
+	session, err := mgo.Dial("mongodb://SEavenger:SEavenger@ds121225.mlab.com:21225/se_avengers_test")
+	if err != nil {
+		panic(err)
+	}
+	defer session.Close()
+
+	err = session.DB("se_avengers_test").DropDatabase()
+	if err != nil {
+		panic(err)
+	}
+
+	userC := session.DB("se_avengers_test").C("users")
+
+	users := []model.User {
+		model.User{ID: bson.NewObjectId(), Username: "testSignup", FirstName: "test", LastName: "signup", Password: "test", Email: "testSignup@gmail.com", Followers: []string{}, Following: []string{}, 
+			Bio: "testtest", Token: ""},
+		model.User{ID: bson.NewObjectId(), Username: "testLogin", FirstName: "testLogin", Password: "test", Email: "testLogin@gmail.com", Followers: []string{}, Following: []string{}},
+		model.User{ID: bson.NewObjectId(), Username: "testUserInfo_1", FirstName: "testUserInfo_1", Password: "test", Email: "testUserInfo_1@gmail.com", Followers: []string{}, Following: []string{"testUserInfo_2"}},
+		model.User{ID: bson.NewObjectId(), Username: "testUserInfo_2", FirstName: "testUserInfo_2", Password: "test", Email: "testUserInfo_2@gmail.com", Followers: []string{"testUserInfo_1"}, Following: []string{}},
+	}
+
+	for _, u:= range users {
+		err := userC.Insert(u)
+		if err != nil {
+			panic(err)
+		}
+	}
 }
