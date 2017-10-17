@@ -77,7 +77,7 @@ func TestNewTweet (t *testing.T) {
 	}
 
 	expectedJSON := []string {
-		"{\"id\":\"\",\"owner\":\"59d24577311bc337bfec6cf9\",\"message\":\"BBBBBBBBQ\"",
+		"{\"owner\":\"59d24577311bc337bfec6cf9\",\"message\":\"BBBBBBBBQ\"}",
 	}
 	
 	// Run
@@ -96,7 +96,7 @@ func TestNewTweet (t *testing.T) {
 		// Assertion
 		if assert.NoError(t, h.NewTweet(c)) {
 			assert.Equal(t, http.StatusOK, rec.Code)
-			assert.Equal(t, expectedJSON[i], rec.Body.String()[:len(rec.Body.String())-51])
+			assert.Equal(t, expectedJSON[i], rec.Body.String())
 		}
 	}
 }

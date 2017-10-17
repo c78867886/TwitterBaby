@@ -67,10 +67,14 @@ func (h *Handler) FetchTweets (c echo.Context) (err error) {
 	totalPage := int(math.Ceil(float64(totalTweets)/float64(perpage)))
 
 	var tweetList [] model.Tweet
-	if page == totalPage{
-		tweetList = tweets[perpage*(page-1):]
+	if page > totalPage{
+		tweetList = []model.Tweet{}
 	}else{
-		tweetList = tweets[perpage*(page-1):perpage*page]
+		if page == totalPage{
+			tweetList = tweets[perpage*(page-1):]
+		}else{
+			tweetList = tweets[perpage*(page-1):perpage*page]
+		}
 	}
 
 	// Change id to username
@@ -118,8 +122,14 @@ func (h *Handler) NewTweet(c echo.Context) (err error) {
 	}
 
 	tweet.ID = ""
+	var container struct {
+		Owner	string	`json:"owner"`
+		Message	string	`json:"message"`
+	}
+	container.Owner = tweet.Owner
+	container.Message = tweet.Message
 
-	return c.JSON(http.StatusOK, tweet)
+	return c.JSON(http.StatusOK, container)
 }
 
 // DeleteTweet : Delete a specific tweet.
@@ -204,10 +214,14 @@ func (h *Handler) FetchTweetTimeLine (c echo.Context) (err error) {
 	totalPage := int(math.Ceil(float64(totalTweets)/float64(perpage)))
 
 	var tweetList [] model.Tweet
-	if page == totalPage{
-		tweetList = tweets[perpage*(page-1):]
+	if page > totalPage{
+		tweetList = []model.Tweet{}
 	}else{
-		tweetList = tweets[perpage*(page-1):perpage*page]
+		if page == totalPage{
+			tweetList = tweets[perpage*(page-1):]
+		}else{
+			tweetList = tweets[perpage*(page-1):perpage*page]
+		}
 	}
 
 	// Change id to username
