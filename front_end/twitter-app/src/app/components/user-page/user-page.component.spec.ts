@@ -22,7 +22,9 @@ import { MatToolbarModule,
 describe('UserPageComponent', () => {
   let component: UserPageComponent;
   let fixture: ComponentFixture<UserPageComponent>;
-
+  let spy1: jasmine.Spy;
+  let spy2: jasmine.Spy;
+  let dataService: DataService;
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [ UserPageComponent, UserInfoComponent, TweetlistComponent, PageSplitComponent ],
@@ -49,6 +51,12 @@ describe('UserPageComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(UserPageComponent);
     component = fixture.componentInstance;
+    dataService = fixture.debugElement.injector.get('data');
+    spy1 = spyOn(dataService, 'getUserInfo')
+    .and.returnValue(Promise.resolve('test'));
+  
+    spy2 = spyOn(dataService, 'getTweetList')
+    .and.returnValue(Promise.resolve([]));
     fixture.detectChanges();
   });
 

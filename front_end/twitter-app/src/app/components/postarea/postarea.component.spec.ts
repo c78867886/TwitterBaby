@@ -5,6 +5,8 @@ import { HttpModule } from '@angular/http';
 import { FormsModule } from '@angular/forms';
 import { RouterTestingModule } from '@angular/router/testing';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { DebugElement }    from '@angular/core';
+import { By }              from '@angular/platform-browser';
 import { MatToolbarModule, 
   MatInputModule, 
   MatMenuModule, 
@@ -19,7 +21,8 @@ import { MatToolbarModule,
 describe('PostareaComponent', () => {
   let component: PostareaComponent;
   let fixture: ComponentFixture<PostareaComponent>;
-
+  let de: DebugElement;
+  let el: HTMLElement;
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
@@ -47,9 +50,15 @@ describe('PostareaComponent', () => {
     fixture = TestBed.createComponent(PostareaComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
+    // de = fixture.debugElement.query(By.css('.disBtn'));
+    // el = de.nativeElement;
   });
 
   it('should be created', () => {
     expect(component).toBeTruthy();
+    // expect(el).toBeTruthy();
+    // component.content = 'test';
+    // fixture.detectChanges();
+    // expect(el).toBeNull();
   });
 });
