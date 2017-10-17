@@ -1,11 +1,11 @@
 package server
 
 import (
-	"fmt"
+	"model"
+	"handler"
 	"time"
 	"gopkg.in/mgo.v2/bson"
 	"gopkg.in/mgo.v2"
-	"model"
 )
 
 func dbDrop(db *mgo.Session) {
@@ -194,41 +194,37 @@ func dbReinsert(db *mgo.Session) {
 	db.Close()
 }
 
-func dbFind(db *mgo.Session) {
-	collect := db.DB("se_avengers").C("tweets")
-
-	from := "JasonHo"
-	var result model.User
-	err := collect.Find(bson.M{"from": from}).One(&result)
-	if err != nil {
-		panic(err)
-	}
-
-	fmt.Println(result.ID)
-
-	db.Close()
-}
-
 func reconstructTestDB() {
-	session, err := mgo.Dial("mongodb://SEavenger:SEavenger@ds121225.mlab.com:21225/se_avengers_test")
-	if err != nil {
-		panic(err)
-	}
-	defer session.Close()
+	h := handler.NewHandler("mongodb://SEavenger:SEavenger@ds121225.mlab.com:21225/se_avengers_test")
 
-	err = session.DB("se_avengers_test").DropDatabase()
+	err := h.DB.DB(h.DBName).DropDatabase()
 	if err != nil {
 		panic(err)
 	}
 
-	userC := session.DB("se_avengers_test").C("users")
+	userC := h.DB.DB(h.DBName).C("users")
 
 	users := []model.User {
 		model.User{ID: bson.NewObjectId(), Username: "testSignup", FirstName: "test", LastName: "signup", Password: "test", Email: "testSignup@gmail.com", Followers: []string{}, Following: []string{}, 
 			Bio: "testtest", Token: ""},
+		model.User{ID: bson.NewObjectId(), Username: "testSignup_dup", FirstName: "test", LastName: "signup_dup", Password: "test", Email: "testSignup_dup@gmail.com", Followers: []string{}, Following: []string{}, 
+			Bio: "testtest", Token: ""},
 		model.User{ID: bson.NewObjectId(), Username: "testLogin", FirstName: "testLogin", Password: "test", Email: "testLogin@gmail.com", Followers: []string{}, Following: []string{}},
 		model.User{ID: bson.NewObjectId(), Username: "testUserInfo_1", FirstName: "testUserInfo_1", Password: "test", Email: "testUserInfo_1@gmail.com", Followers: []string{}, Following: []string{"testUserInfo_2"}},
 		model.User{ID: bson.NewObjectId(), Username: "testUserInfo_2", FirstName: "testUserInfo_2", Password: "test", Email: "testUserInfo_2@gmail.com", Followers: []string{"testUserInfo_1"}, Following: []string{}},
+		model.User{ID: bson.NewObjectId(), Username: "testShowFollower_1", FirstName: "testShowFollower_1", Password: "test", Email: "testShowFollower_1@gmail.com", Followers: []string{}, Following: []string{}},
+		model.User{ID: bson.NewObjectId(), Username: "testShowFollower_2", FirstName: "test", LastName: "ShowFollower_2", Password: "test", Email: "testShowFollower_2@gmail.com",
+			Followers: []string{"testShowFollower_1", "testShowFollower_3"}, Following: []string{}, Bio: "testtest"},
+		model.User{ID: bson.NewObjectId(), Username: "testShowFollower_3", FirstName: "testShowFollower_3", Password: "test", Email: "testShowFollower_3@gmail.com",
+			Followers: []string{"testShowFollower_2"}, Following: []string{}},
+		model.User{ID: bson.NewObjectId(), Username: "testShowFollowing_1", FirstName: "testShowFollowing_1", Password: "test", Email: "testShowFollowing_1@gmail.com", Followers: []string{}, Following: []string{}},
+		model.User{ID: bson.NewObjectId(), Username: "testShowFollowing_2", FirstName: "test", LastName: "ShowFollowing_2", Password: "test", Email: "testShowFollowing_2@gmail.com",
+			Followers: []string{}, Following: []string{"testShowFollowing_1", "testShowFollowing_3"}, Bio: "testtest"},
+		model.User{ID: bson.NewObjectId(), Username: "testShowFollowing_3", FirstName: "testShowFollowing_3", Password: "test", Email: "testShowFollowing_3@gmail.com",
+			Followers: []string{}, Following: []string{"testShowFollowing_2"}},
+		model.User{ID: bson.NewObjectId(), Username: "testFollow", FirstName: "testFollow", Password: "test", Email: "testFollow@gmail.com", Followers: []string{}, Following: []string{"testFollow_1"}},
+		model.User{ID: bson.NewObjectId(), Username: "testFollow_1", FirstName: "testFollow_1", Password: "test", Email: "testFollow_1@gmail.com", Followers: []string{}, Following: []string{}},
+		model.User{ID: bson.NewObjectId(), Username: "testFollow_2", FirstName: "testFollow_2", Password: "test", Email: "testFollow_2@gmail.com", Followers: []string{}, Following: []string{}},
 	}
 
 	for _, u:= range users {
@@ -237,4 +233,6 @@ func reconstructTestDB() {
 			panic(err)
 		}
 	}
+
+	h.DB.Close()
 }

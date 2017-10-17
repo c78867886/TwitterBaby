@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"model"
 	"fmt"
 	"strings"
 	"time"
@@ -14,41 +15,88 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+type testCase struct {
+	positive	bool
+	input		input
+	expected	expected
+}
+
+type input struct {
+	user	string
+	target	string
+}
+
+type expected struct {
+	code 		int
+	message 	string
+}
+
 func TestSignup(t *testing.T) {
 	// Setup
 	e := echo.New()
 	h := NewHandler("mongodb://SEavenger:SEavenger@ds121225.mlab.com:21225/se_avengers_test")
 
 	// Test cases
-	type response struct {
-		code 		int
-		message 	string
+	testCases := []testCase {
+		// test success
+		testCase{
+			true,
+			input{"", `{"username":"testSignup","firstname":"test","lastname":"signup","password":"test","email":"testSignup@gmail.com","bio":"testtest"}`},
+			expected{http.StatusCreated, `{"username":"testSignup","firstname":"test","lastname":"signup","email":"testSignup@gmail.com","bio":"testtest"}`},
+		},
+		testCase{
+			true,
+			input{"", `{"username":"testSignup","firstname":"test","lastname":"signup","password":"test","email":"testSignup@gmail.com"}`,},
+			expected{http.StatusCreated, `{"username":"testSignup","firstname":"test","lastname":"signup","email":"testSignup@gmail.com"}`},
+		},
+		testCase{
+			true,
+			input{"", `{"username":"testSignup","firstname":"test","password":"test","email":"testSignup@gmail.com","bio":"testtest"}`},
+			expected{http.StatusCreated, `{"username":"testSignup","firstname":"test","email":"testSignup@gmail.com","bio":"testtest"}`},
+		},
+		// test empty
+		testCase{
+			false,
+			input{"", `{"firstname":"test","lastname":"signup","password":"test","email":"testSignup@gmail.com"}`},
+			expected{http.StatusBadRequest, "Invalid username, firstname, email or password."},
+		},
+		testCase{
+			false,
+			input{"", `{"username":"testSignup","lastname":"signup","password":"test","email":"testSignup@gmail.com"}`,},
+			expected{http.StatusBadRequest, "Invalid username, firstname, email or password."},
+		},
+		testCase{
+			false,
+			input{"", `{"username":"testSignup","firstname":"test","lastname":"signup","password":"test"}`},
+			expected{http.StatusBadRequest, "Invalid username, firstname, email or password."},
+		},
+		testCase{
+			false,
+			input{"", `{"username":"testSignup","firstname":"test","lastname":"signup","email":"testSignup@gmail.com","bio":"testtest"}`},
+			expected{http.StatusBadRequest, "Invalid username, firstname, email or password."},
+		},
+		// test duplicate
+		testCase{
+			false,
+			input{"", `{"username":"testSignup_dup","firstname":"test","lastname":"signup_dup","password":"test","email":"testSignup_dup@gmail.com","bio":"testtest"}`},
+			expected{http.StatusBadRequest, "Username or email already used."},
+		},
 	}
 
-	testSuccess := []string {
-		`{"username":"testSignup","firstname":"test","lastname":"signup","password":"test","email":"testSignup@gmail.com","bio":"testtest"}`,
-		`{"username":"testSignup","firstname":"test","lastname":"signup","password":"test","email":"testSignup@gmail.com"}`,
-		`{"username":"testSignup","firstname":"test","password":"test","email":"testSignup@gmail.com","bio":"testtest"}`,
-	}
-
-	testSuccessExpected := []response {
-		response{code: http.StatusCreated, message: `{"username":"testSignup","firstname":"test","lastname":"signup","email":"testSignup@gmail.com","bio":"testtest"}`},
-		response{code: http.StatusCreated, message: `{"username":"testSignup","firstname":"test","lastname":"signup","email":"testSignup@gmail.com"}`},
-		response{code: http.StatusCreated, message: `{"username":"testSignup","firstname":"test","email":"testSignup@gmail.com","bio":"testtest"}`},
-	}
-
-	// Test successful
-	for i, tc := range testSuccess {
+	// Run
+	for _, tc := range testCases {
 		// Delete DB entry
-		err := h.DB.DB(h.DBName).C("users").Remove(bson.M{"username": "testSignup"})
-		if err != nil {
-			if err != mgo.ErrNotFound {
-				t.Fatal(err)
+		if tc.positive {
+			err := h.DB.DB(h.DBName).C("users").Remove(bson.M{"username": "testSignup"})
+			if err != nil {
+				if err != mgo.ErrNotFound {
+					t.Fatal(err)
+				}
 			}
 		}
 
 		// Setup
-		req := httptest.NewRequest(echo.POST, "/", strings.NewReader(tc))
+		req := httptest.NewRequest(echo.POST, "/", strings.NewReader(tc.input.target))
 		req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
 		rec := httptest.NewRecorder()
 		c := e.NewContext(req, rec)
@@ -56,155 +104,276 @@ func TestSignup(t *testing.T) {
 		c.SetPath("/api/v1/signup")
 
 		// Assertion
-		if assert.NoError(t, h.Signup(c), tc) {
-			assert.Equal(t, testSuccessExpected[i].code, rec.Code, tc)
-			assert.Equal(t, testSuccessExpected[i].message, rec.Body.String(), tc)
+		if tc.positive {
+			if assert.NoError(t, h.Signup(c), tc.input.target) {
+				assert.Equal(t, tc.expected.code, rec.Code, tc.input.target)
+				assert.Equal(t, tc.expected.message, rec.Body.String(), tc.input.target)
+			}
+		} else {
+			if err := h.Signup(c); assert.Error(t, err, tc.input.target) {
+				assert.Equal(t, tc.expected.code, err.(*echo.HTTPError).Code, tc.input.target)
+				assert.Equal(t, tc.expected.message, err.(*echo.HTTPError).Message, tc.input.target)
+			}
 		}
 	}
-
-	testEmpty := []string {
-		`{"firstname":"test","lastname":"signup","password":"test","email":"testSignup@gmail.com"}`,
-		`{"username":"testSignup","lastname":"signup","password":"test","email":"testSignup@gmail.com"}`,
-		`{"username":"testSignup","firstname":"test","lastname":"signup","password":"test"}`,
-		`{"username":"testSignup","firstname":"test","lastname":"signup","email":"testSignup@gmail.com","bio":"testtest"}`,
-	}
-
-	// Test empty fail
-	for _, tc := range testEmpty {
-		// Setup
-		req := httptest.NewRequest(echo.POST, "/", strings.NewReader(tc))
-		req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
-		rec := httptest.NewRecorder()
-		c := e.NewContext(req, rec)
-		// Set the registered path for the handler.
-		c.SetPath("/api/v1/signup")
-
-		// Assertion
-		assert.Error(t, h.Signup(c), tc)
-	}
-
-	testDuplicate := `{"username":"testSignup","firstname":"test","lastname":"signup","password":"test","email":"testSignup@gmail.com","bio":"testtest"}`
-
-	// Test duplicate fail
-	// Setup
-	req := httptest.NewRequest(echo.POST, "/", strings.NewReader(testDuplicate))
-	req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
-	rec := httptest.NewRecorder()
-	c := e.NewContext(req, rec)
-	// Set the registered path for the handler.
-	c.SetPath("/api/v1/signup")
-
-	// Assertion
-	assert.Error(t, h.Signup(c), testDuplicate)
+	h.DB.Close()
 }
 
 func TestLogin(t *testing.T) {
 	e := echo.New()
 	h := NewHandler("mongodb://SEavenger:SEavenger@ds121225.mlab.com:21225/se_avengers_test")
 
-	type response struct {
-		code 		int
-		message 	string
+	testCases := []testCase {
+		// test success
+		testCase{
+			true,
+			input{"", `{"email":"testLogin@gmail.com","password":"test"}`},
+			expected{http.StatusOK, `{"username":"testLogin","firstname":"testLogin","email":"testLogin@gmail.com"`},
+		},
+		// tes fail
+		testCase{
+			false,
+			input{"", `{"email":"testLogin@gmail.com","password":""}`},
+			expected{http.StatusUnauthorized, "Invalid email or password."},
+		},
+		testCase{
+			false,
+			input{"", `{"email":"","password":"test"}`},
+			expected{http.StatusUnauthorized, "Invalid email or password."},
+		},
+		testCase{
+			false,
+			input{"", `{"email":"testLogin","password":"test"}`},
+			expected{http.StatusUnauthorized, "Invalid email or password."},
+		},
 	}
 
-	testSuccess := []string {
-		`{"email":"testLogin@gmail.com","password":"test"}`,
-	}
-
-	testSuccessExpected := []response {
-		response{code: http.StatusOK, message: `{"username":"testLogin","firstname":"testLogin","email":"testLogin@gmail.com"`},
-	}
-
-	for i, tc := range testSuccess {
-		req := httptest.NewRequest(echo.POST, "/", strings.NewReader(tc))
+	for _, tc := range testCases {
+		req := httptest.NewRequest(echo.POST, "/", strings.NewReader(tc.input.target))
 		req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
 		rec := httptest.NewRecorder()
 		c := e.NewContext(req, rec)
 		c.SetPath("/api/v1/login")
 
-		if assert.NoError(t, h.Login(c)) {
-			assert.Equal(t, testSuccessExpected[i].code, rec.Code, tc)
-			assert.Equal(t, testSuccessExpected[i].message, strings.Split(rec.Body.String(), `,"token`)[0], tc)
+		if tc.positive {
+			if assert.NoError(t, h.Login(c), tc.input.target) {
+				assert.Equal(t, tc.expected.code, rec.Code, tc.input.target)
+				assert.Equal(t, tc.expected.message, strings.Split(rec.Body.String(), `,"token`)[0], tc.input.target)
+			}
+		} else {
+			if err := h.Login(c); assert.Error(t, err, tc.input.target) {
+				assert.Equal(t, tc.expected.code, err.(*echo.HTTPError).Code, tc.input.target)
+				assert.Equal(t, tc.expected.message, err.(*echo.HTTPError).Message, tc.input.target)
+			}
 		}
 	}
-
-	testFail := []string {
-		`{"email":"testLogin@gmail.com","password":""}`,
-		`{"email":"","password":"test"}`,
-		`{"email":"testLogin","password":"test"}`,
-	}
-
-	for _, tc := range testFail {
-		req := httptest.NewRequest(echo.POST, "/", strings.NewReader(tc))
-		req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
-		rec := httptest.NewRecorder()
-		c := e.NewContext(req, rec)
-		c.SetPath("/api/v1/login")
-
-		assert.Error(t, h.Login(c), tc)
-	}
+	h.DB.Close()
 }
 
 func TestFetchUserInfo(t *testing.T) {
 	e := echo.New()
 	h := NewHandler("mongodb://SEavenger:SEavenger@ds121225.mlab.com:21225/se_avengers_test")
-	
-	type response struct {
-		code 		int
-		message 	string
+
+	testCases := []testCase {
+		// test success
+		testCase{
+			true,
+			input{"testUserInfo_1", "testUserInfo_2"},
+			expected{http.StatusOK, `{"userinfo":{"username":"testUserInfo_2","firstname":"testUserInfo_2","email":"testUserInfo_2@gmail.com"},"followercount":1,"followingcount":0,"followed":true}`},
+		},
+		testCase{
+			true,
+			input{"testUserInfo_2", "testUserInfo_1"},
+			expected{http.StatusOK, `{"userinfo":{"username":"testUserInfo_1","firstname":"testUserInfo_1","email":"testUserInfo_1@gmail.com"},"followercount":0,"followingcount":1,"followed":false}`},
+		},
+		// tes fail
+		testCase{
+			false,
+			input{"testUserInfo_1", "userNotExist"},
+			expected{http.StatusNotFound, "User does not exist."},
+		},
 	}
 
-	type request struct {
-		user	string
-		target	string
-	}
-
-	testParamSuccess := []request {
-		request {"testUserInfo_1", "testUserInfo_2"},
-		request {"testUserInfo_2", "testUserInfo_1"},
-	}
-
-	testSuccessExpected := []response {
-		response{code: http.StatusOK, message: `{"userinfo":{"username":"testUserInfo_2","firstname":"testUserInfo_2","email":"testUserInfo_2@gmail.com"},"followercount":1,"followingcount":0,"followed":true}`},
-		response{code: http.StatusOK, message: `{"userinfo":{"username":"testUserInfo_1","firstname":"testUserInfo_1","email":"testUserInfo_1@gmail.com"},"followercount":0,"followingcount":1,"followed":false}`},
-	}
-	
-	for i, tc := range testParamSuccess {
+	for _, tc := range testCases {
 		req := httptest.NewRequest(echo.GET, "/", nil)
-		req.Header.Set(echo.HeaderAuthorization, "Bearer " + getToken(tc.user))
+		req.Header.Set(echo.HeaderAuthorization, "Bearer " + getToken(tc.input.user))
 		rec := httptest.NewRecorder()
 		c := e.NewContext(req, rec)
-		c.SetPath("/api/v1/UserInfo")
+		c.SetPath("/api/v1/userInfo")
 		c.SetParamNames("username")
-		c.SetParamValues(tc.target)
+		c.SetParamValues(tc.input.target)
 		processJWTToken(c)
 
-		if assert.NoError(t, h.FetchUserInfo(c)) {
-			assert.Equal(t, testSuccessExpected[i].code, rec.Code)
-			assert.Equal(t, testSuccessExpected[i].message, rec.Body.String())
+		if tc.positive {
+			if assert.NoError(t, h.FetchUserInfo(c), tc.input.user + " fetching " + tc.input.target) {
+				assert.Equal(t, tc.expected.code, rec.Code, tc.input.user + " fetching " + tc.input.target)
+				assert.Equal(t, tc.expected.message, rec.Body.String(), tc.input.user + " fetching " + tc.input.target)
+			}
+		} else {
+			if err := h.FetchUserInfo(c); assert.Error(t, err, tc.input.user + " fetching " + tc.input.target) {
+				assert.Equal(t, tc.expected.code, err.(*echo.HTTPError).Code, tc.input.user + " fetching " + tc.input.target)
+				assert.Equal(t, tc.expected.message, err.(*echo.HTTPError).Message, tc.input.user + " fetching " + tc.input.target)
+			}
 		}
 	}
+	h.DB.Close()
 }
 
 func TestFollow(t *testing.T) {
+	e := echo.New()
+	h := NewHandler("mongodb://SEavenger:SEavenger@ds121225.mlab.com:21225/se_avengers_test")
 
+	testCases := []testCase {
+		// test success
+		testCase{
+			true,
+			input{"testFollow", "testFollow_2"},
+			expected{http.StatusOK, `["testFollow_1","testFollow_2"]`},
+		},
+		// test fail
+		testCase{
+			false,
+			input{"testFollow", "testFollow_not_exist"},
+			expected{http.StatusNotFound, "User does not exist."},
+		},
+	}
+
+	for _, tc := range testCases {
+		req := httptest.NewRequest(echo.POST, "/", nil)
+		req.Header.Set(echo.HeaderAuthorization, "Bearer " + getToken(tc.input.user))
+		rec := httptest.NewRecorder()
+		c := e.NewContext(req, rec)
+		c.SetPath("/api/v1/follow")
+		c.SetParamNames("username")
+		c.SetParamValues(tc.input.target)
+		processJWTToken(c)
+
+		if tc.positive {
+			if assert.NoError(t, h.Follow(c), tc.input.user + " follows " + tc.input.target) {
+				assert.Equal(t, tc.expected.code, rec.Code, tc.input.user + " follows " + tc.input.target)
+				assert.Equal(t, tc.expected.message, rec.Body.String(), tc.input.user + " follows " + tc.input.target)
+
+				user := model.User{}
+				h.DB.DB(h.DBName).C("users").Find(bson.M{"username": tc.input.target}).One(&user)
+				assert.Equal(t, []string{tc.input.user}, user.Followers, tc.input.user + " follows " + tc.input.target)
+			}
+		} else {
+			if err := h.Follow(c); assert.Error(t, err, tc.input.user + " follows " + tc.input.target) {
+				assert.Equal(t, tc.expected.code, err.(*echo.HTTPError).Code, tc.input.user + " follows " + tc.input.target)
+				assert.Equal(t, tc.expected.message, err.(*echo.HTTPError).Message, tc.input.user + " follows " + tc.input.target)
+			}
+		}
+	}
+	h.DB.Close()
 }
 
 func TestShowFollower(t *testing.T) {
+	e := echo.New()
+	h := NewHandler("mongodb://SEavenger:SEavenger@ds121225.mlab.com:21225/se_avengers_test")
 
+	testCases := []testCase {
+		// test success
+		testCase{
+			true,
+			input{"", "testShowFollower_1"},
+			expected{http.StatusOK, "[]"},
+		},
+		testCase{
+			true,
+			input{"", "testShowFollower_2"},
+			expected{http.StatusOK, `[{"username":"testShowFollower_1","firstname":"testShowFollower_1"},{"username":"testShowFollower_3","firstname":"testShowFollower_3"}]`},
+		},
+		testCase{
+			true,
+			input{"", "testShowFollower_3"},
+			expected{http.StatusOK, `[{"username":"testShowFollower_2","firstname":"test","lastname":"ShowFollower_2","bio":"testtest"}]`},
+		},
+		// test fail
+		testCase{
+			false,
+			input{"", "testShowFollower_not_exist"},
+			expected{http.StatusNotFound, "User does not exist."},
+		},
+	}
+
+	for _, tc := range testCases {
+		req := httptest.NewRequest(echo.GET, "/", nil)
+		rec := httptest.NewRecorder()
+		c := e.NewContext(req, rec)
+		c.SetPath("/api/v1/showFollower")
+		c.SetParamNames("username")
+		c.SetParamValues(tc.input.target)
+
+		if tc.positive {
+			if assert.NoError(t, h.ShowFollower(c), tc.input.target) {
+				assert.Equal(t, tc.expected.code, rec.Code, tc.input.target)
+				assert.Equal(t, tc.expected.message, rec.Body.String(), tc.input.target)
+			}
+		} else {
+			if err := h.ShowFollower(c); assert.Error(t, err, tc.input.target) {
+				assert.Equal(t, tc.expected.code, err.(*echo.HTTPError).Code, tc.input.target)
+				assert.Equal(t, tc.expected.message, err.(*echo.HTTPError).Message, tc.input.target)
+			}
+		}
+	}
+	h.DB.Close()
 }
 
 func TestShowFollowing(t *testing.T) {
+	e := echo.New()
+	h := NewHandler("mongodb://SEavenger:SEavenger@ds121225.mlab.com:21225/se_avengers_test")
 
+	testCases := []testCase {
+		// test success
+		testCase{
+			true,
+			input{"", "testShowFollowing_1"},
+			expected{http.StatusOK, "[]"},
+		},
+		testCase{
+			true,
+			input{"", "testShowFollowing_2"},
+			expected{http.StatusOK, `[{"username":"testShowFollowing_1","firstname":"testShowFollowing_1"},{"username":"testShowFollowing_3","firstname":"testShowFollowing_3"}]`},
+		},
+		testCase{
+			true,
+			input{"", "testShowFollowing_3"},
+			expected{http.StatusOK, `[{"username":"testShowFollowing_2","firstname":"test","lastname":"ShowFollowing_2","bio":"testtest"}]`},
+		},
+		// test fail
+		testCase{
+			false,
+			input{"", "testShowFollowing_not_exist"},
+			expected{http.StatusNotFound, "User does not exist."},
+		},
+	}
+
+	for _, tc := range testCases {
+		req := httptest.NewRequest(echo.GET, "/", nil)
+		rec := httptest.NewRecorder()
+		c := e.NewContext(req, rec)
+		c.SetPath("/api/v1/showFollowing")
+		c.SetParamNames("username")
+		c.SetParamValues(tc.input.target)
+
+		if tc.positive {
+			if assert.NoError(t, h.ShowFollowing(c), tc.input.target) {
+				assert.Equal(t, tc.expected.code, rec.Code, tc.input.target)
+				assert.Equal(t, tc.expected.message, rec.Body.String(), tc.input.target)
+			}
+		} else {
+			if err := h.ShowFollowing(c); assert.Error(t, err, tc.input.target) {
+				assert.Equal(t, tc.expected.code, err.(*echo.HTTPError).Code, tc.input.target)
+				assert.Equal(t, tc.expected.message, err.(*echo.HTTPError).Message, tc.input.target)
+			}
+		}
+	}
+	h.DB.Close()
 }
 
 func TestUpdateUserInfo(t *testing.T) {
 
 }
-
-
-
-
 
 func getToken(username string) string {
 	token := jwt.New(jwt.SigningMethodHS256)
