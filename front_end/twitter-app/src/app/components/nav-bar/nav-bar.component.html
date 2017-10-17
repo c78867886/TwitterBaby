@@ -9,12 +9,12 @@
     <button type='submit' [routerLink]="['/user', username]" style="display:none"></button>
   </form>
 
-  <button class="button" mat-icon-button [matMenuTriggerFor]="menu">
+  <button class="navRightButton" mat-icon-button [matMenuTriggerFor]="menu">
     <mat-icon>account_box</mat-icon>
     <span>{{loginName}}</span>
   </button>
   <mat-menu #menu="matMenu">
     <button mat-menu-item><mat-icon>account_circle</mat-icon>Profile</button>
-    <button mat-menu-item (click)='logout()'><mat-icon>clear</mat-icon>Logout</button>
+    <button class="logoutBtn" mat-menu-item (click)='logout()'><mat-icon>clear</mat-icon>Logout</button>
   </mat-menu>
 </mat-toolbar>

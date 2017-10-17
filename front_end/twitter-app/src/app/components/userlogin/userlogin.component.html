@@ -13,9 +13,9 @@
             <button mat-raised-button type="submit" class="btn">Log In</button>
           </div>
           <!-- <input type="submit" name="submit" value="Log In" class="btn-login"> -->
-          <a class = "loginlink" href="#"><u>Forgot Your Password?</u></a>
+          <a class = "loginlink" routerLink="#"><u>Forgot Your Password?</u></a>
           <br>
-          <a class = "loginlink" href="/signup"><u>No account? Please Sign Up!</u></a>
+          <a class = "loginlink" routerLink="/signup"><u>No account? Please Sign Up!</u></a>
           <div *ngIf="successMessage" class="alert alert-success">{{successMessage}})</div>
           <div *ngIf="errorMessage" class="alert alert-danger">{{errorMessage}}</div>
       </form>

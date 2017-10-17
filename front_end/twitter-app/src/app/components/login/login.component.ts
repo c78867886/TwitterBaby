@@ -43,11 +43,16 @@ export class LoginComponent implements OnInit {
     //         );
     //       });
       let userinfo = JSON.parse(localStorage.getItem("user_info_object"));
-      this.username = userinfo.username;
+
+      if (userinfo) {
+        this.username = userinfo.username;
+      }
+
       this.data.getUserInfo(this.username)
       .then(userinfo => 
         {
           this.userInfo = userinfo;
+          console.log(userinfo);
         }
       );
 
