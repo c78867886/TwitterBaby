@@ -117,7 +117,9 @@ func (h *Handler) NewTweet(c echo.Context) (err error) {
 		return
 	}
 
-	return c.JSON(http.StatusCreated, tweet)
+	tweet.ID = ""
+
+	return c.JSON(http.StatusOK, tweet)
 }
 
 // DeleteTweet : Delete a specific tweet.
