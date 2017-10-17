@@ -22,6 +22,10 @@ module.exports = function (config) {
     angularCli: {
       environment: 'dev'
     },
+    files: [
+      { pattern: './src/test.ts', watched: false },
+      { pattern: './node_modules/@angular/material/prebuilt-themes/deeppurple-amber.css'}
+    ],
     reporters: ['progress', 'kjhtml'],
     port: 9876,
     colors: true,
