@@ -30,21 +30,21 @@ describe('UserloginComponent', () => {
         providers: [AuthService ],
       })
       .compileComponents();
-      
+      // fixture = 
       authService = new AuthService(null);
       component = new UserloginComponent(authService, _route);
   });
 
-  it ('should be login successful if login() successfully', () => {
-    let backAns = {"username": "a", "id": "1"}; 
-    spyOn(authService, 'login').and.callFake(() => {
-      return Observable.from([backAns]);
-    })
+  // it ('should be login successful if login() successfully', () => {
+  //   let backAns = {"username": "a", "id": "1"}; 
+  //   spyOn(authService, 'login').and.callFake(() => {
+  //     return Observable.from([backAns]);
+  //   })
      
-    component.login();
+  //   component.login();
 
-    expect(component.successMessage).toContain("Login success");
-  })
+  //   expect(component.successMessage).toContain("Login success");
+  // })
 
   it ('should be signup failure if signup() is failed', () => {
     spyOn(authService, 'login').and.callFake(() => {
