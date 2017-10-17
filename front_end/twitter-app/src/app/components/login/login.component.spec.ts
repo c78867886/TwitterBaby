@@ -9,6 +9,10 @@ import { HttpModule } from '@angular/http';
 import { FormsModule } from '@angular/forms';
 import { RouterTestingModule } from '@angular/router/testing';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { Observable } from 'rxjs/Observable';
+import 'rxjs/add/observable/of';
+
+
 import { MatToolbarModule, 
   MatInputModule, 
   MatMenuModule, 
@@ -23,7 +27,8 @@ import { MatToolbarModule,
 describe('LoginComponent', () => {
   let component: LoginComponent;
   let fixture: ComponentFixture<LoginComponent>;
-  let spy: jasmine.Spy;
+  let spy1: jasmine.Spy;
+  let spy2: jasmine.Spy;
   let dataService: DataService;
   let userName: string;
   beforeEach(async(() => {
@@ -70,9 +75,12 @@ describe('LoginComponent', () => {
         lastname: "string;",
         username: "string;"
       }};
-    // dataService = fixture.debugElement.injector.get(DataService);
-    // spy = spyOn(dataService, 'getUserInfo')
-    //       .and.returnValue(Promise.resolve('test'));
+    dataService = fixture.debugElement.injector.get('data');
+    spy1 = spyOn(dataService, 'getUserInfo')
+          .and.returnValue(Promise.resolve('test'));
+
+    spy1 = spyOn(dataService, 'getTweetListTimeLine')
+          .and.returnValue(Observable.of('test'));
     fixture.detectChanges();
   });
 
