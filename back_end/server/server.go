@@ -39,6 +39,7 @@ func NewServer(h *handler.Handler) (e *echo.Echo) {
 	e.POST("/api/v1/signup", h.Signup)
 	e.POST("/api/v1/login", h.Login)
 	e.POST("/api/v1/follow/:username", h.Follow)
+	e.POST("/api/v1/unfollow/:username", h.Unfollow)
 	e.GET("/api/v1/userInfo/:username", h.FetchUserInfo)
 	e.POST("/api/v1/updateUserInfo", h.UpdateUserInfo)
 	e.GET("/api/v1/showFollower/:username", h.ShowFollower)

@@ -256,11 +256,65 @@ func TestFollow(t *testing.T) {
 				user := model.User{}
 				h.DB.DB(h.DBName).C("users").Find(bson.M{"username": tc.input.target}).One(&user)
 				assert.Equal(t, []string{tc.input.user}, user.Followers, tc.input.user + " follows " + tc.input.target)
+
+				h.DB.DB(h.DBName).C("users").Update(bson.M{"username": tc.input.target}, bson.M{"$pull": bson.M{"followers": tc.input.user}})
+				h.DB.DB(h.DBName).C("users").Update(bson.M{"username": tc.input.user}, bson.M{"$pull": bson.M{"following": tc.input.target}})
 			}
 		} else {
 			if err := h.Follow(c); assert.Error(t, err, tc.input.user + " follows " + tc.input.target) {
 				assert.Equal(t, tc.expected.code, err.(*echo.HTTPError).Code, tc.input.user + " follows " + tc.input.target)
 				assert.Equal(t, tc.expected.message, err.(*echo.HTTPError).Message, tc.input.user + " follows " + tc.input.target)
+			}
+		}
+	}
+	h.DB.Close()
+}
+
+func TestUnfollow(t *testing.T) {
+	e := echo.New()
+	h := NewHandler("mongodb://SEavenger:SEavenger@ds121225.mlab.com:21225/se_avengers_test")
+
+	testCases := []testCase {
+		// test success
+		testCase{
+			true,
+			input{"testUnfollow", "testUnfollow_2"},
+			expected{http.StatusOK, `["testUnfollow_1"]`},
+		},
+		// test fail
+		testCase{
+			false,
+			input{"testUnfollow", "testUnfollow_not_exist"},
+			expected{http.StatusNotFound, "User does not exist."},
+		},
+	}
+
+	for _, tc := range testCases {
+		req := httptest.NewRequest(echo.POST, "/", nil)
+		req.Header.Set(echo.HeaderAuthorization, "Bearer " + getToken(tc.input.user))
+		rec := httptest.NewRecorder()
+		c := e.NewContext(req, rec)
+		c.SetPath("/api/v1/unfollow")
+		c.SetParamNames("username")
+		c.SetParamValues(tc.input.target)
+		processJWTToken(c)
+
+		if tc.positive {
+			if assert.NoError(t, h.Unfollow(c), tc.input.user + " unfollows " + tc.input.target) {
+				assert.Equal(t, tc.expected.code, rec.Code, tc.input.user + " unfollows " + tc.input.target)
+				assert.Equal(t, tc.expected.message, rec.Body.String(), tc.input.user + " unfollows " + tc.input.target)
+
+				user := model.User{}
+				h.DB.DB(h.DBName).C("users").Find(bson.M{"username": tc.input.target}).One(&user)
+				assert.Equal(t, []string{}, user.Followers, tc.input.user + " unfollows " + tc.input.target)
+
+				h.DB.DB(h.DBName).C("users").Update(bson.M{"username": tc.input.target}, bson.M{"$addToSet": bson.M{"followers": tc.input.user}})
+				h.DB.DB(h.DBName).C("users").Update(bson.M{"username": tc.input.user}, bson.M{"$addToSet": bson.M{"following": tc.input.target}})
+			}
+		} else {
+			if err := h.Unfollow(c); assert.Error(t, err, tc.input.user + " unfollows " + tc.input.target) {
+				assert.Equal(t, tc.expected.code, err.(*echo.HTTPError).Code, tc.input.user + " unfollows " + tc.input.target)
+				assert.Equal(t, tc.expected.message, err.(*echo.HTTPError).Message, tc.input.user + " unfollows " + tc.input.target)
 			}
 		}
 	}
