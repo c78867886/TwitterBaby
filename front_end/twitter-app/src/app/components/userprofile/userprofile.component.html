@@ -3,14 +3,14 @@
   <!-- Banner -->
   <div class="banner">
       <div id="banner_img">
-          <img id="profileheadimg" src="assets/images/angrycat.jpg">
+          <img id="profileheadimg" src="assets/images/grumpycat.jpeg">
       </div>  
   </div>
   <div class="banner_menu">
       <div >
           <nav class="nav">
             <ul>
-                  <!-- <li><img class="logo" src="assets/images/twitterLogo.png"></li> -->
+                  <li><a img class="logo" src="assets/images/twitterLogo.png"></a></li> 
                   <li><a href="javascript:myFunction('You clicked!')" (click)=onGetTweets()>Tweets</a></li>
                   <li><a href="" click=getfollowing()>Following</a></li>
                   <li><a href="">Moments</a></li>
@@ -25,35 +25,50 @@
   <!-- Left Box -->
   <div class="leftBox">
     <div class="userInfo">
-        <label>User Name</label><br>
-        <label>Joined Date</label>
+        <div><label>User Name</label></div>
+        <div><label>Joined Date</label></div>
+    </div>
+    <div>
+        <h3 id=head3>Who to follow</h3>
     </div>
     <div class="cardBox">
         <mat-card  class="tofollow-card">
             <mat-card-header>
-              <img class="headpotrait" mat-card-avatar src="assets/images/fubao1.jpeg" >
-              <mat-card-title>Display Name here</mat-card-title>
-              <mat-card-subtitle>Brief Dio</mat-card-subtitle>
-            </mat-card-header>
-            <mat-card-actions class="action">
+              <img class="headpotrait" mat-card-avatar src="assets/images/head1.jpg" >
+              <mat-card-title>Jason Ho</mat-card-title>
               <button class="card_button" mat-raised-button>Follow</button>
-            </mat-card-actions>
+            </mat-card-header>
           </mat-card>
           <mat-card  class="tofollow-card">
               <mat-card-header>
-                <img class="headpotrait" mat-card-avatar src="assets/images/fubao1.jpeg" >
-                <mat-card-title>Display Name here</mat-card-title>
-                <mat-card-subtitle>Brief Dio</mat-card-subtitle>
-              </mat-card-header>
-              <mat-card-actions class="action">
+                <img class="headpotrait" mat-card-avatar src="assets/images/head2.jpg" >
+                <mat-card-title>Diane Xie</mat-card-title>
                 <button class="card_button" mat-raised-button>Follow</button>
-              </mat-card-actions>
+              </mat-card-header>
             </mat-card>
       </div>
 
   </div>
 
   <div class="displayBody">
+        <mat-card class="body-card">
+                <mat-card-header>
+                  <img mat-card-avatar class="body-card-image" src="assets/images/uflogo.jpg">
+                  <mat-card-title>UF</mat-card-title>
+                  <mat-card-subtitle>University of Florida</mat-card-subtitle>
+                </mat-card-header>
+                <!-- <img mat-card-image class = "body-card-image" src="assets/images/uflogo.jpg" alt="Photo of Uf"> -->
+                <mat-card-content>
+                  <p>
+                        The University of Florida was originally established in 1853 as the East Florida Seminary, and over the years the school has grown to what it is
+                         today with the absorption of other institutions throughout its history. 
+                  </p>
+                </mat-card-content>
+                <mat-card-actions>
+                  <button mat-button>LIKE</button>
+                  <button mat-button>SHARE</button>
+                </mat-card-actions>
+        </mat-card>
   </div>
 </div>
 

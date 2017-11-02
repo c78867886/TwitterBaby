@@ -34,6 +34,7 @@ import { UserloginComponent } from './components/userlogin/userlogin.component';
 import { SignUpComponent } from './components/sign-up/sign-up.component';
 import { NavBarComponent } from './components/nav-bar/nav-bar.component';
 import { NotfoundComponent } from './components/notfound/notfound.component';
+import { UserprofileComponent } from './components/userprofile/userprofile.component';
 
 @NgModule({
   declarations: [
@@ -49,7 +50,8 @@ import { NotfoundComponent } from './components/notfound/notfound.component';
     PageSplitComponent,
     UserloginComponent,
     SignUpComponent,
-    NotfoundComponent
+    NotfoundComponent,
+    UserprofileComponent,
   ],
   imports: [
     BrowserModule,

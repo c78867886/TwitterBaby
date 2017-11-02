@@ -82,37 +82,46 @@
 .leftBox{
     height: 500px;
     width: 38%;
-    border: solid;
-    border-color: rgba(0,173,167,0.6);
+    border-width:thin;
+    /* border-color: rgba(0,173,167,0.6); */
     float: left;
 }
     .userInfo{
-        width: 90%;
-        height: 70px;
-        border: solid;
-        border-color: rgba(0,173,167,0.6);
+        width: 92%;
+        height: 50px;
+        border-width:1px;
+        /* border: solid;
+        border-color: rgba(0,173,167,0.6); */
         padding: 5px;
+        border-bottom: groove;
+        border-bottom-color: rgba(228, 225, 225, 0.4);
+    }
+    #head3{
+        padding: 10px;
     }
     .cardBox{
         width: 100%;
     }
     .tofollow-card{
         width: 83%;
-        height: 100px;
-        border: solid;
-        border-color: rgba(0,173,167,0.6);
+        height: 50px;
+        border-bottom: groove;
+        border-bottom-color: rgba(224, 219, 219, 0.4);
+        float: left;
     }
     .headpotrait{
         width: 60px;
         height: 60px;
-        border-radius: 50%;
-        
+        border-radius: 50%; 
     }
     .card_button{
-        width: 40px;
+        width: 30px;
         height: 30px;
         text-align: center;
+        float: right;
     }
+
+
 
 /* Display Body--------------- */
 .displayBody{
@@ -123,6 +132,15 @@
    border: solid;
    border-color: rgba(0,173,167,0.6);
 }
+    .body-card{
+        height: 200px;
+    }
+    .body-card-image{
+        width: 80px;
+        height: 80px;
+        border-radius: 2px;
+    }
+
 
 
 
