@@ -140,6 +140,10 @@
         height: 80px;
         border-radius: 2px;
     }
+    #bioTextArea{
+        width: 200px;
+        height: 100px;
+    }
 
 
 

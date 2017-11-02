@@ -1,0 +1,28 @@
+<div class="example-container">
+  <h3 id="dialogHead">Edit Your Profile</h3>
+  <mat-form-field>
+    <label>User Name</label>
+    <input matInput placeholder="Input Username">
+  </mat-form-field>
+  <mat-form-field>
+    <label>First Name</label>
+    <input matInput placeholder="Input First Name">
+  </mat-form-field>
+  <mat-form-field>
+    <label>Last Name</label>
+    <input matInput placeholder="Input Last Name">
+  </mat-form-field>
+  <mat-form-field>
+    <label>Email</label>
+    <input matInput placeholder="Edit Your Email">
+  </mat-form-field>
+  <mat-form-field>
+    <label>Bio</label>
+    <textarea matInput placeholder=""></textarea>
+  </mat-form-field>
+  <mat-dialog-actions>
+    <button mat-raised-button (click)="onCloseConfirm()">Confirm</button>
+    <button mat-raised-button (click)="onCloseCancel()">Cancel</button>
+  </mat-dialog-actions>
+  <!-- <strong>{{data}}</strong> -->
+  </div>

@@ -18,7 +18,7 @@
           </nav>
       </div>
       <div class="banner_button"> 
-          <button id="profileButton">Edit Profile</button>
+          <button id="profileButton" (click)="openEditUserProfileDiag()">Edit Profile</button>
       </div>   
   </div>
 
@@ -50,14 +50,40 @@
 
   </div>
 
+
+
   <div class="displayBody">
+    <h3>My Info</h3>
+    <mat-form-field>
+      <label>User Name: </label>
+    </mat-form-field>
+    <br>
+    <mat-form-field>
+      <label>First Name: </label>
+    </mat-form-field>
+    <mat-form-field>
+      <label>Last Name: </label>
+    </mat-form-field>
+    <br>
+    <mat-form-field>
+      <label>Email: </label>
+    </mat-form-field>
+    <br>
+    <mat-form-field>
+      <label>Bio: </label><br>
+      <textarea id="bioTextArea">ckmvowiejfewlrewm,mrwiejorjewronelwmrkm</textarea>
+    </mat-form-field>
+  </div>
+  
+
+  <!-- <div class="displayBody">
         <mat-card class="body-card">
                 <mat-card-header>
                   <img mat-card-avatar class="body-card-image" src="assets/images/uflogo.jpg">
                   <mat-card-title>UF</mat-card-title>
                   <mat-card-subtitle>University of Florida</mat-card-subtitle>
                 </mat-card-header>
-                <!-- <img mat-card-image class = "body-card-image" src="assets/images/uflogo.jpg" alt="Photo of Uf"> -->
+                <img mat-card-image class = "body-card-image" src="assets/images/uflogo.jpg" alt="Photo of Uf">
                 <mat-card-content>
                   <p>
                         The University of Florida was originally established in 1853 as the East Florida Seminary, and over the years the school has grown to what it is
@@ -69,6 +95,6 @@
                   <button mat-button>SHARE</button>
                 </mat-card-actions>
         </mat-card>
-  </div>
+  </div> -->
 </div>
 
