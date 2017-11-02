@@ -95,7 +95,7 @@ func (h *Handler) FetchTweets (c echo.Context) (err error) {
 //			  Return 404 Not Found if the user is not in the database.
 //			  Return 400 Bad Request if the content of the tweet is empty.
 func (h *Handler) NewTweet(c echo.Context) (err error) {
-	userID := userIDFromToken(c)
+	userID := userNameFromToken(c)
 
 	db := h.DB.Clone()
 	defer db.Close()
