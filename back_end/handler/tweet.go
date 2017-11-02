@@ -33,6 +33,7 @@ func (h *Handler) FetchTweets (c echo.Context) (err error) {
 	defer db.Close()
 
 	// Retrieve user info from database by username
+	/*
 	user := model.User{}
 	err = db.DB("se_avengers").C("users").Find(bson.M{"username": username}).One(&user)
 	if err != nil {
@@ -42,10 +43,11 @@ func (h *Handler) FetchTweets (c echo.Context) (err error) {
 		return
 	}
 	id := user.ID.Hex()
+	*/
 
 	// Retrieve tweets from database
 	tweets := []model.Tweet{}
-	err = db.DB("se_avengers").C("tweets").Find(bson.M{"owner": id}).Sort("-timestamp").All(&tweets)
+	err = db.DB("se_avengers").C("tweets").Find(bson.M{"owner": username}).Sort("-timestamp").All(&tweets)
 
 	var container struct {
 		Page	string	`json:"page"`
@@ -67,16 +69,22 @@ func (h *Handler) FetchTweets (c echo.Context) (err error) {
 	totalPage := int(math.Ceil(float64(totalTweets)/float64(perpage)))
 
 	var tweetList [] model.Tweet
-	if page == totalPage{
-		tweetList = tweets[perpage*(page-1):]
+	if page > totalPage{
+		tweetList = []model.Tweet{}
 	}else{
-		tweetList = tweets[perpage*(page-1):perpage*page]
+		if page == totalPage{
+			tweetList = tweets[perpage*(page-1):]
+		}else{
+			tweetList = tweets[perpage*(page-1):perpage*page]
+		}
 	}
 
 	// Change id to username
+	/*
 	for i := range tweetList {
 		tweetList[i].Owner = user.Username
 	}
+	*/
 
 	container.Page = strconv.Itoa(page)
 	container.TotalPage = strconv.Itoa(totalPage)
@@ -95,12 +103,12 @@ func (h *Handler) FetchTweets (c echo.Context) (err error) {
 //			  Return 404 Not Found if the user is not in the database.
 //			  Return 400 Bad Request if the content of the tweet is empty.
 func (h *Handler) NewTweet(c echo.Context) (err error) {
-	userID := userNameFromToken(c)
+	userName := userNameFromToken(c)
 
 	db := h.DB.Clone()
 	defer db.Close()
 
-	tweet := &model.Tweet{ID: bson.NewObjectId(), Owner: string(userID), Timestamp: time.Now()}
+	tweet := &model.Tweet{ID: bson.NewObjectId(), Owner: string(userName), Timestamp: time.Now()}
 	if err = c.Bind(tweet); err != nil {
 		return
 	}
@@ -117,7 +125,15 @@ func (h *Handler) NewTweet(c echo.Context) (err error) {
 		return
 	}
 
-	return c.JSON(http.StatusCreated, tweet)
+	tweet.ID = ""
+	var container struct {
+		Owner	string	`json:"owner"`
+		Message	string	`json:"message"`
+	}
+	container.Owner = tweet.Owner
+	container.Message = tweet.Message
+
+	return c.JSON(http.StatusOK, container)
 }
 
 // DeleteTweet : Delete a specific tweet.
@@ -147,6 +163,11 @@ func (h *Handler) DeleteTweet(c echo.Context) (err error) {
 	return c.NoContent(http.StatusNoContent)
 }
 
+// FetchTweetTimeLine : Handle requests asking for a list of tweets timeline of a specific user.
+//				 	  	URL  : "/api/v1/tweettimeline/:username"
+//				 		Method: GET
+//				 		Return 200 OK on success.
+//				 		Return 404 Not Found if the user is not in the database.
 func (h *Handler) FetchTweetTimeLine (c echo.Context) (err error) {
 	username := userNameFromToken(c)
 	username = c.Param("username")
@@ -168,15 +189,17 @@ func (h *Handler) FetchTweetTimeLine (c echo.Context) (err error) {
 	}
 	// Get the user list of tweet timeline.
 	following := user.Following
-	timeLineUserList := append(following, user.ID.Hex())
+	timeLineUserList := append(following, user.Username)
 
 	// Map between ID and username
+	/*
 	mapIDandUsername := make(map[string]string)
 	for i := range timeLineUserList{
 		tempUser := model.User{}
 		err = db.DB("se_avengers").C("users").FindId(bson.ObjectIdHex(timeLineUserList[i])).One(&tempUser)
 		mapIDandUsername[tempUser.ID.Hex()] = tempUser.Username
 	}
+	*/
 
 	// Retrieve tweets from database
 	tweets := []model.Tweet{}
@@ -202,16 +225,22 @@ func (h *Handler) FetchTweetTimeLine (c echo.Context) (err error) {
 	totalPage := int(math.Ceil(float64(totalTweets)/float64(perpage)))
 
 	var tweetList [] model.Tweet
-	if page == totalPage{
-		tweetList = tweets[perpage*(page-1):]
+	if page > totalPage{
+		tweetList = []model.Tweet{}
 	}else{
-		tweetList = tweets[perpage*(page-1):perpage*page]
+		if page == totalPage{
+			tweetList = tweets[perpage*(page-1):]
+		}else{
+			tweetList = tweets[perpage*(page-1):perpage*page]
+		}
 	}
 
 	// Change id to username
+	/*
 	for i := range tweetList {
 		tweetList[i].Owner = mapIDandUsername[tweetList[i].Owner]
 	}
+	*/
 
 	container.Page = strconv.Itoa(page)
 	container.TotalPage = strconv.Itoa(totalPage)
