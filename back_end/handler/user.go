@@ -147,7 +147,7 @@ func (h *Handler) FetchUserInfo (c echo.Context) (err error) {
 	return c.JSON(http.StatusOK, container)
 }
 
-// Follow : Add a specific user ID to the current user's following set, and add current user to that user's follower list.
+// Follow : Add a specific username to the current user's following set, and add current user to that user's follower list.
 //			URL: "/api/v1/follow/:username"
 //			Method: POST
 //			Return 200 OK on success, along with the user's following list.
@@ -170,6 +170,39 @@ func (h *Handler) Follow(c echo.Context) (err error) {
 
 	// Add followee to self following list
 	err = db.DB(h.DBName).C("users").Update(bson.M{"username": username}, bson.M{"$addToSet": bson.M{"following": followee}})
+	if err != nil {
+		return
+	}
+	
+	user := model.User{}
+	err = db.DB(h.DBName).C("users").Find(bson.M{"username": username}).One(&user)
+
+	return c.JSON(http.StatusOK, user.Following)
+}
+
+// Unfollow : Remove a specific username from the current user's following set, and remove current user from that user's follower list.
+//			URL: "/api/v1/unfollow/:username"
+//			Method: POST
+//			Return 200 OK on success, along with the user's following list.
+//			Return 404 Not Found if the followee is not in the database.
+func (h *Handler) Unfollow(c echo.Context) (err error) {
+	username := usernameFromToken(c)
+	followee := c.Param("username")
+
+	db := h.DB.Clone()
+	defer db.Close()
+
+	// Remove self from followee's follower list
+	err = db.DB(h.DBName).C("users").Update(bson.M{"username": followee}, bson.M{"$pull": bson.M{"followers": username}})
+	if err != nil {
+		if err == mgo.ErrNotFound {
+			return &echo.HTTPError{Code: http.StatusNotFound, Message: "User does not exist."}
+		}
+		return
+	}
+
+	// Remove followee from self following list
+	err = db.DB(h.DBName).C("users").Update(bson.M{"username": username}, bson.M{"$pull": bson.M{"following": followee}})
 	if err != nil {
 		return
 	}
