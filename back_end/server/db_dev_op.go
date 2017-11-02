@@ -24,17 +24,16 @@ func dbReinsert(db *mgo.Session) {
 
 	users := []model.User {
 		model.User{ID: bson.NewObjectId(), Username: "JasonHo", FirstName: "Jason", LastName: "Ho", Password: "test1", Email: "hojason117@gmail.com", Followers: []string{}, Following: []string{}, 
-			Bio: "Hi everyone, this is Jason Ho.", Token: ""},
+			Bio: "Hi everyone, this is Jason Ho.", Tag: "Albert Einstein"},
 		model.User{ID: bson.NewObjectId(), Username: "MarsLee", FirstName: "Chih-Yin", LastName: "Lee", Password: "test2", Email: "c788678867886@gmail.com", Followers: []string{}, Following: []string{}, 
-			Bio: "Hi everyone, this is Mars Lee.", Token: ""},
+			Bio: "Hi everyone, this is Mars Lee.", Tag: "Bruno Mars"},
 		model.User{ID: bson.NewObjectId(), Username: "JasonHe", FirstName: "Jason", LastName: "He", Password: "test3", Email: "hexing_h@hotmail.com", Followers: []string{}, Following: []string{}, 
-			Bio: "Hi everyone, this is Jason He.", Token: ""},
+			Bio: "Hi everyone, this is Jason He.", Tag: "Jason hehehehe"},
 		model.User{ID: bson.NewObjectId(), Username: "DianeLin", FirstName: "Diane", LastName: "Lin", Password: "test4", Email: "diane@gmail.com", Followers: []string{}, Following: []string{}, 
-			Bio: "Hi everyone, this is Diane Lin.", Token: ""}, 
+			Bio: "Hi everyone, this is Diane Lin.", Tag: "Diane Kruger"}, 
 		model.User{ID: bson.NewObjectId(), Username: "TomRiddle", FirstName: "Tom", LastName: "Riddle", Password: "test5", Email: "triddle@gmail.com", Followers: []string{}, Following: []string{}, 
-			Bio: "Hi everyone, this is Lord Voldemort.", Token: ""}, 
-		model.User{ID: bson.NewObjectId(), Username: "JS", FirstName: "Jon", Password: "pass", Email: "json@gmail.com", Followers: []string{}, Following: []string{}, 
-			Bio: "Hi everyone, this is Lord Voldemort.", Token: ""},
+			Bio: "Hi everyone, this is Lord Voldemort.", Tag: "Voldemort"}, 
+		model.User{ID: bson.NewObjectId(), Username: "JS", FirstName: "Jon", Password: "pass", Email: "json@gmail.com", Followers: []string{}, Following: []string{}},
 	}
 
 	for _, u := range users {
@@ -225,6 +224,10 @@ func reconstructTestDB() {
 		model.User{ID: bson.NewObjectId(), Username: "testUnfollow", FirstName: "testUnfollow", Password: "test", Email: "testUnfollow@gmail.com", Followers: []string{}, Following: []string{"testUnfollow_1", "testUnfollow_2"}},
 		model.User{ID: bson.NewObjectId(), Username: "testUnfollow_1", FirstName: "testUnfollow_1", Password: "test", Email: "testUnfollow_1@gmail.com", Followers: []string{}, Following: []string{}},
 		model.User{ID: bson.NewObjectId(), Username: "testUnfollow_2", FirstName: "testUnfollow_2", Password: "test", Email: "testUnfollow_2@gmail.com", Followers: []string{}, Following: []string{}},
+		model.User{ID: bson.NewObjectId(), Username: "testUpdateUserInfo", FirstName: "testUpdateUserInfo", Password: "test", Email: "testUpdateUserInfo@gmail.com", Followers: []string{}, Following: []string{}},
+		model.User{ID: bson.NewObjectId(), Username: "testUpdateUserInfo_empty_firstname", FirstName: "testUpdateUserInfo_empty_firstname", Password: "test", Email: "testUpdateUserInfo_empty_firstname@gmail.com", 
+			Followers: []string{}, Following: []string{}, Tag: "testUpdate"},
+		model.User{ID: bson.NewObjectId(), Username: "testUpdateProfilePicture", FirstName: "testUpdateProfilePicture", Password: "test", Email: "testUpdateProfilePicture@gmail.com", Followers: []string{}, Following: []string{}},
 	}
 
 	for _, u:= range users {
