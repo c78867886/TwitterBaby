@@ -8,6 +8,7 @@ import (
 	"gopkg.in/mgo.v2/bson"
 	"github.com/labstack/echo"
 	"model"
+	"notification"
 )
 
 // Signup : Create an user instance.
@@ -177,6 +178,8 @@ func (h *Handler) Follow(c echo.Context) (err error) {
 	user := model.User{}
 	err = db.DB(h.DBName).C("users").Find(bson.M{"username": username}).One(&user)
 
+	h.NotifHandler.Manager.Operator <- notification.FollowNotif{Followee: followee, Follower: username}
+
 	return c.JSON(http.StatusOK, user.Following)
 }
 
@@ -302,7 +305,7 @@ func (h *Handler) ShowFollowing(c echo.Context) (err error) {
 //					Return 200 OK on success, along with the user data.
 //					Return 400 Bad Request if firstname is empty.
 //					Return 404 Not Found if the user is not in the database.
-func (h *Handler) UpdateUserInfo (c echo.Context) (err error) {
+func (h *Handler) UpdateUserInfo(c echo.Context) (err error) {
 	username := usernameFromToken(c)
 
 	db := h.DB.Clone()
