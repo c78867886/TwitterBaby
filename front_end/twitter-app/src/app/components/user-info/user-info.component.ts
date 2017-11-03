@@ -14,11 +14,11 @@ export class UserInfoComponent implements OnInit {
 
   followFunc(): void {
     if(!this.userInfo.followed) {
-      this.data.followUser(this.userInfo.userinfo.id);
+      this.data.followUser(this.userInfo.userinfo.username);
       this.userInfo.followed = true;
       this.userInfo.followercount++;
     } else {
-      this.data.unfollowUser(this.userInfo.userinfo.id);
+      this.data.unfollowUser(this.userInfo.userinfo.username);
       this.userInfo.followed = false;
       this.userInfo.followercount--;
     }

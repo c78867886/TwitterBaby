@@ -2,12 +2,22 @@
   <button mat-button routerLink="/home" class="brand">BabyTwitter</button>
   <span class="example-spacer"></span>
 
-  <form class="form" (submit)="onSubmit()">
+  <form class="form" (submit)="onSubmit()" autocomplete="off">
     <mat-form-field class="search">
       <input name="search" matInput placeholder="Search a friend" class="input" id="input" [(ngModel)]='username'>
     </mat-form-field>
-    <button type='submit' [routerLink]="['/user', username]" style="display:none"></button>
+    <input type='submit' [routerLink]="['/user', username]" style="display:none">
   </form>
+  
+  <button class="refresh" (click)="refresh()" mat-icon-button>
+    <mat-icon>refresh</mat-icon>
+    <div class="redPoint"></div>
+  </button>
+
+  <button class="notifications" mat-icon-button>
+    <mat-icon>notifications</mat-icon>
+    <div class="redPoint"></div>
+  </button>
 
   <button class="navRightButton" mat-icon-button [matMenuTriggerFor]="menu">
     <mat-icon>account_box</mat-icon>
@@ -15,6 +25,6 @@
   </button>
   <mat-menu #menu="matMenu">
     <button mat-menu-item><mat-icon>account_circle</mat-icon>Profile</button>
-    <button class="logoutBtn" mat-menu-item (click)='logout()'><mat-icon>clear</mat-icon>Logout</button>
+    <button class="logoutBtn" mat-menu-item (click)='logout()'><mat-icon>exit_to_app</mat-icon>Logout</button>
   </mat-menu>
 </mat-toolbar>
