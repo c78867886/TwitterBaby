@@ -1,28 +1,24 @@
 <div class="example-container">
-  <h3 id="dialogHead">Edit Your Profile</h3>
+  <h3 md-dialog-title id="dialogHead">Edit Your Profile</h3>
   <mat-form-field>
-    <label>User Name</label>
-    <input matInput placeholder="Input Username">
+    <input matInput placeholder="Input Username" value="User Name">
   </mat-form-field>
   <mat-form-field>
-    <label>First Name</label>
-    <input matInput placeholder="Input First Name">
+    <input matInput placeholder="Input First Name" value="First Name">
   </mat-form-field>
   <mat-form-field>
-    <label>Last Name</label>
-    <input matInput placeholder="Input Last Name">
+    <input matInput placeholder="Input Last Name" value="Last Name">
   </mat-form-field>
   <mat-form-field>
-    <label>Email</label>
-    <input matInput placeholder="Edit Your Email">
+    <input matInput placeholder="Edit Your Email" value="Email">
   </mat-form-field>
   <mat-form-field>
-    <label>Bio</label>
-    <textarea matInput placeholder=""></textarea>
+    <textarea matInput placeholder="" value="Bio"></textarea>
   </mat-form-field>
+  <strong>{{data}}</strong>
   <mat-dialog-actions>
-    <button mat-raised-button (click)="onCloseConfirm()">Confirm</button>
-    <button mat-raised-button (click)="onCloseCancel()">Cancel</button>
+    <button mat-raised-button (click)="onCloseConfirm()"class="dialogBtnConf">Confirm</button>
+    <button mat-raised-button (click)="onCloseCancel()" class="dialogBtnCanc">Cancel</button>
   </mat-dialog-actions>
-  <!-- <strong>{{data}}</strong> -->
+  
   </div>

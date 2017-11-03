@@ -35,6 +35,8 @@ import { SignUpComponent } from './components/sign-up/sign-up.component';
 import { NavBarComponent } from './components/nav-bar/nav-bar.component';
 import { NotfoundComponent } from './components/notfound/notfound.component';
 import { UserprofileComponent } from './components/userprofile/userprofile.component';
+import { MatDialogModule } from '@angular/material';
+import { EditUserProfileDialogComponent } from './components/edit-user-profile-dialog/edit-user-profile-dialog.component';
 
 @NgModule({
   declarations: [
@@ -52,6 +54,7 @@ import { UserprofileComponent } from './components/userprofile/userprofile.compo
     SignUpComponent,
     NotfoundComponent,
     UserprofileComponent,
+    EditUserProfileDialogComponent,
   ],
   imports: [
     BrowserModule,
@@ -68,7 +71,12 @@ import { UserprofileComponent } from './components/userprofile/userprofile.compo
     MatProgressSpinnerModule,
     MatChipsModule,
     rooting,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    MatDialogModule,
+    
+  ],
+  entryComponents:[
+    EditUserProfileDialogComponent,
   ],
   providers: [
     { provide: 'data', useClass: DataService },

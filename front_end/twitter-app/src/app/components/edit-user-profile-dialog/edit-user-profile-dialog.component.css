@@ -1,0 +1,11 @@
+#dialogHead{
+    text-align: center;
+}
+
+.dialogBtnConf{
+    float: left;
+}
+
+.dialogBtnCanc{
+    float: right;
+}

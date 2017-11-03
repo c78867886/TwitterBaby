@@ -54,25 +54,16 @@
 
   <div class="displayBody">
     <h3>My Info</h3>
-    <mat-form-field>
-      <label>User Name: </label>
-    </mat-form-field>
-    <br>
-    <mat-form-field>
-      <label>First Name: </label>
-    </mat-form-field>
-    <mat-form-field>
-      <label>Last Name: </label>
-    </mat-form-field>
-    <br>
-    <mat-form-field>
-      <label>Email: </label>
-    </mat-form-field>
-    <br>
-    <mat-form-field>
-      <label>Bio: </label><br>
-      <textarea id="bioTextArea">ckmvowiejfewlrewm,mrwiejorjewronelwmrkm</textarea>
-    </mat-form-field>
+    <div>
+      <label class="profileLabel">User Name: {{userName}}</label>
+    </div>
+    <div><label class="profileLabel">First Name: {{userFirstName}}</label></div>
+    <div><label class="profileLabel">Last Name: {{userLastName}}</label></div>
+    <div><label class="profileLabel">Email: {{userEmail}}</label></div>
+    <div>
+      <label class="profileLabel">Bio: </label>
+      <textarea>{{userBio}}</textarea>
+    </div>
   </div>
   
 

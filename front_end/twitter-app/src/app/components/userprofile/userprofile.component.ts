@@ -1,8 +1,9 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, Inject} from '@angular/core';
 import { Tweet } from '../../models/tweet.model';
 import { TweetlistComponent } from '../tweetlist/tweetlist.component';
 import { MatDialog } from '@angular/material'
 import { EditUserProfileDialogComponent } from '../edit-user-profile-dialog/edit-user-profile-dialog.component';
+import { Subscription } from 'rxjs/Subscription';
 
 @Component({
   selector: 'app-userprofile',
@@ -10,23 +11,47 @@ import { EditUserProfileDialogComponent } from '../edit-user-profile-dialog/edit
   styleUrls: ['./userprofile.component.css']
 })
 export class UserprofileComponent implements OnInit {
-  // @Input() userTweetList: Tweet[];
-  // @Input() username: string;
+
+  userName: string;
+  userFirstName: string;
+  userLastName: string;
+  userEmail: string;
+  userBio: string;
   dialogResult = "";
 
-  constructor(public dialog : MatDialog) { }
+  constructor(public dialog : MatDialog,
+              ) { }
 
   ngOnInit() {
+    /**
+     * Get user Info
+     */
+    let userinfo = JSON.parse(localStorage.getItem("user_info_object"));
+    if (userinfo) {
+        this.userName = userinfo.username;
+        this.userFirstName = userinfo.firstname;
+        this.userLastName = userinfo.lastname;
+        this.userEmail = userinfo.email;
+        this.userBio = userinfo.bio;
+    }
   }
 
+  /*
+  * Edit profile
+  * Open a dilog
+  */
   openEditUserProfileDiag() {
     let dialogRef = this.dialog.open(EditUserProfileDialogComponent, {
       width: '600px',
-      data: 'The dialog data',
+      data: 'The dialog data shows here',
 
     })
 
-    dialogRef.afterClosed().subscribe(result => {
+
+  /**
+   *  After the dialog is closed
+   */
+  dialogRef.afterClosed().subscribe(result => {
       console.log('Dialog is closed: ${result}');
       this.dialogResult = result;
     })
