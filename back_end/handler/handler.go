@@ -1,14 +1,16 @@
 package handler
 
 import (
+	"notification"
 	"strings"
 	"gopkg.in/mgo.v2"
 )
 
 // Handler : Handler for dealing with requests.
 type Handler struct {
-	DB 		*mgo.Session
-	DBName 	string
+	DB 				*mgo.Session
+	DBName 			string
+	NotifHandler	*notification.Handler
 }
 
 // Key : Key for signing tokens.
@@ -24,7 +26,7 @@ func NewHandler(dbURL string) (h *Handler) {
 	}
 
 	// Initialize handler
-	h = &Handler{DB: session, DBName: strings.Split(dbURL, "/")[3]}
+	h = &Handler{DB: session, DBName: strings.Split(dbURL, "/")[3], NotifHandler: notification.NewHandler(session, strings.Split(dbURL, "/")[3])}
 
 	return h
 }
