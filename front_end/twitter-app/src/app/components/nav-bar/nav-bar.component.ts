@@ -9,6 +9,7 @@ import { Router } from '@angular/router';
 export class NavBarComponent implements OnInit {
   username: string = "";
   loginName: string = "";
+  hostName: string = "";
   shouldBeShowed: boolean;
   subscription: Subscription;
   constructor(@Inject('data') private data, @Inject('auth') private auth, private route: Router) { }
@@ -19,6 +20,7 @@ export class NavBarComponent implements OnInit {
         this.shouldBeShowed = true;
         let userinfo = JSON.parse(localStorage.getItem("user_info_object"));
         this.loginName = userinfo.firstname + ' ' + userinfo.lastname;
+        this.hostName = userinfo.username;
       } else {
         this.shouldBeShowed = false;
       }
@@ -36,5 +38,14 @@ export class NavBarComponent implements OnInit {
     localStorage.clear();
     this.auth.isLoggedIn();
     this.route.navigateByUrl('/login');
+  }
+
+  refresh(): void {
+    if (this.route.url !== '/home') {
+      this.route.navigateByUrl('/home');
+    } else {
+      this.data.getTweetListTimeLine(this.hostName, 1);
+    }
+    
   }
 }

@@ -29,3 +29,21 @@
 .input{
     color:#00ADA7;
 }
+
+.refresh {
+    margin-right: 3px;
+}
+
+.notifications {
+    margin-right: 8px;
+}
+
+.redPoint {
+    position: relative;
+    right: -26px;
+    top: -32px;
+    width: 7px;
+    height: 7px;
+    border-radius: 3.5px;
+    background-color: red;
+}

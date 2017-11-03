@@ -2,6 +2,7 @@ package server
 
 import (
 	"handler"
+	"notification"
 	"fmt"
 	"time"
 	"context"
@@ -11,7 +12,7 @@ import (
 )
 
 // NewServer : Instantiate a server
-func NewServer(h *handler.Handler) (e *echo.Echo) {
+func NewServer(h *handler.Handler, nh *notification.Handler) (e *echo.Echo) {
 	e = echo.New()
 	e.HideBanner = true
 	e.Logger.SetLevel(log.ERROR)
@@ -36,12 +37,14 @@ func NewServer(h *handler.Handler) (e *echo.Echo) {
 	}))
 
 	// Routes
+	e.GET("/api/v1/ws", nh.GetConnection)
 	e.POST("/api/v1/signup", h.Signup)
 	e.POST("/api/v1/login", h.Login)
 	e.POST("/api/v1/follow/:username", h.Follow)
 	e.POST("/api/v1/unfollow/:username", h.Unfollow)
 	e.GET("/api/v1/userInfo/:username", h.FetchUserInfo)
 	e.POST("/api/v1/updateUserInfo", h.UpdateUserInfo)
+	e.POST("/api/v1/updateProfilePic", h.UpdateProfilePicture)
 	e.GET("/api/v1/showFollower/:username", h.ShowFollower)
 	e.GET("/api/v1/showFollowing/:username", h.ShowFollowing)
 	e.GET("/api/v1/tweetlist/:username", h.FetchTweets)

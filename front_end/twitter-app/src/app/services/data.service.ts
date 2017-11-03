@@ -41,47 +41,51 @@ export class DataService {
 
   getUserInfo(id: string): Promise<Object> {
     let options: RequestOptions = this.getHeader();
-    return this.http.get(this.localhost + `/api/v1/userInfo?username=${id}`, options)
+    return this.http.get(this.localhost + `/api/v1/userInfo/${id}`, options)
                       .toPromise()
                       .then((res: Response) => res.json())
                       .catch(this.handleError);
   }
   
   // Follow and unfollow part
-  followUser(mongoid: string): Promise<Object> {
+  followUser(id: string): Promise<Object> {
     let post = {};
     let options: RequestOptions = this.getHeader();
-    return this.http.post(`http://127.0.0.1:1323/api/v1/follow/${mongoid}`, post, options)
+    return this.http.post(`http://127.0.0.1:1323/api/v1/follow/${id}`, post, options)
       .toPromise()
       .catch(this.handleError);
   }
 
-  unfollowUser(mongoid: string): void {
-    
+  unfollowUser(id: string): Promise<Object> {
+    let post = {};
+    let options: RequestOptions = this.getHeader();
+    return this.http.post(`http://127.0.0.1:1323/api/v1/unfollow/${id}`, post, options)
+      .toPromise()
+      .catch(this.handleError);
   }
 
-  showFollower(mongoid: string): Promise<object> {
+  showFollower(id: string): Promise<object> {
     let options: RequestOptions = this.getHeader();
-    return this.http.get(this.localhost + `/api/v1/showFollower/${mongoid}`, options)
+    return this.http.get(this.localhost + `/api/v1/showFollower/${id}`, options)
                       .toPromise()
                       .then((res: Response) => res.json())
                       .catch(this.handleError);
   }
 
-  showFollowing(mongoid: string): Promise<object> {
+  showFollowing(id: string): Promise<object> {
     let options: RequestOptions = this.getHeader();
-    return this.http.get(this.localhost + `/api/v1/showFollowing/${mongoid}`, options)
+    return this.http.get(this.localhost + `/api/v1/showFollowing/${id}`, options)
                       .toPromise()
                       .then((res: Response) => res.json())
                       .catch(this.handleError);
   }
 
   //Create new tweet
-  postTweet(mongoid: string, id: string, content: string): Promise<Object>{
+  postTweet(id: string, content: string): Promise<Object>{
     let options: RequestOptions = this.getHeader();
     let message: object = {message: content};
     //console.log(message);
-    return this.http.post(`http://127.0.0.1:1323/api/v1/newTweet/${mongoid}`, message, options)
+    return this.http.post(`http://127.0.0.1:1323/api/v1/newTweet/${id}`, message, options)
             .toPromise()
             .then((res: Response) => {
               this.getTweetListTimeLine(id, 1);

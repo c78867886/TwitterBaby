@@ -1,6 +1,7 @@
 package model
 
 import "gopkg.in/mgo.v2/bson"
+//import "gopkg.in/mgo.v2"
 
 // User : Data structure that holds a single user.
 type User struct {
@@ -13,5 +14,7 @@ type User struct {
 	Followers	[]string		`json:"followers,omitempty" bson:"followers,omitempty"`
 	Following	[]string		`json:"following,omitempty" bson:"following,omitempty"`
 	Bio			string			`json:"bio,omitempty" bson:"bio,omitempty"`
+	Tag			string			`json:"tag,omitempty" bson:"tag,omitempty"`
+	Picture		string			`json:"picture,omitempty" bson:"picture,omitempty"`
 	Token		string			`json:"token,omitempty" bson:"-"`
 }

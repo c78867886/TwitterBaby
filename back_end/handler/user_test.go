@@ -54,6 +54,11 @@ func TestSignup(t *testing.T) {
 			input{"", `{"username":"testSignup","firstname":"test","password":"test","email":"testSignup@gmail.com","bio":"testtest"}`},
 			expected{http.StatusCreated, `{"username":"testSignup","firstname":"test","email":"testSignup@gmail.com","bio":"testtest"}`},
 		},
+		testCase{
+			true,
+			input{"", `{"username":"testSignup","firstname":"test","password":"test","email":"testSignup@gmail.com","bio":"testtest","tag":"Einstein"}`},
+			expected{http.StatusCreated, `{"username":"testSignup","firstname":"test","email":"testSignup@gmail.com","bio":"testtest","tag":"Einstein"}`},
+		},
 		// test empty
 		testCase{
 			false,
@@ -426,7 +431,133 @@ func TestShowFollowing(t *testing.T) {
 }
 
 func TestUpdateUserInfo(t *testing.T) {
+	e := echo.New()
+	h := NewHandler("mongodb://SEavenger:SEavenger@ds121225.mlab.com:21225/se_avengers_test")
 
+	testCases := []testCase {
+		// test success
+		testCase{
+			true,
+			input{"testUpdateUserInfo", `{"firstname":"testUpdateUserInfo_mod","lastname":"mod","bio":"mod","tag":"mod"}`},
+			expected{http.StatusOK, `{"username":"testUpdateUserInfo","firstname":"testUpdateUserInfo_mod","lastname":"mod","email":"testUpdateUserInfo@gmail.com","bio":"mod","tag":"mod"}`},
+		},
+		testCase{
+			true,
+			input{"testUpdateUserInfo", `{"firstname":"testUpdateUserInfo","lastname":"","bio":"","tag":""}`},
+			expected{http.StatusOK, `{"username":"testUpdateUserInfo","firstname":"testUpdateUserInfo","email":"testUpdateUserInfo@gmail.com"}`},
+		},
+		// test fail
+		testCase{
+			false,
+			input{"testUpdateUserInfo_empty_firstname", `{"firstname":"","lastname":"","bio":"","tag":"testUpdate"}`},
+			expected{http.StatusBadRequest, "Firstname cannot be empty."},
+		},
+		testCase{
+			false,
+			input{"testUpdateUserInfo_not_exist", `{"firstname":"testUpdateUserInfo_not_exist","lastname":"","bio":"","tag":""}`},
+			expected{http.StatusNotFound, "User does not exist."},
+		},
+	}
+
+	for _, tc := range testCases {
+		req := httptest.NewRequest(echo.POST, "/", strings.NewReader(tc.input.target))
+		req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
+		req.Header.Set(echo.HeaderAuthorization, "Bearer " + getToken(tc.input.user))
+		rec := httptest.NewRecorder()
+		c := e.NewContext(req, rec)
+		c.SetPath("/api/v1/updateUserInfo")
+		processJWTToken(c)
+
+		if tc.positive {
+			if assert.NoError(t, h.UpdateUserInfo(c), tc.input.target) {
+				assert.Equal(t, tc.expected.code, rec.Code, tc.input.target)
+				assert.Equal(t, tc.expected.message, rec.Body.String(), tc.input.target)
+			}
+		} else {
+			if err := h.UpdateUserInfo(c); assert.Error(t, err, tc.input.target) {
+				assert.Equal(t, tc.expected.code, err.(*echo.HTTPError).Code, tc.input.target)
+				assert.Equal(t, tc.expected.message, err.(*echo.HTTPError).Message, tc.input.target)
+			}
+		}
+	}
+	h.DB.Close()
+}
+
+func TestUpdateProfilePicture(t *testing.T) {
+	e := echo.New()
+	h := NewHandler("mongodb://SEavenger:SEavenger@ds121225.mlab.com:21225/se_avengers_test")
+
+	oversizedImage := [10485760 + 1]byte{}
+	for i := 0; i < 10485760 + 1; i++ {
+		oversizedImage[i] = 'A'
+	}
+
+	testCases := []testCase {
+		// test success
+		testCase{
+			true,
+			input{"testUpdateProfilePicture", `{"picture":"iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAAjVBMVEXp6en///+8vLwPZ66L1fPY` + 
+														  `//9Xo95eqeH4/f8wg8AQaK6U2flirOJkruJ4wutnseTf8/+F0PF0v+p5y+7l9/+CzO9puefw+//2` + 
+														  `9vZ8xux/ye3X8f/b29trteWt6f+V0/O48P8YbbCo3/WVrcC1zeHFxcWo5/+h4f/K+/++9P+FwuzM` + 
+														  `/f/H6fgjd7hnvekVvPy4AAABSElEQVQ4jXXT23KDIBCAYbY5WaNiqEGJWoOao0ne//G6gBjphH/G` + 
+														  `GVk/1ysJQC/DxcdC2QMQ6J/tylP77IEUsm3WnppWFoQsVuuNp/VqQRAMm8jTZhhBjEX4RhS7GRAO` + 
+														  `ah7dy7S8/xPRECpwjSmlUamKqFN8taCmcYbP0zeosQmo0wjscg1qasBNnWiWIshsKdPgZkBtwLys` + 
+														  `1Dss4JzXuQtyPRwB10CtyN7fUIAbcOSMMZ6rcW7L7np4NIBZkPMpppuDQAPmZsBvgvEAFwc8cfsd` + 
+														  `gRAJ0+A1PRIqC/Q9aPBygDDgbACuCGCq0eBswAETgRMEQk1HsMcOD3CFOODUgIsG+xzmBUJNLwbs` + 
+														  `8Bavxxw0arKzwLT/mWVGI1juPC01kMl26WmbSAQdCk+J7Agpqk4+vz8mZVcVBIrq9OXpVBX4dwP+` + 
+														  `n74KgD9PVzqtRZGhswAAAABJRU5ErkJggg=="}`},
+			expected{http.StatusCreated, `{"username":"testUpdateProfilePicture","firstname":"testUpdateProfilePicture","email":"testUpdateProfilePicture@gmail.com",` + 
+											   `"picture":"iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAAjVBMVEXp6en///+8vLwPZ66L1fPY` + 
+														  `//9Xo95eqeH4/f8wg8AQaK6U2flirOJkruJ4wutnseTf8/+F0PF0v+p5y+7l9/+CzO9puefw+//2` + 
+														  `9vZ8xux/ye3X8f/b29trteWt6f+V0/O48P8YbbCo3/WVrcC1zeHFxcWo5/+h4f/K+/++9P+FwuzM` + 
+														  `/f/H6fgjd7hnvekVvPy4AAABSElEQVQ4jXXT23KDIBCAYbY5WaNiqEGJWoOao0ne//G6gBjphH/G` + 
+														  `GVk/1ysJQC/DxcdC2QMQ6J/tylP77IEUsm3WnppWFoQsVuuNp/VqQRAMm8jTZhhBjEX4RhS7GRAO` + 
+														  `ah7dy7S8/xPRECpwjSmlUamKqFN8taCmcYbP0zeosQmo0wjscg1qasBNnWiWIshsKdPgZkBtwLys` + 
+														  `1Dss4JzXuQtyPRwB10CtyN7fUIAbcOSMMZ6rcW7L7np4NIBZkPMpppuDQAPmZsBvgvEAFwc8cfsd` + 
+														  `gRAJ0+A1PRIqC/Q9aPBygDDgbACuCGCq0eBswAETgRMEQk1HsMcOD3CFOODUgIsG+xzmBUJNLwbs` + 
+														  `8Bavxxw0arKzwLT/mWVGI1juPC01kMl26WmbSAQdCk+J7Agpqk4+vz8mZVcVBIrq9OXpVBX4dwP+` + 
+											  			  `n74KgD9PVzqtRZGhswAAAABJRU5ErkJggg=="}`},
+		},
+		testCase{
+			true,
+			input{"testUpdateProfilePicture", `{"picture":""}`},
+			expected{http.StatusCreated, `{"username":"testUpdateProfilePicture","firstname":"testUpdateProfilePicture","email":"testUpdateProfilePicture@gmail.com"}`},
+		},
+		// test fail
+		testCase{
+			false,
+			input{"testUpdateProfilePicture_oversized_image", `{"picture":"` + string(oversizedImage[:]) + `"}`},
+			expected{http.StatusBadRequest, "Image must be smaller than 10 MB."},
+		},
+		testCase{
+			false,
+			input{"testUpdateProfilePicture_not_exist", `{"picture":""}`},
+			expected{http.StatusNotFound, "User does not exist."},
+		},
+	}
+
+	for _, tc := range testCases {
+		req := httptest.NewRequest(echo.POST, "/", strings.NewReader(tc.input.target))
+		req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
+		req.Header.Set(echo.HeaderAuthorization, "Bearer " + getToken(tc.input.user))
+		rec := httptest.NewRecorder()
+		c := e.NewContext(req, rec)
+		c.SetPath("/api/v1/updateProfilePic")
+		processJWTToken(c)
+
+		if tc.positive {
+			if assert.NoError(t, h.UpdateProfilePicture(c), tc.input.target) {
+				assert.Equal(t, tc.expected.code, rec.Code, tc.input.target)
+				assert.Equal(t, tc.expected.message, rec.Body.String(), tc.input.target)
+			}
+		} else {
+			if err := h.UpdateProfilePicture(c); assert.Error(t, err, tc.input.target) {
+				assert.Equal(t, tc.expected.code, err.(*echo.HTTPError).Code, tc.input.target)
+				assert.Equal(t, tc.expected.message, err.(*echo.HTTPError).Message, tc.input.target)
+			}
+		}
+	}
+	h.DB.Close()
 }
 
 func getToken(username string) string {

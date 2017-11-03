@@ -295,33 +295,102 @@ func (h *Handler) ShowFollowing(c echo.Context) (err error) {
 	return c.JSON(http.StatusOK, &container)
 }
 
+// UpdateUserInfo : Update a user's info, only firstname, lastname, bio, and tag are allowed to be modified.
+//					# Request body must contain all four fields, even if they are empty or not modified.
+//					URL: "/api/v1/updateUserInfo"
+//					Method: POST
+//					Return 200 OK on success, along with the user data.
+//					Return 400 Bad Request if firstname is empty.
+//					Return 404 Not Found if the user is not in the database.
 func (h *Handler) UpdateUserInfo (c echo.Context) (err error) {
 	username := usernameFromToken(c)
-
-	user := model.User{}
-	if err = c.Bind(user); err != nil {
-		return
-	}
-
-	if user.ID != "" {
-		return &echo.HTTPError{Code: http.StatusUnauthorized, Message: "User ID cannot be modified."}
-	}
 
 	db := h.DB.Clone()
 	defer db.Close()
 
-	err = db.DB("se_avengers").C("users").Update(bson.M{"username": username}, bson.M{"followers": username})
+	type userUpdate struct {
+		FirstName 	string	`json:"firstname"`
+		LastName	string	`json:"lastname"`
+		Bio			string	`json:"bio"`
+		Tag			string	`json:"tag"`
+	}
+
+	update := &userUpdate{}
+	if err = c.Bind(update); err != nil {
+		return
+	}
+
+	if update.FirstName == "" {
+		return &echo.HTTPError{Code: http.StatusBadRequest, Message: "Firstname cannot be empty."}
+	}
+
+	err = db.DB(h.DBName).C("users").Update(bson.M{"username": username}, bson.M{"$set": bson.M{"firstname": update.FirstName, "lastname": update.LastName, "bio": update.Bio, "tag": update.Tag}})
 	if err != nil {
 		if err == mgo.ErrNotFound {
 			return &echo.HTTPError{Code: http.StatusNotFound, Message: "User does not exist."}
 		}
+		return
+	}
+
+	user := &model.User{}
+	err = db.DB(h.DBName).C("users").Find(bson.M{"username": username}).One(user)
+	if err != nil {
+		return
 	}
 
 	// Don't send password
 	user.Password = ""
 	
 	//return c.JSON(http.StatusOK, user)
-	return c.NoContent(http.StatusNotImplemented)
+	return c.JSON(http.StatusOK, user)
+}
+
+// UpdateProfilePicture : Update a user's profile picture, or remove profile picture by sending an empty string.
+//						  # Image is to be encoded into base 64 string, and cannot be larger than 10 MB.
+//						  URL: "/api/v1/updateProfilePic"
+//						  Method: POST
+//						  Return 201 Created on success, along with the user data.
+//						  Return 400 Bad Request if the image is larger than 10 MB.
+//						  Return 404 Not Found if the user is not in the database.
+func (h *Handler) UpdateProfilePicture(c echo.Context) (err error) {
+	username := usernameFromToken(c)
+	
+	db := h.DB.Clone()
+	defer db.Close()
+
+	type base64Image struct {
+		Base64String	string	`json:"picture"`
+	}
+	
+	image := base64Image{}
+	if err = c.Bind(&image); err != nil {
+		return
+	}
+
+	// Do not accept image larger than 10 MB
+	if len(image.Base64String) > 10485760 {
+		return &echo.HTTPError{Code: http.StatusBadRequest, Message: "Image must be smaller than 10 MB."}
+	}
+	
+	err = db.DB(h.DBName).C("users").Update(bson.M{"username": username}, bson.M{"$set": bson.M{"picture": &image.Base64String}})
+	if err != nil {
+		if err == mgo.ErrNotFound {
+			return &echo.HTTPError{Code: http.StatusNotFound, Message: "User does not exist."}
+		}
+		return
+	}
+
+	user := &model.User{}
+	err = db.DB(h.DBName).C("users").Find(bson.M{"username": username}).One(user)
+	if err != nil {
+		return
+	}
+
+	// Don't send password
+	user.Password = ""
+	
+	//return c.JSON(http.StatusOK, user)
+	return c.JSON(http.StatusCreated, user)
 }
 
 func usernameFromToken(c echo.Context) string {
