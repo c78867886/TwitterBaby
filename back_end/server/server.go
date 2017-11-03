@@ -20,7 +20,7 @@ func NewServer(h *handler.Handler) (e *echo.Echo) {
 		SigningKey: []byte(handler.Key),
 		Skipper: func(c echo.Context) bool {
 			// Skip authentication for and signup login requests
-			if c.Request().Method == "OPTIONS" || c.Path() == "/api/v1/login" || c.Path() == "/api/v1/signup" {
+			if c.Request().Method == "OPTIONS" || c.Path() == "/api/v1/login" || c.Path() == "/api/v1/signup" || c.Path() == "/api/v1/ws/:username" {
 				return true
 			}
 			return false
@@ -36,7 +36,7 @@ func NewServer(h *handler.Handler) (e *echo.Echo) {
 	}))
 
 	// Routes
-	e.GET("/api/v1/ws", h.NotifHandler.GetConnection)
+	e.GET("/api/v1/ws/:username", h.NotifHandler.GetConnection)
 	e.POST("/api/v1/signup", h.Signup)
 	e.POST("/api/v1/login", h.Login)
 	e.POST("/api/v1/follow/:username", h.Follow)

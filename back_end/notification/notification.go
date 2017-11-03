@@ -8,7 +8,6 @@ import (
 	"gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
 	"github.com/gorilla/websocket"
-	"github.com/dgrijalva/jwt-go"
 	//"github.com/golang-collections/collections/stack"
 )
 
@@ -56,7 +55,11 @@ func NewHandler(db *mgo.Session, dbName string) (h *Handler) {
 
 // GetConnection : Upgrade a client connection to websocket.
 func (h *Handler) GetConnection(c echo.Context) (err error) {
-	username := usernameFromToken(c)
+	username := c.Param("username")
+
+	if _, ok := h.Manager.clients[username]; ok {
+		return &echo.HTTPError{Code: http.StatusBadRequest, Message: "User already has a web socket connection."}
+	}
 
 	conn, err := h.upgrader.Upgrade(c.Response(), c.Request(), nil)
 	if err != nil {
@@ -123,7 +126,9 @@ func (manager *ClientManager) forwardNewTweetNotif(m NewTweetNotif) {
 	}
 
 	for _, t := range target {
-		manager.clients[t.Username].incoming <- m
+		if val, ok := manager.clients[t.Username]; ok {
+			val.incoming <- m
+		}
 	}
 }
 
@@ -131,12 +136,5 @@ func (manager *ClientManager) forwardFollowNotif(m FollowNotif) {
 	db := manager.DB.Clone()
 	defer db.Close()
 
-	
-}
 
-func usernameFromToken(c echo.Context) string {
-	user := c.Get("user").(*jwt.Token)
-	claims := user.Claims.(jwt.MapClaims)
-
-	return claims["username"].(string)
 }
