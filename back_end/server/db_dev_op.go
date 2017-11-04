@@ -18,7 +18,7 @@ func dbReinsert() {
 	userC := h.DB.DB(h.DBName).C(model.UserCollection)
 
 	users := []model.User {
-		model.User{ID: bson.NewObjectId(), Username: "JasonHo", FirstName: "Jason", LastName: "Ho", Password: "test1", Email: "hojason117@gmail.com", Followers: []string{"MarsLee"}, Following: []string{"MarsLee"}, 
+		model.User{ID: bson.NewObjectId(), Username: "JasonHo", FirstName: "Jason", LastName: "Ho", Password: "test1", Email: "hojason117@gmail.com", Followers: []string{"MarsLee", "TomRiddle"}, Following: []string{"MarsLee"}, 
 			Bio: "Hi everyone, this is Jason Ho.", Tag: "Albert Einstein"},
 		model.User{ID: bson.NewObjectId(), Username: "MarsLee", FirstName: "Chih-Yin", LastName: "Lee", Password: "test2", Email: "c788678867886@gmail.com", Followers: []string{"JasonHo"}, Following: []string{"JasonHo"}, 
 			Bio: "Hi everyone, this is Mars Lee.", Tag: "Bruno Mars"},
@@ -26,7 +26,7 @@ func dbReinsert() {
 			Bio: "Hi everyone, this is Jason He.", Tag: "Jason hehehehe"},
 		model.User{ID: bson.NewObjectId(), Username: "DianeLin", FirstName: "Diane", LastName: "Lin", Password: "test4", Email: "diane@gmail.com", Followers: []string{}, Following: []string{}, 
 			Bio: "Hi everyone, this is Diane Lin.", Tag: "Diane Kruger"}, 
-		model.User{ID: bson.NewObjectId(), Username: "TomRiddle", FirstName: "Tom", LastName: "Riddle", Password: "test5", Email: "triddle@gmail.com", Followers: []string{}, Following: []string{}, 
+		model.User{ID: bson.NewObjectId(), Username: "TomRiddle", FirstName: "Tom", LastName: "Riddle", Password: "test5", Email: "triddle@gmail.com", Followers: []string{}, Following: []string{"JasonHo"}, 
 			Bio: "Hi everyone, this is Lord Voldemort.", Tag: "Voldemort"}, 
 		model.User{ID: bson.NewObjectId(), Username: "JS", FirstName: "Jon", Password: "pass", Email: "json@gmail.com", Followers: []string{}, Following: []string{}},
 	}
@@ -41,7 +41,8 @@ func dbReinsert() {
 	notificationC := h.DB.DB(h.DBName).C(model.NotificationCollection)
 
 	notifications := []model.Individual {
-		model.Individual{ID: bson.NewObjectId(), Username: "JasonHo", Notifications: []model.Notification{model.Notification{Timestamp: time.Now(), Detail: model.FollowNotif{Followee: "MarsLee", Follower: "JasonHo"}}}},
+		model.Individual{ID: bson.NewObjectId(), Username: "JasonHo", Notifications: []model.Notification{model.Notification{Timestamp: time.Now(), Type: model.FollowType, Detail: model.FollowNotif{Followee: "JasonHo", Follower: "MarsLee"}},
+			model.Notification{Timestamp: time.Now(), Type: model.FollowType, Detail: model.FollowNotif{Followee: "JasonHo", Follower: "TomRiddle"}}}},
 		model.Individual{ID: bson.NewObjectId(), Username: "MarsLee", Notifications: make([]model.Notification, 0)},
 		model.Individual{ID: bson.NewObjectId(), Username: "JasonHe", Notifications: make([]model.Notification, 0)},
 		model.Individual{ID: bson.NewObjectId(), Username: "DianeLin", Notifications: make([]model.Notification, 0)},
