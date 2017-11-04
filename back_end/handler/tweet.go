@@ -7,7 +7,6 @@ import (
 	"gopkg.in/mgo.v2/bson"
 	"github.com/labstack/echo"
 	"model"
-	"notification"
 	"github.com/dgrijalva/jwt-go"
 	"math"
 	"strconv"
@@ -134,7 +133,7 @@ func (h *Handler) NewTweet(c echo.Context) (err error) {
 	container.Owner = tweet.Owner
 	container.Message = tweet.Message
 
-	h.NotifHandler.Manager.Operator <- notification.NewTweetNotif{Publisher: userName}
+	h.NotifHandler.Manager.Operator <- model.NewTweetNotif{Publisher: userName}
 
 	return c.JSON(http.StatusOK, container)
 }

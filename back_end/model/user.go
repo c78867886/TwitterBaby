@@ -1,7 +1,6 @@
 package model
 
 import "gopkg.in/mgo.v2/bson"
-//import "gopkg.in/mgo.v2"
 
 // User : Data structure that holds a single user.
 type User struct {
