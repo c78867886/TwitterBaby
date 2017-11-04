@@ -1,4 +1,4 @@
-<app-nav-bar></app-nav-bar>
+<!-- <app-nav-bar></app-nav-bar> -->
 <div class="container">
   <!-- Banner -->
   <div class="banner">
@@ -50,20 +50,25 @@
 
   </div>
 
-
-
   <div class="displayBody">
     <h3>My Info</h3>
+    <form>
     <div>
       <label class="profileLabel">User Name: {{userName}}</label>
     </div>
     <div><label class="profileLabel">First Name: {{userFirstName}}</label></div>
     <div><label class="profileLabel">Last Name: {{userLastName}}</label></div>
     <div><label class="profileLabel">Email: {{userEmail}}</label></div>
+    <div><label class="profileLabel">Email:</label></div>
+    <div>
+      <input type="text" [(ngModel)]='userLastName' name='userLastName'>
+    </div>
+
     <div>
       <label class="profileLabel">Bio: </label>
-      <textarea>{{userBio}}</textarea>
+      <p id="BioTextArea">{{userBio}}</p>
     </div>
+    </form>
   </div>
   
 

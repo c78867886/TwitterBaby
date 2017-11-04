@@ -9,6 +9,7 @@ import 'rxjs/add/operator/toPromise';
 export class DataService {
   localhost = "http://localhost:1323";
   private timelineSource = new BehaviorSubject<object>([]);
+  private backEndHostUrl: String = "http://127.0.0.1:1323/api/v1";
   constructor(private http: Http) { }
 
   // Create the header for http request
@@ -115,5 +116,22 @@ export class DataService {
   private handleError(error: any): Promise<any> {
     console.error('An error occurred', error);
     return Promise.reject(error.body || error);
+  }
+
+  /**
+   * Update User Info
+   * By Diane
+   * @param error 
+   */
+  updateUserInfo(userNewInfo): Promise<Object>{
+    let options: RequestOptions = this.getHeader();
+    // console.log(`${this.authUrl}/signup`, signUpUserInfo, options);
+    return this.http.post(`${this.backEndHostUrl}/updateUserInfo`,userNewInfo, options)
+      .toPromise()
+      .then((res: Response) => {
+        localStorage.setItem('user_info_object', JSON.stringify(res.json()));
+        console.log(res.json());
+    })
+    .catch(this.handleError);
   }
 }

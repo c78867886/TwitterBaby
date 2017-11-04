@@ -47,5 +47,15 @@ export class NavBarComponent implements OnInit {
       this.data.getTweetListTimeLine(this.hostName, 1);
     }
     
+
+  }
+
+  /**
+  * Go to user profile
+  */
+  goToUserProfile(): void{
+    console.log("Navigate to the userprofile webpage");
+    this.auth.isLoggedIn();
+    this.route.navigateByUrl('/userprofile');
   }
 }

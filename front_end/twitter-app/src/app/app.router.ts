@@ -20,8 +20,8 @@ const appRoutes: Routes = [
     { path: '404', component: NotfoundComponent, canActivate: [AuthGuardService]},
     { path: 'login', component: UserloginComponent, canActivate: [AuthGuardLoggedService]},
     { path: 'signup', component: SignUpComponent, canActivate: [AuthGuardLoggedService]},
-    { path: 'userprofile', component: UserprofileComponent, canActivate: [AuthGuardLoggedService]},
-    { path: '**', redirectTo: '/home' },
+    { path: 'userprofile', component: UserprofileComponent },
+    { path: '**', redirectTo: '/userprofile' },
 ];
 
 export const rooting = RouterModule.forRoot(appRoutes);

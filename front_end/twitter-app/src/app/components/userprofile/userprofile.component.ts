@@ -23,9 +23,20 @@ export class UserprofileComponent implements OnInit {
               ) { }
 
   ngOnInit() {
-    /**
-     * Get user Info
-     */
+    let userinfo = JSON.parse(localStorage.getItem("user_info_object"));
+    if (userinfo) {
+        this.userName = userinfo.username;
+        this.userFirstName = userinfo.firstname;
+        this.userLastName = userinfo.lastname;
+        this.userEmail = userinfo.email;
+        this.userBio = userinfo.bio;
+    }
+  }
+  
+  /**
+   * Get User Info
+   */
+  getUserInfo() {
     let userinfo = JSON.parse(localStorage.getItem("user_info_object"));
     if (userinfo) {
         this.userName = userinfo.username;
@@ -38,7 +49,7 @@ export class UserprofileComponent implements OnInit {
 
   /*
   * Edit profile
-  * Open a dilog
+  * Open a dilog EditUserProfileDialogComponent
   */
   openEditUserProfileDiag() {
     let dialogRef = this.dialog.open(EditUserProfileDialogComponent, {
@@ -47,14 +58,24 @@ export class UserprofileComponent implements OnInit {
 
     })
 
-
   /**
    *  After the dialog is closed
    */
   dialogRef.afterClosed().subscribe(result => {
-      console.log('Dialog is closed: ${result}');
-      this.dialogResult = result;
-    })
+    // Fresh user info 
+    console.log('Dialog is closed: ${result}');
+    this.dialogResult = result;
+    let userinfo = JSON.parse(localStorage.getItem("user_info_object"));
+    
+    userinfo = JSON.parse(localStorage.getItem("user_info_object"));
+    if (userinfo) {
+        this.userName = userinfo.username;
+        this.userFirstName = userinfo.firstname;
+        this.userLastName = userinfo.lastname;
+        this.userEmail = userinfo.email;
+        this.userBio = userinfo.bio;
+    }
+  })
   }
 
 }
