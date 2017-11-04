@@ -76,16 +76,11 @@ func TerminalControl(e *echo.Echo, h *handler.Handler, srvAddr string) {
 			ShutdownServer(e, h)
 			break
 		} else if op == "h" {
-			fmt.Println("'h' for help")
 			fmt.Println("'q' to shutdown server")
-			fmt.Println("'d' to drop database")
 			fmt.Println("'i' to reconstruct database to default (w/ some initial collections)")
 			fmt.Println("'r' to reconstruct testing database")
-		} else if op == "d" {
-			dbDrop(h.DB.Clone())
-			fmt.Println("Dropped database.")
 		} else if op == "i" {
-			dbReinsert(h.DB.Clone())
+			dbReinsert()
 			fmt.Println("Database reconstructed.")
 		} else if op == "r" {
 			reconstructTestDB()

@@ -3,6 +3,9 @@ package model
 import "gopkg.in/mgo.v2/bson"
 import "time"
 
+// TweetCollection : Tweet collection name in database.
+const TweetCollection = "tweets"
+
 // Tweet : Data structure that holds a single tweet.
 type Tweet struct {
 	ID			bson.ObjectId	`json:"id" bson:"_id"`

@@ -92,7 +92,7 @@ func TestSignup(t *testing.T) {
 	for _, tc := range testCases {
 		// Delete DB entry
 		if tc.positive {
-			err := h.DB.DB(h.DBName).C("users").Remove(bson.M{"username": "testSignup"})
+			err := h.DB.DB(h.DBName).C(model.UserCollection).Remove(bson.M{"username": "testSignup"})
 			if err != nil {
 				if err != mgo.ErrNotFound {
 					t.Fatal(err)
@@ -259,11 +259,11 @@ func TestFollow(t *testing.T) {
 				assert.Equal(t, tc.expected.message, rec.Body.String(), tc.input.user + " follows " + tc.input.target)
 
 				user := model.User{}
-				h.DB.DB(h.DBName).C("users").Find(bson.M{"username": tc.input.target}).One(&user)
+				h.DB.DB(h.DBName).C(model.UserCollection).Find(bson.M{"username": tc.input.target}).One(&user)
 				assert.Equal(t, []string{tc.input.user}, user.Followers, tc.input.user + " follows " + tc.input.target)
 
-				h.DB.DB(h.DBName).C("users").Update(bson.M{"username": tc.input.target}, bson.M{"$pull": bson.M{"followers": tc.input.user}})
-				h.DB.DB(h.DBName).C("users").Update(bson.M{"username": tc.input.user}, bson.M{"$pull": bson.M{"following": tc.input.target}})
+				h.DB.DB(h.DBName).C(model.UserCollection).Update(bson.M{"username": tc.input.target}, bson.M{"$pull": bson.M{"followers": tc.input.user}})
+				h.DB.DB(h.DBName).C(model.UserCollection).Update(bson.M{"username": tc.input.user}, bson.M{"$pull": bson.M{"following": tc.input.target}})
 			}
 		} else {
 			if err := h.Follow(c); assert.Error(t, err, tc.input.user + " follows " + tc.input.target) {
@@ -310,11 +310,11 @@ func TestUnfollow(t *testing.T) {
 				assert.Equal(t, tc.expected.message, rec.Body.String(), tc.input.user + " unfollows " + tc.input.target)
 
 				user := model.User{}
-				h.DB.DB(h.DBName).C("users").Find(bson.M{"username": tc.input.target}).One(&user)
+				h.DB.DB(h.DBName).C(model.UserCollection).Find(bson.M{"username": tc.input.target}).One(&user)
 				assert.Equal(t, []string{}, user.Followers, tc.input.user + " unfollows " + tc.input.target)
 
-				h.DB.DB(h.DBName).C("users").Update(bson.M{"username": tc.input.target}, bson.M{"$addToSet": bson.M{"followers": tc.input.user}})
-				h.DB.DB(h.DBName).C("users").Update(bson.M{"username": tc.input.user}, bson.M{"$addToSet": bson.M{"following": tc.input.target}})
+				h.DB.DB(h.DBName).C(model.UserCollection).Update(bson.M{"username": tc.input.target}, bson.M{"$addToSet": bson.M{"followers": tc.input.user}})
+				h.DB.DB(h.DBName).C(model.UserCollection).Update(bson.M{"username": tc.input.user}, bson.M{"$addToSet": bson.M{"following": tc.input.target}})
 			}
 		} else {
 			if err := h.Unfollow(c); assert.Error(t, err, tc.input.user + " unfollows " + tc.input.target) {

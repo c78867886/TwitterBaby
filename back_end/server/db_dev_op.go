@@ -5,27 +5,22 @@ import (
 	"handler"
 	"time"
 	"gopkg.in/mgo.v2/bson"
-	"gopkg.in/mgo.v2"
 )
 
-func dbDrop(db *mgo.Session) {
-	err := db.DB("se_avengers").DropDatabase()
+func dbReinsert() {
+	h := handler.NewHandler("mongodb://SEavenger:SEavenger@ds149324.mlab.com:49324/se_avengers")
+
+	err := h.DB.DB(h.DBName).DropDatabase()
 	if err != nil {
 		panic(err)
 	}
 
-	db.Close()
-}
-
-func dbReinsert(db *mgo.Session) {
-	dbDrop(db.Clone())
-
-	userC := db.DB("se_avengers").C("users")
+	userC := h.DB.DB(h.DBName).C(model.UserCollection)
 
 	users := []model.User {
-		model.User{ID: bson.NewObjectId(), Username: "JasonHo", FirstName: "Jason", LastName: "Ho", Password: "test1", Email: "hojason117@gmail.com", Followers: []string{}, Following: []string{}, 
+		model.User{ID: bson.NewObjectId(), Username: "JasonHo", FirstName: "Jason", LastName: "Ho", Password: "test1", Email: "hojason117@gmail.com", Followers: []string{"MarsLee"}, Following: []string{"MarsLee"}, 
 			Bio: "Hi everyone, this is Jason Ho.", Tag: "Albert Einstein"},
-		model.User{ID: bson.NewObjectId(), Username: "MarsLee", FirstName: "Chih-Yin", LastName: "Lee", Password: "test2", Email: "c788678867886@gmail.com", Followers: []string{}, Following: []string{}, 
+		model.User{ID: bson.NewObjectId(), Username: "MarsLee", FirstName: "Chih-Yin", LastName: "Lee", Password: "test2", Email: "c788678867886@gmail.com", Followers: []string{"JasonHo"}, Following: []string{"JasonHo"}, 
 			Bio: "Hi everyone, this is Mars Lee.", Tag: "Bruno Mars"},
 		model.User{ID: bson.NewObjectId(), Username: "JasonHe", FirstName: "Jason", LastName: "He", Password: "test3", Email: "hexing_h@hotmail.com", Followers: []string{}, Following: []string{}, 
 			Bio: "Hi everyone, this is Jason He.", Tag: "Jason hehehehe"},
@@ -43,7 +38,25 @@ func dbReinsert(db *mgo.Session) {
 		}
 	}
 
-	tweetC := db.DB("se_avengers").C("tweets")
+	notificationC := h.DB.DB(h.DBName).C(model.NotificationCollection)
+
+	notifications := []model.Individual {
+		model.Individual{ID: bson.NewObjectId(), Username: "JasonHo", Notifications: []model.Notification{model.Notification{Timestamp: time.Now(), Detail: model.FollowNotif{Followee: "MarsLee", Follower: "JasonHo"}}}},
+		model.Individual{ID: bson.NewObjectId(), Username: "MarsLee", Notifications: make([]model.Notification, 0)},
+		model.Individual{ID: bson.NewObjectId(), Username: "JasonHe", Notifications: make([]model.Notification, 0)},
+		model.Individual{ID: bson.NewObjectId(), Username: "DianeLin", Notifications: make([]model.Notification, 0)},
+		model.Individual{ID: bson.NewObjectId(), Username: "TomRiddle", Notifications: make([]model.Notification, 0)},
+		model.Individual{ID: bson.NewObjectId(), Username: "JS", Notifications: make([]model.Notification, 0)},
+	}
+
+	for _, c := range notifications {
+		err := notificationC.Insert(c)
+		if err != nil {
+			panic(err)
+		}
+	}
+
+	tweetC := h.DB.DB(h.DBName).C(model.TweetCollection)
 
 	tweets := []model.Tweet {
 		model.Tweet{ID: bson.NewObjectId(), Owner: "JasonHo", Message: "Hi, I am Jason Ho. Weather sucks.", Timestamp: time.Now()}, 
@@ -187,7 +200,7 @@ func dbReinsert(db *mgo.Session) {
 		}
 	}
 
-	db.Close()
+	h.DB.Close()
 }
 
 func reconstructTestDB() {
@@ -198,7 +211,7 @@ func reconstructTestDB() {
 		panic(err)
 	}
 
-	userC := h.DB.DB(h.DBName).C("users")
+	userC := h.DB.DB(h.DBName).C(model.UserCollection)
 
 	users := []model.User {
 		model.User{ID: bson.NewObjectId(), Username: "testSignup", FirstName: "test", LastName: "signup", Password: "test", Email: "testSignup@gmail.com", Followers: []string{}, Following: []string{}, 
@@ -223,15 +236,47 @@ func reconstructTestDB() {
 		model.User{ID: bson.NewObjectId(), Username: "testFollow_2", FirstName: "testFollow_2", Password: "test", Email: "testFollow_2@gmail.com", Followers: []string{}, Following: []string{}},
 		model.User{ID: bson.NewObjectId(), Username: "testUnfollow", FirstName: "testUnfollow", Password: "test", Email: "testUnfollow@gmail.com", Followers: []string{}, Following: []string{"testUnfollow_1", "testUnfollow_2"}},
 		model.User{ID: bson.NewObjectId(), Username: "testUnfollow_1", FirstName: "testUnfollow_1", Password: "test", Email: "testUnfollow_1@gmail.com", Followers: []string{}, Following: []string{}},
-		model.User{ID: bson.NewObjectId(), Username: "testUnfollow_2", FirstName: "testUnfollow_2", Password: "test", Email: "testUnfollow_2@gmail.com", Followers: []string{}, Following: []string{}},
+		model.User{ID: bson.NewObjectId(), Username: "testUnfollow_2", FirstName: "testUnfollow_2", Password: "test", Email: "testUnfollow_2@gmail.com", Followers: []string{"testUnfollow"}, Following: []string{}},
 		model.User{ID: bson.NewObjectId(), Username: "testUpdateUserInfo", FirstName: "testUpdateUserInfo", Password: "test", Email: "testUpdateUserInfo@gmail.com", Followers: []string{}, Following: []string{}},
 		model.User{ID: bson.NewObjectId(), Username: "testUpdateUserInfo_empty_firstname", FirstName: "testUpdateUserInfo_empty_firstname", Password: "test", Email: "testUpdateUserInfo_empty_firstname@gmail.com", 
 			Followers: []string{}, Following: []string{}, Tag: "testUpdate"},
 		model.User{ID: bson.NewObjectId(), Username: "testUpdateProfilePicture", FirstName: "testUpdateProfilePicture", Password: "test", Email: "testUpdateProfilePicture@gmail.com", Followers: []string{}, Following: []string{}},
 	}
 
-	for _, u:= range users {
+	for _, u := range users {
 		err := userC.Insert(u)
+		if err != nil {
+			panic(err)
+		}
+	}
+
+	notificationC := h.DB.DB(h.DBName).C(model.NotificationCollection)
+
+	notifications := []model.Individual {
+		model.Individual{ID: bson.NewObjectId(), Username: "testSignup", Notifications: make([]model.Notification, 0)},
+		model.Individual{ID: bson.NewObjectId(), Username: "testSignup_dup", Notifications: make([]model.Notification, 0)},
+		model.Individual{ID: bson.NewObjectId(), Username: "testLogin", Notifications: make([]model.Notification, 0)},
+		model.Individual{ID: bson.NewObjectId(), Username: "testUserInfo_1", Notifications: make([]model.Notification, 0)},
+		model.Individual{ID: bson.NewObjectId(), Username: "testUserInfo_2", Notifications: make([]model.Notification, 0)},
+		model.Individual{ID: bson.NewObjectId(), Username: "testShowFollower_1", Notifications: make([]model.Notification, 0)},
+		model.Individual{ID: bson.NewObjectId(), Username: "testShowFollower_2", Notifications: make([]model.Notification, 0)},
+		model.Individual{ID: bson.NewObjectId(), Username: "testShowFollower_3", Notifications: make([]model.Notification, 0)},
+		model.Individual{ID: bson.NewObjectId(), Username: "testShowFollowing_1", Notifications: make([]model.Notification, 0)},
+		model.Individual{ID: bson.NewObjectId(), Username: "testShowFollowing_2", Notifications: make([]model.Notification, 0)},
+		model.Individual{ID: bson.NewObjectId(), Username: "testShowFollowing_3", Notifications: make([]model.Notification, 0)},
+		model.Individual{ID: bson.NewObjectId(), Username: "testFollow", Notifications: make([]model.Notification, 0)},
+		model.Individual{ID: bson.NewObjectId(), Username: "testFollow_1", Notifications: make([]model.Notification, 0)},
+		model.Individual{ID: bson.NewObjectId(), Username: "testFollow_2", Notifications: make([]model.Notification, 0)},
+		model.Individual{ID: bson.NewObjectId(), Username: "testUnfollow", Notifications: make([]model.Notification, 0)},
+		model.Individual{ID: bson.NewObjectId(), Username: "testUnfollow_1", Notifications: make([]model.Notification, 0)},
+		model.Individual{ID: bson.NewObjectId(), Username: "testUnfollow_2", Notifications: make([]model.Notification, 0)},
+		model.Individual{ID: bson.NewObjectId(), Username: "testUpdateUserInfo", Notifications: make([]model.Notification, 0)},
+		model.Individual{ID: bson.NewObjectId(), Username: "testUpdateUserInfo_empty_firstname", Notifications: make([]model.Notification, 0)},
+		model.Individual{ID: bson.NewObjectId(), Username: "testUpdateProfilePicture", Notifications: make([]model.Notification, 0)},
+	}
+
+	for _, c := range notifications {
+		err := notificationC.Insert(c)
 		if err != nil {
 			panic(err)
 		}
