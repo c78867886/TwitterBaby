@@ -1,7 +1,6 @@
 package handler
 
 import (
-	"fmt"
 	"strings"
 	"time"
 	"net/http"
@@ -146,7 +145,6 @@ func TestFetchTweetTimeLine (t *testing.T) {
 	
 }
 
-
 func getIDToken(id string) string {
 	token := jwt.New(jwt.SigningMethodHS256)
 
@@ -160,73 +158,4 @@ func getIDToken(id string) string {
 	}
 
 	return Token
-}
-
-func getToken(username string) string {
-	token := jwt.New(jwt.SigningMethodHS256)
-
-	claims := token.Claims.(jwt.MapClaims)
-	claims["username"] = username
-	claims["exp"] = time.Now().Add(time.Hour * 24).Unix()
-
-	Token, err := token.SignedString([]byte(Key))
-	if err != nil {
-		panic(err)
-	}
-
-	return Token
-}
-
-func processJWTToken(c echo.Context) {
-	type JWTConfig struct {
-		SigningKey 		interface{}
-		SigningMethod	string
-		ContextKey		string
-		TokenLookup		string
-		AuthScheme 		string
-		Claims 			jwt.Claims
-		keyFunc 		jwt.Keyfunc
-	}
-	var DefaultJWTConfig = JWTConfig {
-		SigningKey: 	[]byte(Key),
-		SigningMethod: 	"HS256",
-		ContextKey:    	"user",
-		TokenLookup:   	"header:" + echo.HeaderAuthorization,
-		AuthScheme:    	"Bearer",
-		Claims:       	jwt.MapClaims{},
-	}
-	DefaultJWTConfig.keyFunc = func(t *jwt.Token) (interface{}, error) {
-		if t.Method.Alg() != DefaultJWTConfig.SigningMethod {
-			return nil, fmt.Errorf("Unexpected jwt signing method=%v", t.Header["alg"])
-		}
-		return DefaultJWTConfig.SigningKey, nil
-	}
-
-	parts := strings.Split(DefaultJWTConfig.TokenLookup, ":")
-	extractor := jwtFromHeader(parts[1], DefaultJWTConfig.AuthScheme)
-
-	auth, err := extractor(c)
-	token := new(jwt.Token)
-	
-	if _, ok := DefaultJWTConfig.Claims.(jwt.MapClaims); ok {
-		token, err = jwt.Parse(auth, DefaultJWTConfig.keyFunc)
-	}
-
-	if err == nil && token.Valid {
-		c.Set(DefaultJWTConfig.ContextKey, token)
-	}
-}
-
-var ErrJWTMissing = echo.NewHTTPError(http.StatusBadRequest, "Missing or malformed jwt")
-type jwtExtractor func(echo.Context) (string, error)
-
-func jwtFromHeader(header string, authScheme string) jwtExtractor {
-	return func(c echo.Context) (string, error) {
-		auth := c.Request().Header.Get(header)
-		l := len(authScheme)
-		if len(auth) > l+1 && auth[:l] == authScheme {
-			return auth[l+1:], nil
-		}
-		return "", ErrJWTMissing
-	}
 }

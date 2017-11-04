@@ -2,6 +2,9 @@ package model
 
 import "gopkg.in/mgo.v2/bson"
 
+// UserCollection : User collection name in database.
+const UserCollection = "users"
+
 // User : Data structure that holds a single user.
 type User struct {
 	ID        	bson.ObjectId 	`json:"-" bson:"_id"`

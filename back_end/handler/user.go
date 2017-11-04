@@ -35,13 +35,17 @@ func (h *Handler) Signup(c echo.Context) (err error) {
 	}
 
 	varify := &model.User{}
-	err = db.DB(h.DBName).C("users").Find(bson.M{"$or": []bson.M{bson.M{"username": u.Username}, bson.M{"email": u.Email}}}).One(varify)
+	err = db.DB(h.DBName).C(model.UserCollection).Find(bson.M{"$or": []bson.M{bson.M{"username": u.Username}, bson.M{"email": u.Email}}}).One(varify)
 	if err == nil {
 		return &echo.HTTPError{Code: http.StatusBadRequest, Message: "Username or email already used."}
 	}
 
 	// Save user
-	err = db.DB(h.DBName).C("users").Insert(u);
+	err = db.DB(h.DBName).C(model.UserCollection).Insert(u);
+	if err != nil {
+		return
+	}
+	err = db.DB(h.DBName).C(model.NotificationCollection).Insert(model.Individual{ID: bson.NewObjectId(), Username: u.Username, Notifications: make([]model.Notification, 0)})
 	if err != nil {
 		return
 	}
@@ -68,7 +72,7 @@ func (h *Handler) Login(c echo.Context) (err error) {
 	db := h.DB.Clone()
 	defer db.Close()
 
-	err = db.DB(h.DBName).C("users").Find(bson.M{"email": u.Email, "password": u.Password}).One(u)
+	err = db.DB(h.DBName).C(model.UserCollection).Find(bson.M{"email": u.Email, "password": u.Password}).One(u)
 	if err != nil {
 		if err == mgo.ErrNotFound {
 			return &echo.HTTPError{Code: http.StatusUnauthorized, Message: "Invalid email or password."}
@@ -112,7 +116,7 @@ func (h *Handler) FetchUserInfo (c echo.Context) (err error) {
 
 	// Retrieve user info from database
 	user := model.User{}
-	err = db.DB(h.DBName).C("users").Find(bson.M{"username": c.Param("username")}).One(&user)
+	err = db.DB(h.DBName).C(model.UserCollection).Find(bson.M{"username": c.Param("username")}).One(&user)
 	if err != nil {
 		if err == mgo.ErrNotFound {
 			return &echo.HTTPError{Code: http.StatusNotFound, Message: "User does not exist."}
@@ -160,7 +164,7 @@ func (h *Handler) Follow(c echo.Context) (err error) {
 	defer db.Close()
 
 	// Add self to followee's follower list
-	err = db.DB(h.DBName).C("users").Update(bson.M{"username": followee}, bson.M{"$addToSet": bson.M{"followers": username}})
+	err = db.DB(h.DBName).C(model.UserCollection).Update(bson.M{"username": followee}, bson.M{"$addToSet": bson.M{"followers": username}})
 	if err != nil {
 		if err == mgo.ErrNotFound {
 			return &echo.HTTPError{Code: http.StatusNotFound, Message: "User does not exist."}
@@ -169,15 +173,15 @@ func (h *Handler) Follow(c echo.Context) (err error) {
 	}
 
 	// Add followee to self following list
-	err = db.DB(h.DBName).C("users").Update(bson.M{"username": username}, bson.M{"$addToSet": bson.M{"following": followee}})
+	err = db.DB(h.DBName).C(model.UserCollection).Update(bson.M{"username": username}, bson.M{"$addToSet": bson.M{"following": followee}})
 	if err != nil {
 		return
 	}
 	
 	user := model.User{}
-	err = db.DB(h.DBName).C("users").Find(bson.M{"username": username}).One(&user)
+	err = db.DB(h.DBName).C(model.UserCollection).Find(bson.M{"username": username}).One(&user)
 
-	h.NotifHandler.Manager.Operator <- model.FollowNotif{Followee: followee, Follower: username}
+	h.NotifHandler.Manager.Operator <- model.Notification{Timestamp: time.Now(), Detail: model.FollowNotif{Followee: followee, Follower: username}}
 
 	return c.JSON(http.StatusOK, user.Following)
 }
@@ -195,7 +199,7 @@ func (h *Handler) Unfollow(c echo.Context) (err error) {
 	defer db.Close()
 
 	// Remove self from followee's follower list
-	err = db.DB(h.DBName).C("users").Update(bson.M{"username": followee}, bson.M{"$pull": bson.M{"followers": username}})
+	err = db.DB(h.DBName).C(model.UserCollection).Update(bson.M{"username": followee}, bson.M{"$pull": bson.M{"followers": username}})
 	if err != nil {
 		if err == mgo.ErrNotFound {
 			return &echo.HTTPError{Code: http.StatusNotFound, Message: "User does not exist."}
@@ -204,13 +208,13 @@ func (h *Handler) Unfollow(c echo.Context) (err error) {
 	}
 
 	// Remove followee from self following list
-	err = db.DB(h.DBName).C("users").Update(bson.M{"username": username}, bson.M{"$pull": bson.M{"following": followee}})
+	err = db.DB(h.DBName).C(model.UserCollection).Update(bson.M{"username": username}, bson.M{"$pull": bson.M{"following": followee}})
 	if err != nil {
 		return
 	}
 	
 	user := model.User{}
-	err = db.DB(h.DBName).C("users").Find(bson.M{"username": username}).One(&user)
+	err = db.DB(h.DBName).C(model.UserCollection).Find(bson.M{"username": username}).One(&user)
 
 	return c.JSON(http.StatusOK, user.Following)
 }
@@ -228,7 +232,7 @@ func (h *Handler) ShowFollower(c echo.Context) (err error) {
 
 	// Retrieve user info from database
 	user := model.User{}
-	err = db.DB(h.DBName).C("users").Find(bson.M{"username": username}).One(&user)
+	err = db.DB(h.DBName).C(model.UserCollection).Find(bson.M{"username": username}).One(&user)
 	if err != nil {
 		if err == mgo.ErrNotFound {
 			return &echo.HTTPError{Code: http.StatusNotFound, Message: "User does not exist."}
@@ -246,7 +250,7 @@ func (h *Handler) ShowFollower(c echo.Context) (err error) {
 
 	for _, f := range user.Followers {
 		follower := followerData{}
-		err = db.DB(h.DBName).C("users").Find(bson.M{"username": f}).One(&follower)
+		err = db.DB(h.DBName).C(model.UserCollection).Find(bson.M{"username": f}).One(&follower)
 		if err != nil {
 			return
 		}
@@ -269,7 +273,7 @@ func (h *Handler) ShowFollowing(c echo.Context) (err error) {
 
 	// Retrieve user info from database
 	user := model.User{}
-	err = db.DB(h.DBName).C("users").Find(bson.M{"username": username}).One(&user)
+	err = db.DB(h.DBName).C(model.UserCollection).Find(bson.M{"username": username}).One(&user)
 	if err != nil {
 		if err == mgo.ErrNotFound {
 			return &echo.HTTPError{Code: http.StatusNotFound, Message: "User does not exist."}
@@ -287,7 +291,7 @@ func (h *Handler) ShowFollowing(c echo.Context) (err error) {
 
 	for _, f := range user.Following {
 		following := followingData{}
-		err = db.DB(h.DBName).C("users").Find(bson.M{"username": f}).One(&following)
+		err = db.DB(h.DBName).C(model.UserCollection).Find(bson.M{"username": f}).One(&following)
 		if err != nil {
 			return
 		}
@@ -326,7 +330,7 @@ func (h *Handler) UpdateUserInfo(c echo.Context) (err error) {
 		return &echo.HTTPError{Code: http.StatusBadRequest, Message: "Firstname cannot be empty."}
 	}
 
-	err = db.DB(h.DBName).C("users").Update(bson.M{"username": username}, bson.M{"$set": bson.M{"firstname": update.FirstName, "lastname": update.LastName, "bio": update.Bio, "tag": update.Tag}})
+	err = db.DB(h.DBName).C(model.UserCollection).Update(bson.M{"username": username}, bson.M{"$set": bson.M{"firstname": update.FirstName, "lastname": update.LastName, "bio": update.Bio, "tag": update.Tag}})
 	if err != nil {
 		if err == mgo.ErrNotFound {
 			return &echo.HTTPError{Code: http.StatusNotFound, Message: "User does not exist."}
@@ -335,7 +339,7 @@ func (h *Handler) UpdateUserInfo(c echo.Context) (err error) {
 	}
 
 	user := &model.User{}
-	err = db.DB(h.DBName).C("users").Find(bson.M{"username": username}).One(user)
+	err = db.DB(h.DBName).C(model.UserCollection).Find(bson.M{"username": username}).One(user)
 	if err != nil {
 		return
 	}
@@ -374,7 +378,7 @@ func (h *Handler) UpdateProfilePicture(c echo.Context) (err error) {
 		return &echo.HTTPError{Code: http.StatusBadRequest, Message: "Image must be smaller than 10 MB."}
 	}
 	
-	err = db.DB(h.DBName).C("users").Update(bson.M{"username": username}, bson.M{"$set": bson.M{"picture": &image.Base64String}})
+	err = db.DB(h.DBName).C(model.UserCollection).Update(bson.M{"username": username}, bson.M{"$set": bson.M{"picture": &image.Base64String}})
 	if err != nil {
 		if err == mgo.ErrNotFound {
 			return &echo.HTTPError{Code: http.StatusNotFound, Message: "User does not exist."}
@@ -383,7 +387,7 @@ func (h *Handler) UpdateProfilePicture(c echo.Context) (err error) {
 	}
 
 	user := &model.User{}
-	err = db.DB(h.DBName).C("users").Find(bson.M{"username": username}).One(user)
+	err = db.DB(h.DBName).C(model.UserCollection).Find(bson.M{"username": username}).One(user)
 	if err != nil {
 		return
 	}
