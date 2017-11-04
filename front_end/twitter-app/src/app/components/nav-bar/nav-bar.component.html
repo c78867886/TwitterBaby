@@ -11,7 +11,7 @@
   
   <button class="refresh" (click)="refresh()" mat-icon-button>
     <mat-icon>refresh</mat-icon>
-    <div class="redPoint"></div>
+    <div *ngIf="rcvnewTweet" class="redPoint"></div>
   </button>
 
   <button class="notifications" mat-icon-button>

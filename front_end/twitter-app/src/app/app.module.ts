@@ -9,6 +9,7 @@ import { DataService } from './services/data.service';
 import { AuthService } from './services/auth.service';
 import { AuthGuardService } from './services/auth-guard.service';
 import { AuthGuardLoggedService } from './services/auth-guard-logged.service';
+import { NotificationService } from './services/notification.service';
 import { rooting } from './app.router';
 
 import { MatToolbarModule, 
@@ -71,6 +72,7 @@ import { NotfoundComponent } from './components/notfound/notfound.component';
   providers: [
     { provide: 'data', useClass: DataService },
     { provide: 'auth', useClass: AuthService },
+    { provide: "notify", useClass: NotificationService},
     AuthGuardService, AuthGuardLoggedService
   ],
   bootstrap: [AppComponent]

@@ -85,7 +85,7 @@ export class DataService {
     let options: RequestOptions = this.getHeader();
     let message: object = {message: content};
     //console.log(message);
-    return this.http.post(`http://127.0.0.1:1323/api/v1/newTweet/${id}`, message, options)
+    return this.http.post(`http://127.0.0.1:1323/api/v1/newTweet`, message, options)
             .toPromise()
             .then((res: Response) => {
               this.getTweetListTimeLine(id, 1);
