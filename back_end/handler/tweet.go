@@ -108,7 +108,7 @@ func (h *Handler) NewTweet(c echo.Context) (err error) {
 	db := h.DB.Clone()
 	defer db.Close()
 
-	tweet := &model.Tweet{ID: bson.NewObjectId(), Owner: string(userName), Timestamp: time.Now()}
+	tweet := &model.Tweet{ID: bson.NewObjectId(), Owner: string(userName), Numcomment: 0, Timestamp: time.Now()}
 	if err = c.Bind(tweet); err != nil {
 		return
 	}

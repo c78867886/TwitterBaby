@@ -12,5 +12,6 @@ type Tweet struct {
 	Owner 		string			`json:"owner" bson:"owner"`
 	From 		string			`json:"from,omitempty" bson:"from,omitempty"`
 	Message 	string			`json:"message" bson:"message"`
+	Numcomment  int				`json:"numcomment" bson:"numcomment"`
 	Timestamp	time.Time		`json:"timestamp,omitempty" bson:"timestamp"`
 }
