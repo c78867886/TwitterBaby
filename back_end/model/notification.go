@@ -23,8 +23,9 @@ type (
 
 	// FollowNotif : Data structure that holds a follow notification.
 	FollowNotif struct {
-		Followee	string	`bson:"followee"`
-		Follower	string	`bson:"follower"`
+		Timestamp	time.Time	`bson:"timestamp"`
+		Followee	string		`bson:"followee"`
+		Follower	string		`bson:"follower"`
 	}
 
 	/*// Data structure that holds a 

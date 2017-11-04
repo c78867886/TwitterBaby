@@ -133,7 +133,7 @@ func (h *Handler) NewTweet(c echo.Context) (err error) {
 	container.Owner = tweet.Owner
 	container.Message = tweet.Message
 
-	h.NotifHandler.Manager.Operator <- model.NewTweetNotif{Publisher: userName}
+	h.NotifHandler.Manager.Operator <- model.NewTweetNotif{Timestamp: time.Now(), Publisher: userName}
 
 	return c.JSON(http.StatusOK, container)
 }

@@ -151,7 +151,7 @@ func (manager *ClientManager) flushNotif(conn *Client) {
 	defer db.Close()
 
 	target := model.Individual{}
-	err := db.DB(manager.dbName).C("notification").Find(bson.M{"username": conn.username}).One(&target)
+	err := db.DB(manager.dbName).C("notifications").Find(bson.M{"username": conn.username}).One(&target)
 	if err != nil {
 		if err == mgo.ErrNotFound {
 			return
@@ -174,15 +174,13 @@ func (manager *ClientManager) forwardNewTweetNotif(m model.NewTweetNotif) {
 	defer db.Close()
 
 	targets := []model.User{}
-	err := db.DB(manager.dbName).C("user").Find(bson.M{"following": bson.M{"$in": m.Publisher}}).All(&targets)
+	err := db.DB(manager.dbName).C("users").Find(bson.M{"following": m.Publisher}).All(&targets)
 	if err != nil {
-		if err == mgo.ErrNotFound {
-			return
-		}
 		panic(err)
 	}
 
 	for _, t := range targets {
+		fmt.Println(t.Username)
 		if val, ok := manager.Clients[t.Username]; ok {
 			for _, c := range val {
 				c.incoming <- m
