@@ -50,6 +50,8 @@ func NewServer(h *handler.Handler) (e *echo.Echo) {
 	e.POST("/api/v1/newTweet", h.NewTweet)
 	e.DELETE("/api/v1/deleteTweet/:tweet", h.DeleteTweet)
 	e.GET("/api/v1/tweettimeline/:username", h.FetchTweetTimeLine)
+	e.POST("/api/v1/newcomment/:tweet", h.NewComment)
+	e.GET("/api/v1/fetchcomment/:tweet", h.FetchComment)
 	
 	// c.Path() == "/" || c.Path() == "/index.html" || c.Path() == "/favicon.ico" || c.Path() == "/inline.bundle.js" || c.Path() == "/inline.bundle.js.map" 
 	// || c.Path() == "/main.bundle.js.map" || c.Path() == "/polyfills.bundle.js" || c.Path() == "/polyfills.bundle.js.map" || c.Path() == "/styles.bundle.js" 
