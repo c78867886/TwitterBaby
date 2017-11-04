@@ -47,7 +47,7 @@ func NewServer(h *handler.Handler) (e *echo.Echo) {
 	e.GET("/api/v1/showFollower/:username", h.ShowFollower)
 	e.GET("/api/v1/showFollowing/:username", h.ShowFollowing)
 	e.GET("/api/v1/tweetlist/:username", h.FetchTweets)
-	e.POST("/api/v1/newTweet/:id", h.NewTweet)
+	e.POST("/api/v1/newTweet", h.NewTweet)
 	e.DELETE("/api/v1/deleteTweet/:tweet", h.DeleteTweet)
 	e.GET("/api/v1/tweettimeline/:username", h.FetchTweetTimeLine)
 	
