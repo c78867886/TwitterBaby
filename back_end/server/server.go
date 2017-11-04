@@ -103,4 +103,10 @@ func ShutdownServer(e *echo.Echo, h *handler.Handler) {
 	if err := e.Shutdown(ctx); err != nil {
 		e.Logger.Fatal(err)
 	}
+
+	for _, u := range h.NotifHandler.Manager.Clients {
+		for _, c := range u {
+			h.NotifHandler.Manager.Unregister <- c
+		}
+	}
 }

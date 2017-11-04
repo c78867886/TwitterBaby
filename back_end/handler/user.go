@@ -8,7 +8,6 @@ import (
 	"gopkg.in/mgo.v2/bson"
 	"github.com/labstack/echo"
 	"model"
-	"notification"
 )
 
 // Signup : Create an user instance.
@@ -178,7 +177,7 @@ func (h *Handler) Follow(c echo.Context) (err error) {
 	user := model.User{}
 	err = db.DB(h.DBName).C("users").Find(bson.M{"username": username}).One(&user)
 
-	h.NotifHandler.Manager.Operator <- notification.FollowNotif{Followee: followee, Follower: username}
+	h.NotifHandler.Manager.Operator <- model.FollowNotif{Followee: followee, Follower: username}
 
 	return c.JSON(http.StatusOK, user.Following)
 }
