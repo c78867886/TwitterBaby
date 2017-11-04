@@ -181,7 +181,7 @@ func (h *Handler) Follow(c echo.Context) (err error) {
 	user := model.User{}
 	err = db.DB(h.DBName).C(model.UserCollection).Find(bson.M{"username": username}).One(&user)
 
-	h.NotifHandler.Manager.Operator <- model.Notification{Timestamp: time.Now(), Detail: model.FollowNotif{Followee: followee, Follower: username}}
+	h.NotifHandler.Manager.Operator <- model.Notification{Timestamp: time.Now(), Type: model.FollowType, Detail: model.FollowNotif{Followee: followee, Follower: username}}
 
 	return c.JSON(http.StatusOK, user.Following)
 }

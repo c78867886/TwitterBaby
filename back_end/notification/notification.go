@@ -103,7 +103,7 @@ func (manager *ClientManager) start() {
 			go manager.flushNotif(conn)
 		case conn := <- manager.Unregister:
 			if _, ok := manager.Clients[conn.username][conn.id]; ok {
-				conn.incoming <- model.Notification{Timestamp: time.Now(), Detail: nil}
+				conn.incoming <- model.Notification{Timestamp: time.Now(), Type: "", Detail: nil}
 				close(conn.incoming)
 				conn.Socket.WriteMessage(websocket.CloseMessage, []byte{})
 				conn.Socket.Close()
@@ -125,8 +125,11 @@ func (c *Client) read(manager *ClientManager) {
 
 		switch t {
 		case websocket.TextMessage:
-			if string(m) == "Clear notifications." {
+			switch string(m) {
+			case "Clear notifications.":
 				manager.clearNotif(c.username)
+			default:
+				fmt.Println("Invalid text message from client.")
 			}
 		default:
 			fmt.Println("Invalid message type from client.")
@@ -143,7 +146,15 @@ func (c *Client) write(manager *ClientManager) {
 		case model.NewTweetNotif:
 			c.Socket.WriteMessage(websocket.TextMessage, []byte("New tweets."))
 		case model.FollowNotif:
-			c.Socket.WriteMessage(websocket.TextMessage, []byte(message.Detail.(model.FollowNotif).Follower + " follows you."))
+			c.Socket.WriteJSON(struct {
+				Timestamp	time.Time	`json:"timestamp"`
+				Type		string		`json:"type"`
+				Detail		string		`json:"detail"`
+			}{
+				Timestamp: message.Timestamp,
+				Type: message.Type,
+				Detail: message.Detail.(model.FollowNotif).Follower,
+			})
 		case nil:
 			return
 		default:
