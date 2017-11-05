@@ -16,9 +16,9 @@
 
   <button matTooltip="View notifications" class="notifications" mat-icon-button [matMenuTriggerFor]="notificationList">
     <mat-icon>notifications</mat-icon>
-    <div *ngIf="followNotificationList.length !== 0" class="notification">
+    <p *ngIf="followNotificationList.length !== 0" class="notification">
       {{ followNotificationList.length }}
-    </div>
+    </p>
   </button>
   <mat-menu #notificationList="matMenu" [overlapTrigger]="false">
     <div class="notify">Notifications
@@ -29,7 +29,7 @@
     <p *ngIf="followNotificationList.length === 0" class="noNotify">
       -No notifications-
     </p>
-    <button [routerLink]="['/user/', message.detail]" class="message" *ngFor="let message of followNotificationList" mat-menu-item>
+    <button [routerLink]="['/user/', message.detail]" class="message" *ngFor="let message of followNotificationList.slice().reverse()" mat-menu-item>
         {{ message.timestamp | date: 'short'}} 
         <br/>
         <span class="followerName">{{ message.detail }}</span>
