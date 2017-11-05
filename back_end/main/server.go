@@ -3,7 +3,6 @@ package main
 import (
 	"server"
 	"handler"
-	"notification"
 )
 
 func main() {
@@ -11,8 +10,7 @@ func main() {
 	dbURL := "mongodb://SEavenger:SEavenger@ds149324.mlab.com:49324/se_avengers"
 	srvAddr := "localhost:1323"
 	h := handler.NewHandler(dbURL)
-	nh := notification.NewHandler()
-	e := server.NewServer(h, nh)
+	e := server.NewServer(h)
 
 	// Initiate parallel server control
 	go server.TerminalControl(e, h, srvAddr)

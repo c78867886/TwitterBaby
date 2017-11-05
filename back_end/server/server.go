@@ -2,7 +2,6 @@ package server
 
 import (
 	"handler"
-	"notification"
 	"fmt"
 	"time"
 	"context"
@@ -12,7 +11,7 @@ import (
 )
 
 // NewServer : Instantiate a server
-func NewServer(h *handler.Handler, nh *notification.Handler) (e *echo.Echo) {
+func NewServer(h *handler.Handler) (e *echo.Echo) {
 	e = echo.New()
 	e.HideBanner = true
 	e.Logger.SetLevel(log.ERROR)
@@ -21,7 +20,7 @@ func NewServer(h *handler.Handler, nh *notification.Handler) (e *echo.Echo) {
 		SigningKey: []byte(handler.Key),
 		Skipper: func(c echo.Context) bool {
 			// Skip authentication for and signup login requests
-			if c.Request().Method == "OPTIONS" || c.Path() == "/api/v1/login" || c.Path() == "/api/v1/signup" {
+			if c.Request().Method == "OPTIONS" || c.Path() == "/api/v1/login" || c.Path() == "/api/v1/signup" || c.Path() == "/api/v1/ws/:username" {
 				return true
 			}
 			return false
@@ -37,29 +36,22 @@ func NewServer(h *handler.Handler, nh *notification.Handler) (e *echo.Echo) {
 	}))
 
 	// Routes
-	e.GET("/api/v1/ws", nh.GetConnection)
-	e.POST("/api/v1/signup", h.Signup)
-	e.POST("/api/v1/login", h.Login)
-	e.POST("/api/v1/follow/:username", h.Follow)
-	e.POST("/api/v1/unfollow/:username", h.Unfollow)
-	e.GET("/api/v1/userInfo/:username", h.FetchUserInfo)
-	e.POST("/api/v1/updateUserInfo", h.UpdateUserInfo)
-	e.POST("/api/v1/updateProfilePic", h.UpdateProfilePicture)
-	e.GET("/api/v1/showFollower/:username", h.ShowFollower)
-	e.GET("/api/v1/showFollowing/:username", h.ShowFollowing)
-	e.GET("/api/v1/tweetlist/:username", h.FetchTweets)
-	e.POST("/api/v1/newTweet/:id", h.NewTweet)
-	e.DELETE("/api/v1/deleteTweet/:tweet", h.DeleteTweet)
-	e.GET("/api/v1/tweettimeline/:username", h.FetchTweetTimeLine)
-	
-	// c.Path() == "/" || c.Path() == "/index.html" || c.Path() == "/favicon.ico" || c.Path() == "/inline.bundle.js" || c.Path() == "/inline.bundle.js.map" 
-	// || c.Path() == "/main.bundle.js.map" || c.Path() == "/polyfills.bundle.js" || c.Path() == "/polyfills.bundle.js.map" || c.Path() == "/styles.bundle.js" 
-	// || c.Path() == "/styles.bundle.js.map" || c.Path() == "/vendor.bundle.js" || c.Path() == "/vendor.bundle.js.map" || c.Path() == "/main.bundle.js"
-
-	//e.Use(middleware.StaticWithConfig(middleware.StaticConfig{Root: "../../bin/dist", Browse: true}))
-	//e.Static("/", "../../bin/dist/assets")
-	//e.File("/index.html", "../../bin/dist/index.html")
-	//e.File("/main.bundle.js", "../../bin/dist/assets/main.bundle.js")
+	e.GET("/api/v1/ws/:username", h.NotifHandler.GetConnection)
+	e.POST("/api/v1/signup", h.UserHandler.Signup)
+	e.POST("/api/v1/login", h.UserHandler.Login)
+	e.POST("/api/v1/follow/:username", h.UserHandler.Follow)
+	e.POST("/api/v1/unfollow/:username", h.UserHandler.Unfollow)
+	e.GET("/api/v1/userInfo/:username", h.UserHandler.FetchUserInfo)
+	e.POST("/api/v1/updateUserInfo", h.UserHandler.UpdateUserInfo)
+	e.POST("/api/v1/updateProfilePic", h.UserHandler.UpdateProfilePicture)
+	e.GET("/api/v1/showFollower/:username", h.UserHandler.ShowFollower)
+	e.GET("/api/v1/showFollowing/:username", h.UserHandler.ShowFollowing)
+	e.GET("/api/v1/tweetlist/:username", h.TweetHandler.FetchTweets)
+	e.POST("/api/v1/newTweet", h.TweetHandler.NewTweet)
+	e.DELETE("/api/v1/deleteTweet/:tweet", h.TweetHandler.DeleteTweet)
+	e.GET("/api/v1/tweettimeline/:username", h.TweetHandler.FetchTweetTimeLine)
+	e.POST("/api/v1/newcomment/:tweet", h.CommentHandler.NewComment)
+	e.GET("/api/v1/fetchcomment/:tweet", h.CommentHandler.FetchComment)
 
 	return e;
 }
@@ -77,16 +69,11 @@ func TerminalControl(e *echo.Echo, h *handler.Handler, srvAddr string) {
 			ShutdownServer(e, h)
 			break
 		} else if op == "h" {
-			fmt.Println("'h' for help")
 			fmt.Println("'q' to shutdown server")
-			fmt.Println("'d' to drop database")
 			fmt.Println("'i' to reconstruct database to default (w/ some initial collections)")
 			fmt.Println("'r' to reconstruct testing database")
-		} else if op == "d" {
-			dbDrop(h.DB.Clone())
-			fmt.Println("Dropped database.")
 		} else if op == "i" {
-			dbReinsert(h.DB.Clone())
+			dbReinsert()
 			fmt.Println("Database reconstructed.")
 		} else if op == "r" {
 			reconstructTestDB()
@@ -97,7 +84,7 @@ func TerminalControl(e *echo.Echo, h *handler.Handler, srvAddr string) {
 
 // ShutdownServer : Shutdown the server
 func ShutdownServer(e *echo.Echo, h *handler.Handler) {
-	h.DB.Close()
+	h.Shutdown()
 
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()

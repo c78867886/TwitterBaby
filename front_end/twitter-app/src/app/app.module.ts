@@ -9,6 +9,7 @@ import { DataService } from './services/data.service';
 import { AuthService } from './services/auth.service';
 import { AuthGuardService } from './services/auth-guard.service';
 import { AuthGuardLoggedService } from './services/auth-guard-logged.service';
+import { NotificationService } from './services/notification.service';
 import { rooting } from './app.router';
 import { ImageUploadModule } from "angular2-image-upload";
 import { MediaService } from './services/media.service';
@@ -24,8 +25,9 @@ import { MatToolbarModule,
          MatExpansionModule,
          MatProgressSpinnerModule,
          MatChipsModule,
+         MatTooltipModule
          } from '@angular/material';
-
+         
 import { UserInfoComponent } from './components/user-info/user-info.component';
 import { TweetlistComponent } from './components/tweetlist/tweetlist.component';
 import { PostareaComponent } from './components/postarea/postarea.component';
@@ -75,6 +77,7 @@ import { EditUserProfileDialogComponent } from './components/edit-user-profile-d
     MatExpansionModule,
     MatProgressSpinnerModule,
     MatChipsModule,
+    MatTooltipModule,
     rooting,
     ReactiveFormsModule,
     MatDialogModule,
@@ -87,6 +90,7 @@ import { EditUserProfileDialogComponent } from './components/edit-user-profile-d
     { provide: 'data', useClass: DataService },
     { provide: 'auth', useClass: AuthService },
     { provide: 'media', useClass: MediaService},
+    { provide: "notify", useClass: NotificationService},
     AuthGuardService, AuthGuardLoggedService
   ],
   bootstrap: [AppComponent]

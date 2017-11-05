@@ -47,3 +47,43 @@
     border-radius: 3.5px;
     background-color: red;
 }
+
+.notification {
+    background: red;
+    color: white;
+    line-height: 110%;
+    position: relative;
+    right: -22px;
+    top: -42px;
+    font-size: 10px;
+    font-weight: bold;
+    width: 10px;
+    border-radius: 1px;
+}
+
+.notify {
+    font-size: 13px;
+    padding-left: 10px;
+    font-weight: bold;
+    border-bottom: 1px #efefef solid;
+}
+
+.clear {
+    font-size: 12px;
+}
+
+.message {
+    border-bottom: 1px #efefef solid;
+    font-size: 12px;
+    line-height: 100%;
+}
+
+.followerName {
+    font-weight: bold;
+}
+
+.noNotify {
+    text-align: center;
+    font-size: 12px;
+    color: #bfbfbf;
+}
