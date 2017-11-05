@@ -42,7 +42,7 @@
     <span>{{loginName}}</span>
   </button>
   <mat-menu #menu="matMenu" [overlapTrigger]="false">
-    <button mat-menu-item>
+    <button mat-menu-item (click)='goToUserProfile()'>
       <mat-icon>
       account_circle
       </mat-icon>
