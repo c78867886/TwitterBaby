@@ -37,30 +37,21 @@ func NewServer(h *handler.Handler) (e *echo.Echo) {
 
 	// Routes
 	e.GET("/api/v1/ws/:username", h.NotifHandler.GetConnection)
-	e.POST("/api/v1/signup", h.Signup)
-	e.POST("/api/v1/login", h.Login)
-	e.POST("/api/v1/follow/:username", h.Follow)
-	e.POST("/api/v1/unfollow/:username", h.Unfollow)
-	e.GET("/api/v1/userInfo/:username", h.FetchUserInfo)
-	e.POST("/api/v1/updateUserInfo", h.UpdateUserInfo)
-	e.POST("/api/v1/updateProfilePic", h.UpdateProfilePicture)
-	e.GET("/api/v1/showFollower/:username", h.ShowFollower)
-	e.GET("/api/v1/showFollowing/:username", h.ShowFollowing)
-	e.GET("/api/v1/tweetlist/:username", h.FetchTweets)
-	e.POST("/api/v1/newTweet", h.NewTweet)
-	e.DELETE("/api/v1/deleteTweet/:tweet", h.DeleteTweet)
-	e.GET("/api/v1/tweettimeline/:username", h.FetchTweetTimeLine)
-	e.POST("/api/v1/newcomment/:tweet", h.NewComment)
-	e.GET("/api/v1/fetchcomment/:tweet", h.FetchComment)
-	
-	// c.Path() == "/" || c.Path() == "/index.html" || c.Path() == "/favicon.ico" || c.Path() == "/inline.bundle.js" || c.Path() == "/inline.bundle.js.map" 
-	// || c.Path() == "/main.bundle.js.map" || c.Path() == "/polyfills.bundle.js" || c.Path() == "/polyfills.bundle.js.map" || c.Path() == "/styles.bundle.js" 
-	// || c.Path() == "/styles.bundle.js.map" || c.Path() == "/vendor.bundle.js" || c.Path() == "/vendor.bundle.js.map" || c.Path() == "/main.bundle.js"
-
-	//e.Use(middleware.StaticWithConfig(middleware.StaticConfig{Root: "../../bin/dist", Browse: true}))
-	//e.Static("/", "../../bin/dist/assets")
-	//e.File("/index.html", "../../bin/dist/index.html")
-	//e.File("/main.bundle.js", "../../bin/dist/assets/main.bundle.js")
+	e.POST("/api/v1/signup", h.UserHandler.Signup)
+	e.POST("/api/v1/login", h.UserHandler.Login)
+	e.POST("/api/v1/follow/:username", h.UserHandler.Follow)
+	e.POST("/api/v1/unfollow/:username", h.UserHandler.Unfollow)
+	e.GET("/api/v1/userInfo/:username", h.UserHandler.FetchUserInfo)
+	e.POST("/api/v1/updateUserInfo", h.UserHandler.UpdateUserInfo)
+	e.POST("/api/v1/updateProfilePic", h.UserHandler.UpdateProfilePicture)
+	e.GET("/api/v1/showFollower/:username", h.UserHandler.ShowFollower)
+	e.GET("/api/v1/showFollowing/:username", h.UserHandler.ShowFollowing)
+	e.GET("/api/v1/tweetlist/:username", h.TweetHandler.FetchTweets)
+	e.POST("/api/v1/newTweet", h.TweetHandler.NewTweet)
+	e.DELETE("/api/v1/deleteTweet/:tweet", h.TweetHandler.DeleteTweet)
+	e.GET("/api/v1/tweettimeline/:username", h.TweetHandler.FetchTweetTimeLine)
+	e.POST("/api/v1/newcomment/:tweet", h.CommentHandler.NewComment)
+	e.GET("/api/v1/fetchcomment/:tweet", h.CommentHandler.FetchComment)
 
 	return e;
 }
@@ -93,17 +84,11 @@ func TerminalControl(e *echo.Echo, h *handler.Handler, srvAddr string) {
 
 // ShutdownServer : Shutdown the server
 func ShutdownServer(e *echo.Echo, h *handler.Handler) {
-	h.DB.Close()
+	h.Shutdown()
 
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 	if err := e.Shutdown(ctx); err != nil {
 		e.Logger.Fatal(err)
-	}
-
-	for _, u := range h.NotifHandler.Manager.Clients {
-		for _, c := range u {
-			h.NotifHandler.Manager.Unregister <- c
-		}
 	}
 }
