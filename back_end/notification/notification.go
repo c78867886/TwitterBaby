@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"sort"
 	"time"
+	"strings"
 	"net/http"
 	"github.com/labstack/echo"
 	"gopkg.in/mgo.v2"
@@ -17,33 +18,40 @@ type(
 	// Handler : Handler for managing websockets and notifications.
 	Handler struct {
 		upgrader	websocket.Upgrader
-		Manager 	ClientManager
+		Manager 	clientManager
 	}
 
 	// ClientManager : Manages all connected websockets and forwards incoming notifications.
-	ClientManager struct {
-		Clients		map[string]map[uuid.UUID]*Client
+	clientManager struct {
+		clients		map[string]map[uuid.UUID]*client
 		Operator	chan model.Notification
-		register	chan *Client
-		Unregister	chan *Client
+		register	chan *client
+		unregister	chan *client
 		db 			*mgo.Session
 		dbName 		string
 	}
 
 	// Client : Data structure that holds a single websocket connection.
-	Client struct {
+	client struct {
 		id			uuid.UUID
 		username	string
 		Socket		*websocket.Conn
-		incoming	chan model.Notification
-		//notifStack	
+		incoming	chan model.Notification	
 	}
 )
 
-// NewHandler : Create a Handler instance
-func NewHandler(db *mgo.Session, dbName string) (h *Handler) {
-	h = &Handler{websocket.Upgrader{CheckOrigin: func(r *http.Request) bool {return true}}, ClientManager{make(map[string]map[uuid.UUID]*Client), 
-		make(chan model.Notification), make(chan *Client), make(chan *Client), db, dbName}}
+// NewHandler : Create a Handler instance.
+func NewHandler(dbURL string) (h *Handler) {
+	// Database connection
+	session, err := mgo.Dial(dbURL)
+	if err != nil {
+		session.Close()
+		panic(err)
+	}
+
+	h = &Handler{websocket.Upgrader{CheckOrigin: func(r *http.Request) bool {return true}}, clientManager{make(map[string]map[uuid.UUID]*client), 
+		make(chan model.Notification), make(chan *client), make(chan *client), session, strings.Split(dbURL, "/")[3]}}
+
 	go h.Manager.start()
 
 	return h
@@ -75,13 +83,13 @@ func (h *Handler) GetConnection(c echo.Context) (err error) {
 		return &echo.HTTPError{Code: http.StatusBadRequest, Message: "Failed to make web socket connection."}
 	}
 
-	cc := Client{uuid.NewV1(), username, conn, make(chan model.Notification)}
+	cc := client{uuid.NewV1(), username, conn, make(chan model.Notification)}
 	h.Manager.register <- &cc
 
 	return c.NoContent(http.StatusOK)
 }
 
-func (manager *ClientManager) start() {
+func (manager *clientManager) start() {
 	for {
 		select {
 		case message := <- manager.Operator:
@@ -94,32 +102,32 @@ func (manager *ClientManager) start() {
 				fmt.Println("Invalid notification type.")
 			}
 		case conn := <- manager.register:
-			if _, ok := manager.Clients[conn.username]; !ok {
-				manager.Clients[conn.username] = make(map[uuid.UUID]*Client)
+			if _, ok := manager.clients[conn.username]; !ok {
+				manager.clients[conn.username] = make(map[uuid.UUID]*client)
 			}
-			manager.Clients[conn.username][conn.id] = conn
+			manager.clients[conn.username][conn.id] = conn
 			go conn.read(manager)
 			go conn.write(manager)
-			go manager.flushNotif(conn)
-		case conn := <- manager.Unregister:
-			if _, ok := manager.Clients[conn.username][conn.id]; ok {
+			go manager.FlushNotif(conn)
+		case conn := <- manager.unregister:
+			if _, ok := manager.clients[conn.username][conn.id]; ok {
+				time.Sleep(2 * time.Second)
 				conn.incoming <- model.Notification{Timestamp: time.Now(), Type: "", Detail: nil}
-				close(conn.incoming)
 				conn.Socket.WriteMessage(websocket.CloseMessage, []byte{})
 				conn.Socket.Close()
-				delete(manager.Clients[conn.username], conn.id)
+				delete(manager.clients[conn.username], conn.id)
 			}
 		}
 	}
 }
 
-func (c *Client) read(manager *ClientManager) {
-	defer func() {manager.Unregister <- c}()
+func (c *client) read(manager *clientManager) {
+	defer func() {manager.unregister <- c}()
 
 	for {
 		t, m, err := c.Socket.ReadMessage()
 		if err != nil {
-			manager.Unregister <- c
+			manager.unregister <- c
 			break
 		}
 
@@ -127,21 +135,27 @@ func (c *Client) read(manager *ClientManager) {
 		case websocket.TextMessage:
 			switch string(m) {
 			case "Clear notifications.":
-				manager.clearNotif(c.username)
+				manager.ClearNotif(c.username)
 			default:
+				c.Socket.WriteMessage(websocket.TextMessage, []byte("Invalid text message."))
 				fmt.Println("Invalid text message from client.")
 			}
 		default:
+			c.Socket.WriteMessage(websocket.TextMessage, []byte("Invalid message type."))
 			fmt.Println("Invalid message type from client.")
 		}
 	}
 }
 
-func (c *Client) write(manager *ClientManager) {
+func (c *client) write(manager *clientManager) {
 	defer c.Socket.Close()
 
 	for {
-		message := <- c.incoming
+		message, ok := <- c.incoming
+		if !ok {
+			return
+		}
+
 		switch message.Detail.(type) {
 		case model.NewTweetNotif:
 			c.Socket.WriteMessage(websocket.TextMessage, []byte("New tweets."))
@@ -163,7 +177,8 @@ func (c *Client) write(manager *ClientManager) {
 	}
 }
 
-func (manager *ClientManager) flushNotif(conn *Client) {
+// FlushNotif : Dump all notifications in the database to the client.
+func (manager *clientManager) FlushNotif(conn *client) {
 	time.Sleep(1 * time.Second)
 
 	db := manager.db.Clone()
@@ -182,7 +197,7 @@ func (manager *ClientManager) flushNotif(conn *Client) {
 	}
 }
 
-func (manager *ClientManager) forwardNewTweetNotif(m model.Notification) {
+func (manager *clientManager) forwardNewTweetNotif(m model.Notification) {
 	db := manager.db.Clone()
 	defer db.Close()
 
@@ -193,7 +208,7 @@ func (manager *ClientManager) forwardNewTweetNotif(m model.Notification) {
 	}
 
 	for _, t := range targets {
-		if val, ok := manager.Clients[t.Username]; ok {
+		if val, ok := manager.clients[t.Username]; ok {
 			for _, c := range val {
 				c.incoming <- m
 			}
@@ -201,7 +216,7 @@ func (manager *ClientManager) forwardNewTweetNotif(m model.Notification) {
 	}
 }
 
-func (manager *ClientManager) forwardFollowNotif(m model.Notification) {
+func (manager *clientManager) forwardFollowNotif(m model.Notification) {
 	db := manager.db.Clone()
 	defer db.Close()
 
@@ -210,19 +225,31 @@ func (manager *ClientManager) forwardFollowNotif(m model.Notification) {
 		panic(err)
 	}
 
-	if cs, ok := manager.Clients[m.Detail.(model.FollowNotif).Followee]; ok {
+	if cs, ok := manager.clients[m.Detail.(model.FollowNotif).Followee]; ok {
 		for _, c := range cs {
 			c.incoming <- m
 		}
 	}
 }
 
-func (manager *ClientManager) clearNotif(username string) {
+// ClearNotif : Empty the unacked notification list in the database for a specific user.
+func (manager *clientManager) ClearNotif(username string) {
 	db := manager.db.Clone()
 	defer db.Close()
 
 	err := db.DB(manager.dbName).C(model.NotificationCollection).Update(bson.M{"username": username}, bson.M{"$set": bson.M{"notifications": make([]model.Notification, 0)}})
 	if err != nil {
 		panic(err)
+	}
+}
+
+// Shutdown : Gracefully shutdown notification handler.
+func (h *Handler) Shutdown() {
+	h.Manager.db.Close()
+
+	for _, u := range h.Manager.clients {
+		for _, c := range u {
+			h.Manager.unregister <- c
+		}
 	}
 }

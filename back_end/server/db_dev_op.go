@@ -242,6 +242,12 @@ func reconstructTestDB() {
 		model.User{ID: bson.NewObjectId(), Username: "testUpdateUserInfo_empty_firstname", FirstName: "testUpdateUserInfo_empty_firstname", Password: "test", Email: "testUpdateUserInfo_empty_firstname@gmail.com", 
 			Followers: []string{}, Following: []string{}, Tag: "testUpdate"},
 		model.User{ID: bson.NewObjectId(), Username: "testUpdateProfilePicture", FirstName: "testUpdateProfilePicture", Password: "test", Email: "testUpdateProfilePicture@gmail.com", Followers: []string{}, Following: []string{}},
+
+		model.User{ID: bson.NewObjectId(), Username: "testFlushNotif", FirstName: "testFlushNotif", Password: "test", Email: "testFlushNotif@gmail.com", Followers: []string{}, Following: []string{}},
+		model.User{ID: bson.NewObjectId(), Username: "testForwardNewTweetNotif_1", FirstName: "testForwardNewTweetNotif", Password: "test", Email: "testForwardNewTweetNotif@gmail.com", Followers: []string{}, Following: []string{"xxx"}},
+		model.User{ID: bson.NewObjectId(), Username: "testForwardNewTweetNotif_2", FirstName: "testForwardNewTweetNotif", Password: "test", Email: "testForwardNewTweetNotif@gmail.com", Followers: []string{}, Following: []string{"xxx"}},
+		model.User{ID: bson.NewObjectId(), Username: "testForwardFollowNotif", FirstName: "testForwardFollowNotif", Password: "test", Email: "testForwardFollowNotif@gmail.com", Followers: []string{}, Following: []string{}},
+		model.User{ID: bson.NewObjectId(), Username: "testClearNotif", FirstName: "testClearNotif", Password: "test", Email: "testClearNotif@gmail.com", Followers: []string{}, Following: []string{}},
 	}
 
 	for _, u := range users {
@@ -274,7 +280,32 @@ func reconstructTestDB() {
 		model.Individual{ID: bson.NewObjectId(), Username: "testUpdateUserInfo", Notifications: make([]model.Notification, 0)},
 		model.Individual{ID: bson.NewObjectId(), Username: "testUpdateUserInfo_empty_firstname", Notifications: make([]model.Notification, 0)},
 		model.Individual{ID: bson.NewObjectId(), Username: "testUpdateProfilePicture", Notifications: make([]model.Notification, 0)},
+		model.Individual{ID: bson.NewObjectId(), Username: "testForwardNewTweetNotif_1", Notifications: make([]model.Notification, 0)},
+		model.Individual{ID: bson.NewObjectId(), Username: "testForwardNewTweetNotif_2", Notifications: make([]model.Notification, 0)},
+		model.Individual{ID: bson.NewObjectId(), Username: "testForwardFollowNotif", Notifications: make([]model.Notification, 0)},
 	}
+
+	const timestampForm = "Jan 2, 2006 at 3:04pm (MST)"
+	t := time.Time{}
+	ns := []model.Notification{}
+	
+	t, _ = time.Parse(timestampForm, "Nov 2, 2017 at 3:00pm (MST)")
+	ns = append(ns, model.Notification{Timestamp: t, Type: model.FollowType, Detail: model.FollowNotif{Followee: "testFlushNotif", Follower: "AAA"}})
+	t, _ = time.Parse(timestampForm, "Nov 3, 2017 at 2:00pm (MST)")
+	ns = append(ns, model.Notification{Timestamp: t, Type: model.FollowType, Detail: model.FollowNotif{Followee: "testFlushNotif", Follower: "BBB"}})
+	t, _ = time.Parse(timestampForm, "Dec 25, 2017 at 2:00pm (MST)")
+	ns = append(ns, model.Notification{Timestamp: t, Type: model.FollowType, Detail: model.FollowNotif{Followee: "testFlushNotif", Follower: "CCC"}})
+	notifications = append(notifications, model.Individual{ID: bson.NewObjectId(), Username: "testFlushNotif", Notifications: ns})
+	ns = []model.Notification{}
+
+	t, _ = time.Parse(timestampForm, "Nov 2, 2017 at 3:00pm (MST)")
+	ns = append(ns, model.Notification{Timestamp: t, Type: model.FollowType, Detail: model.FollowNotif{}})
+	t, _ = time.Parse(timestampForm, "Nov 3, 2017 at 2:00pm (MST)")
+	ns = append(ns, model.Notification{Timestamp: t, Type: model.FollowType, Detail: model.FollowNotif{}})
+	t, _ = time.Parse(timestampForm, "Dec 25, 2017 at 2:00pm (MST)")
+	ns = append(ns, model.Notification{Timestamp: t, Type: model.FollowType, Detail: model.FollowNotif{}})
+	notifications = append(notifications, model.Individual{ID: bson.NewObjectId(), Username: "testClearNotif", Notifications: ns})
+	ns = []model.Notification{}
 
 	for _, c := range notifications {
 		err := notificationC.Insert(c)
