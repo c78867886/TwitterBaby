@@ -20,7 +20,7 @@ const appRoutes: Routes = [
     { path: '404', component: NotfoundComponent, canActivate: [AuthGuardService]},
     { path: 'login', component: UserloginComponent, canActivate: [AuthGuardLoggedService]},
     { path: 'signup', component: SignUpComponent, canActivate: [AuthGuardLoggedService]},
-    { path: 'userprofile', component: UserprofileComponent, canActivate: [AuthGuardLoggedService]},
+    { path: 'userprofile', component: UserprofileComponent},
     { path: '**', redirectTo: '/home' },
 ];
 

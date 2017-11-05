@@ -103,5 +103,6 @@ export class NavBarComponent implements OnInit {
     console.log("Navigate to the userprofile webpage");
     this.auth.isLoggedIn();
     this.route.navigateByUrl('/userprofile');
+    console.log("Done");
   }
 }
