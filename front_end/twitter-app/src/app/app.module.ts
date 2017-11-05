@@ -12,6 +12,8 @@ import { AuthGuardLoggedService } from './services/auth-guard-logged.service';
 import { rooting } from './app.router';
 import { ImageUploadModule } from "angular2-image-upload";
 import { MediaService } from './services/media.service';
+//import { SampleModule } from 'angular2-base64-image-upload';
+
 
 import { MatToolbarModule, 
          MatInputModule, 

@@ -105,6 +105,9 @@ export class UserprofileComponent implements OnInit {
       alert("The file is not an image, Please select an image");
       return;
     }
+
+    
+
     const formData = new FormData();
     formData.append("image", image);
     this.mediaService.uploadImg(image)
