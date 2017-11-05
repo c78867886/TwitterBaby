@@ -87,6 +87,10 @@ export class NavBarComponent implements OnInit {
     } else {
       this.data.getTweetListTimeLine(this.hostName, 1);
     }
-    
+  }
+
+  sendClearMessage(): void {
+    this.notify.send("Clear notifications.");
+    this.followNotificationList = [];
   }
 }
