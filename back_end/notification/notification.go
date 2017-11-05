@@ -190,7 +190,7 @@ func (manager *clientManager) FlushNotif(conn *client) {
 		panic(err)
 	}
 
-	sort.Slice(target.Notifications, func(i, j int) bool {return target.Notifications[i].Timestamp.After(target.Notifications[j].Timestamp)})
+	sort.Slice(target.Notifications, func(i, j int) bool {return target.Notifications[i].Timestamp.Before(target.Notifications[j].Timestamp)})
 
 	for _, m := range target.Notifications {
 		conn.incoming <- m
