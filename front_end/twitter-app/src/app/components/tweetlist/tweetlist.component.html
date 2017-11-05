@@ -13,5 +13,8 @@
   <mat-card-actions class="action">
     <button mat-raised-button color="accent">LIKE</button>
     <button mat-raised-button color="accent">SHARE</button>
+    <button matTooltip="Write a Comment" class="comments" (click)="editComment()" mat-icon-button >
+        <mat-icon size="32">chat</mat-icon>
+    </button>
   </mat-card-actions>
 </mat-card>

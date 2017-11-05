@@ -18,3 +18,14 @@
     margin-left: 40%;
     margin-top: 10%;
 }
+
+.comments{
+    color: #00ADA7;
+    float: left;
+    size: 48;
+}
+.like{
+    color: #00ADA7;
+    float: left;
+    size: 48;
+}
