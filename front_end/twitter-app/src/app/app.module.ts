@@ -21,8 +21,9 @@ import { MatToolbarModule,
          MatExpansionModule,
          MatProgressSpinnerModule,
          MatChipsModule,
+         MatTooltipModule
          } from '@angular/material';
-
+         
 import { UserInfoComponent } from './components/user-info/user-info.component';
 import { TweetlistComponent } from './components/tweetlist/tweetlist.component';
 import { PostareaComponent } from './components/postarea/postarea.component';
@@ -66,6 +67,7 @@ import { NotfoundComponent } from './components/notfound/notfound.component';
     MatExpansionModule,
     MatProgressSpinnerModule,
     MatChipsModule,
+    MatTooltipModule,
     rooting,
     ReactiveFormsModule
   ],

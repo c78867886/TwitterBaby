@@ -2,19 +2,19 @@
   <button mat-button routerLink="/home" class="brand">BabyTwitter</button>
   <span class="example-spacer"></span>
 
-  <form class="form" (submit)="onSubmit()" autocomplete="off">
+  <form matTooltip="Find an user through his/her username" class="form" (submit)="onSubmit()" autocomplete="off">
     <mat-form-field class="search">
       <input name="search" matInput placeholder="Search a friend" class="input" id="input" [(ngModel)]='username'>
     </mat-form-field>
     <input type='submit' [routerLink]="['/user', username]" style="display:none">
   </form>
   
-  <button class="refresh" (click)="refresh()" mat-icon-button>
+  <button matTooltip="Refresh your timeline" class="refresh" (click)="refresh()" mat-icon-button>
     <mat-icon>refresh</mat-icon>
     <div *ngIf="rcvnewTweet" class="redPoint"></div>
   </button>
 
-  <button class="notifications" mat-icon-button [matMenuTriggerFor]="notificationList">
+  <button matTooltip="View notifications" class="notifications" mat-icon-button [matMenuTriggerFor]="notificationList">
     <mat-icon>notifications</mat-icon>
     <div *ngIf="followNotificationList.length !== 0" class="notification">
       {{ followNotificationList.length }}
@@ -22,12 +22,14 @@
   </button>
   <mat-menu #notificationList="matMenu" [overlapTrigger]="false">
     <div class="notify">Notifications
-      <button class="clear" mat-button color="primary">
+      <button class="clear" mat-button color="primary" (click)="sendClearMessage()">
         Mark All as Read
       </button>
     </div>
-
-    <button class="message" *ngFor="let message of followNotificationList" mat-menu-item>
+    <p *ngIf="followNotificationList.length === 0" class="noNotify">
+      -No notifications-
+    </p>
+    <button [routerLink]="['/user/', message.detail]" class="message" *ngFor="let message of followNotificationList" mat-menu-item>
         {{ message.timestamp | date: 'short'}} 
         <br/>
         <span class="followerName">{{ message.detail }}</span>
@@ -40,7 +42,12 @@
     <span>{{loginName}}</span>
   </button>
   <mat-menu #menu="matMenu" [overlapTrigger]="false">
-    <button mat-menu-item><mat-icon>account_circle</mat-icon>Profile</button>
+    <button mat-menu-item>
+      <mat-icon>
+      account_circle
+      </mat-icon>
+      Profile
+    </button>
     <button class="logoutBtn" mat-menu-item (click)='logout()'>
       <mat-icon>
         exit_to_app

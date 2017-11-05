@@ -61,7 +61,7 @@
     font-size: 15px;
     padding-left: 10px;
     font-weight: bold;
-    border-bottom: 1px #9f9f9f solid;
+    border-bottom: 1px #efefef solid;
 }
 
 .clear {
@@ -76,4 +76,8 @@
 
 .followerName {
     font-weight: bold;
+}
+
+.noNotify {
+    text-align: center;
 }
