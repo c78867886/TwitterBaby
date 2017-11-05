@@ -32,12 +32,12 @@ func TestFlushNotif(t *testing.T) {
 	ts := time.Time{}
 	ns := []model.Notification{}
 
-	ts, _ = time.Parse(timestampForm, "Dec 25, 2017 at 2:00pm (MST)")
-	ns = append(ns, model.Notification{Timestamp: ts, Type: model.FollowType, Detail: model.FollowNotif{Followee: "testFlushNotif", Follower: "CCC"}})
-	ts, _ = time.Parse(timestampForm, "Nov 3, 2017 at 2:00pm (MST)")
-	ns = append(ns, model.Notification{Timestamp: ts, Type: model.FollowType, Detail: model.FollowNotif{Followee: "testFlushNotif", Follower: "BBB"}})
 	ts, _ = time.Parse(timestampForm, "Nov 2, 2017 at 3:00pm (MST)")
 	ns = append(ns, model.Notification{Timestamp: ts, Type: model.FollowType, Detail: model.FollowNotif{Followee: "testFlushNotif", Follower: "AAA"}})
+	ts, _ = time.Parse(timestampForm, "Nov 3, 2017 at 2:00pm (MST)")
+	ns = append(ns, model.Notification{Timestamp: ts, Type: model.FollowType, Detail: model.FollowNotif{Followee: "testFlushNotif", Follower: "BBB"}})
+	ts, _ = time.Parse(timestampForm, "Dec 25, 2017 at 2:00pm (MST)")
+	ns = append(ns, model.Notification{Timestamp: ts, Type: model.FollowType, Detail: model.FollowNotif{Followee: "testFlushNotif", Follower: "CCC"}})
 
 	c := client{username: "testFlushNotif", incoming: make(chan model.Notification)}
 
