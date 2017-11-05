@@ -96,7 +96,6 @@ export class NavBarComponent implements OnInit {
     this.followNotificationList = [];
   }
 
-
   /**
   * Go to user profile
   */

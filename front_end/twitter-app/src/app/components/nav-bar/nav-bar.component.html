@@ -41,11 +41,6 @@
     <mat-icon>account_box</mat-icon>
     <span>{{loginName}}</span>
   </button>
-<<<<<<< HEAD
-  <mat-menu #menu="matMenu">
-    <button mat-menu-item (click)='goToUserProfile()'><mat-icon>account_circle</mat-icon>Profile</button>
-    <button class="logoutBtn" mat-menu-item (click)='logout()'><mat-icon>exit_to_app</mat-icon>Logout</button>
-=======
   <mat-menu #menu="matMenu" [overlapTrigger]="false">
     <button mat-menu-item>
       <mat-icon>
@@ -59,6 +54,5 @@
       </mat-icon>
       Logout
     </button> 
->>>>>>> dff2fbb5f188e96f9f29b03f9d9a2768ca0c7c4b
   </mat-menu>
 </mat-toolbar>
