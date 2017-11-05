@@ -3,7 +3,15 @@
   <!-- Banner -->
   <div class="banner">
       <div id="banner_img">
-          <img id="profileheadimg" src="assets/images/grumpycat.jpeg">
+          <div class="image-upload">
+              <label for="file-input">
+                  <img class='profileheadimg' src="assets/images/grumpycat.jpeg"/>
+              </label>
+              <input id="file-input" type="file" #fileInput (change)='uploadImg($event)' accept="image/jpg, image/jpeg, image/png" style="display: none;"/>
+          </div>
+          <!-- <input class="profileheadimg" type="image" (click)='uploadImg()' src="assets/images/grumpycat.jpeg" alt=""/> -->
+          <!-- <image-upload url="https://httpbin.org/status/200"></image-upload>
+          <img class="profileheadimg" (click)='uploadImg()' src="assets/images/grumpycat.jpeg" value="Head Image"> -->
       </div>  
   </div>
   <div class="banner_menu">
@@ -63,7 +71,6 @@
     <div>
       <input type="text" [(ngModel)]='userLastName' name='userLastName'>
     </div>
-
     <div>
       <label class="profileLabel">Bio: </label>
       <p id="BioTextArea">{{userBio}}</p>

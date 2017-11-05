@@ -25,7 +25,7 @@
         margin-right: 5px; 
        float: right;
     }
-    #profileheadimg{
+    .profileheadimg{
         height: 180px;
         width: 180px;
         border-radius: 50%;   
@@ -37,6 +37,10 @@
         right: 0;
         bottom: 0;
         padding: 6px;  
+    }
+
+    .image-upload > input{
+        display: none;
     }
     .logo{
         height: 30px;

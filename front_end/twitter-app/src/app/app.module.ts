@@ -10,6 +10,8 @@ import { AuthService } from './services/auth.service';
 import { AuthGuardService } from './services/auth-guard.service';
 import { AuthGuardLoggedService } from './services/auth-guard-logged.service';
 import { rooting } from './app.router';
+import { ImageUploadModule } from "angular2-image-upload";
+import { MediaService } from './services/media.service';
 
 import { MatToolbarModule, 
          MatInputModule, 
@@ -37,6 +39,7 @@ import { NotfoundComponent } from './components/notfound/notfound.component';
 import { UserprofileComponent } from './components/userprofile/userprofile.component';
 import { MatDialogModule } from '@angular/material';
 import { EditUserProfileDialogComponent } from './components/edit-user-profile-dialog/edit-user-profile-dialog.component';
+
 
 @NgModule({
   declarations: [
@@ -73,7 +76,7 @@ import { EditUserProfileDialogComponent } from './components/edit-user-profile-d
     rooting,
     ReactiveFormsModule,
     MatDialogModule,
-    
+    ImageUploadModule.forRoot(),
   ],
   entryComponents:[
     EditUserProfileDialogComponent,
@@ -81,6 +84,7 @@ import { EditUserProfileDialogComponent } from './components/edit-user-profile-d
   providers: [
     { provide: 'data', useClass: DataService },
     { provide: 'auth', useClass: AuthService },
+    { provide: 'media', useClass: MediaService},
     AuthGuardService, AuthGuardLoggedService
   ],
   bootstrap: [AppComponent]
