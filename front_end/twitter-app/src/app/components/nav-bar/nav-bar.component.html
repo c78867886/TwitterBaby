@@ -14,17 +14,38 @@
     <div *ngIf="rcvnewTweet" class="redPoint"></div>
   </button>
 
-  <button class="notifications" mat-icon-button>
+  <button class="notifications" mat-icon-button [matMenuTriggerFor]="notificationList">
     <mat-icon>notifications</mat-icon>
-    <div class="redPoint"></div>
+    <div *ngIf="followNotificationList.length !== 0" class="notification">
+      {{ followNotificationList.length }}
+    </div>
   </button>
+  <mat-menu #notificationList="matMenu" [overlapTrigger]="false">
+    <div class="notify">Notifications
+      <button class="clear" mat-button color="primary">
+        Mark All as Read
+      </button>
+    </div>
+
+    <button class="message" *ngFor="let message of followNotificationList" mat-menu-item>
+        {{ message.timestamp | date: 'short'}} 
+        <br/>
+        <span class="followerName">{{ message.detail }}</span>
+        has followed you!
+    </button>
+  </mat-menu>
 
   <button class="navRightButton" mat-icon-button [matMenuTriggerFor]="menu">
     <mat-icon>account_box</mat-icon>
     <span>{{loginName}}</span>
   </button>
-  <mat-menu #menu="matMenu">
+  <mat-menu #menu="matMenu" [overlapTrigger]="false">
     <button mat-menu-item><mat-icon>account_circle</mat-icon>Profile</button>
-    <button class="logoutBtn" mat-menu-item (click)='logout()'><mat-icon>exit_to_app</mat-icon>Logout</button>
+    <button class="logoutBtn" mat-menu-item (click)='logout()'>
+      <mat-icon>
+        exit_to_app
+      </mat-icon>
+      Logout
+    </button> 
   </mat-menu>
 </mat-toolbar>

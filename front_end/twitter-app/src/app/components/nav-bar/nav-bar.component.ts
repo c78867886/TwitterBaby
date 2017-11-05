@@ -1,6 +1,7 @@
 import { Component, OnInit, OnDestroy, Inject } from '@angular/core';
 import { Subscription } from 'rxjs/Subscription';
 import { Router } from '@angular/router';
+import { FollowNotification } from '../../models/notification.model';
 @Component({
   selector: 'app-nav-bar',
   templateUrl: './nav-bar.component.html',
@@ -13,6 +14,7 @@ export class NavBarComponent implements OnInit {
   shouldBeShowed: boolean;
   subscription: Subscription;
   rcvnewTweet: boolean = false;
+  followNotificationList: Array<FollowNotification> = [];
   //connected: boolean = false;
   constructor(@Inject('data') private data, @Inject('auth') private auth, 
               @Inject('notify') private notify, private route: Router) { }
@@ -20,15 +22,18 @@ export class NavBarComponent implements OnInit {
   ngOnInit() {
     
     this.notify.getEventListener().subscribe(event => {
-      console.log(this.notify.readyState());
+      //console.log(this.notify.readyState());
       if (event.type === "open") {
         console.log("WS Connected!");
       } else if (event.type === "close") {
         console.log("WS Disconnected!");
       } else if (event.type === 'message') {
-        console.log(event.data);
+        console.log(event);
         if (event.data === "New tweets.") {
           this.rcvnewTweet = true;
+        } else {
+          this.followNotificationList.push(JSON.parse(event.data));
+          console.log(this.followNotificationList);
         }
       }
     });
@@ -39,11 +44,9 @@ export class NavBarComponent implements OnInit {
         let userinfo = JSON.parse(localStorage.getItem("user_info_object"));
         this.loginName = userinfo.firstname + ' ' + userinfo.lastname;
         this.hostName = userinfo.username;
-        setTimeout(() => {
-          if ( !this.notify.readyState() ) {
-            this.notify.connect(userinfo.username);
-          }
-        }, 2000);
+        if ( !this.notify.readyState() ) {
+          this.notify.connect(userinfo.username);
+        }
         
       } else {
         this.shouldBeShowed = false;
@@ -73,6 +76,7 @@ export class NavBarComponent implements OnInit {
     localStorage.clear();
     this.auth.isLoggedIn();
     this.notify.close();
+    this.followNotificationList = [];
     this.route.navigateByUrl('/login');
   }
 
