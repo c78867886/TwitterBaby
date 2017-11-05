@@ -49,16 +49,20 @@
 }
 
 .notification {
-    color: red;
+    background: red;
+    color: white;
+    line-height: 110%;
     position: relative;
-    right: -6px;
-    top: -45px;
+    right: -22px;
+    top: -42px;
     font-size: 10px;
     font-weight: bold;
+    width: 10px;
+    border-radius: 1px;
 }
 
 .notify {
-    font-size: 15px;
+    font-size: 13px;
     padding-left: 10px;
     font-weight: bold;
     border-bottom: 1px #efefef solid;
@@ -80,4 +84,6 @@
 
 .noNotify {
     text-align: center;
+    font-size: 12px;
+    color: #bfbfbf;
 }
