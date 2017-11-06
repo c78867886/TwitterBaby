@@ -1,0 +1,13 @@
+<!-- <mat-spinner *ngIf="!commentslist" class="spinner"></mat-spinner> -->
+  <mat-card *ngFor="let comment of comments" class="comments">
+      <mat-card-header>
+          <div mat-card-avatar class="header-image"></div>
+          <mat-card-title>{{ comment.FromUserName }}</mat-card-title>
+          <mat-card-subtitle>{{ comment.timestamp | date: 'short'}}</mat-card-subtitle>
+      </mat-card-header> 
+      <mat-card-content>
+        <p class="commentMessage">
+            {{ comment.message }}
+        </p>
+      </mat-card-content>
+  </mat-card>

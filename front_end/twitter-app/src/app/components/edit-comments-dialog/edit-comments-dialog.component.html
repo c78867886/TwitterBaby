@@ -1,3 +1,23 @@
-<p>
-  edit-comments-dialog works!
-</p>
+<div class="example-container">
+    <h3 mat-dialog-title id="dialogHead" align="center">Replay to {{tweet.owner}}</h3>
+    <hr>
+    <div>
+      <mat-card-header>
+        <div mat-card-avatar class="header-image"></div>
+        <mat-card-title>{{tweet.owner}}</mat-card-title>
+        <mat-card-subtitle>{{ tweet.timestamp | date: 'short'}}</mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content>
+          <p class="tweetMessage">
+            {{ tweet.message }}
+          </p>
+        </mat-card-content>
+    </div>
+    <div class="commentArea">
+      <textarea id="commentBox" placeholder="Entery your comment here" [(ngModel)]="commentContent"></textarea>
+    </div>
+    <mat-dialog-actions>
+        <button mat-raised-button type="submit" (click)='onCloseSubmit()' class="dialogBtnSub">Submmit</button>
+        <button mat-raised-button (click)="onCloseCancel()" class="dialogBtnCanc">Cancel</button>
+      </mat-dialog-actions>
+</div>
