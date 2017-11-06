@@ -55,22 +55,21 @@ func (h *Handler) FetchTweets (c echo.Context) (err error) {
 	db := h.db.Clone()
 	defer db.Close()
 
-	// Retrieve user info from database by username
-	/*
+	// Check user is in the database
+	
 	user := model.User{}
-	err = db.DB("se_avengers").C("users").Find(bson.M{"username": username}).One(&user)
+	err = db.DB(h.dbName).C("users").Find(bson.M{"username": username}).One(&user)
 	if err != nil {
 		if err == mgo.ErrNotFound {
 			return &echo.HTTPError{Code: http.StatusNotFound, Message: "User "+username+" does not exist."}
 		}
 		return
 	}
-	id := user.ID.Hex()
-	*/
+	
 
 	// Retrieve tweets from database
 	tweets := []model.Tweet{}
-	err = db.DB("se_avengers").C("tweets").Find(bson.M{"owner": username}).Sort("-timestamp").All(&tweets)
+	err = db.DB(h.dbName).C("tweets").Find(bson.M{"owner": username}).Sort("-timestamp").All(&tweets)
 
 	var container struct {
 		Page	string	`json:"page"`
@@ -122,9 +121,9 @@ func (h *Handler) FetchTweets (c echo.Context) (err error) {
 // NewTweet : Add one tweet for a specific user.
 //			  URL: "/api/v1/newTweet"
 //			  Method: POST
-//			  Return 201 Created on success, along with the tweet data.
-//			  Return 404 Not Found if the user is not in the database.
+//			  Return 200 Created on success, along with the tweet data.
 //			  Return 400 Bad Request if the content of the tweet is empty.
+//			  Return 400 Bad Request if the image is larger than 10 MB.
 func (h *Handler) NewTweet(c echo.Context) (err error) {
 	userName := userNameFromToken(c)
 
@@ -141,9 +140,12 @@ func (h *Handler) NewTweet(c echo.Context) (err error) {
 	if tweet.Message == "" {
 		return &echo.HTTPError{Code: http.StatusBadRequest, Message: "Message cannot be empty."}
 	}
+	if len(tweet.Picture) > 10485760 {
+		return &echo.HTTPError{Code: http.StatusBadRequest, Message: "Image must be smaller than 10 MB."}
+	}
 	
 	// Save tweet in database
-	err = db.DB("se_avengers").C("tweets").Insert(tweet)
+	err = db.DB(h.dbName).C("tweets").Insert(tweet)
 	if err != nil {
 		return
 	}
@@ -152,9 +154,11 @@ func (h *Handler) NewTweet(c echo.Context) (err error) {
 	var container struct {
 		Owner	string	`json:"owner"`
 		Message	string	`json:"message"`
+		Picture string	`json:"picture"`
 	}
 	container.Owner = tweet.Owner
 	container.Message = tweet.Message
+	container.Picture = tweet.Picture
 
 	h.notifOperator <- model.Notification{Timestamp: time.Now(), Type: model.NewTweetType, Detail: model.NewTweetNotif{Publisher: userName}}
 
@@ -177,7 +181,7 @@ func (h *Handler) DeleteTweet(c echo.Context) (err error) {
 	db := h.db.Clone()
 	defer db.Close()
 
-	err = db.DB("se_avengers").C("tweets").RemoveId(bson.ObjectIdHex(tweetID))
+	err = db.DB(h.dbName).C("tweets").RemoveId(bson.ObjectIdHex(tweetID))
 	if err != nil {
 		if err == mgo.ErrNotFound {
 			return &echo.HTTPError{Code: http.StatusNotFound, Message: "Tweet does not exist."}
@@ -205,7 +209,7 @@ func (h *Handler) FetchTweetTimeLine (c echo.Context) (err error) {
 
 	// Retrieve user info from database by username
 	user := model.User{}
-	err = db.DB("se_avengers").C("users").Find(bson.M{"username": username}).One(&user)
+	err = db.DB(h.dbName).C("users").Find(bson.M{"username": username}).One(&user)
 	if err != nil {
 		if err == mgo.ErrNotFound {
 			return &echo.HTTPError{Code: http.StatusNotFound, Message: "User "+username+" does not exist."}
@@ -221,14 +225,14 @@ func (h *Handler) FetchTweetTimeLine (c echo.Context) (err error) {
 	mapIDandUsername := make(map[string]string)
 	for i := range timeLineUserList{
 		tempUser := model.User{}
-		err = db.DB("se_avengers").C("users").FindId(bson.ObjectIdHex(timeLineUserList[i])).One(&tempUser)
+		err = db.DB(h.dbName).C("users").FindId(bson.ObjectIdHex(timeLineUserList[i])).One(&tempUser)
 		mapIDandUsername[tempUser.ID.Hex()] = tempUser.Username
 	}
 	*/
 
 	// Retrieve tweets from database
 	tweets := []model.Tweet{}
-	err = db.DB("se_avengers").C("tweets").Find(bson.M{"owner": bson.M{"$in": timeLineUserList}}).Sort("-timestamp").All(&tweets)
+	err = db.DB(h.dbName).C("tweets").Find(bson.M{"owner": bson.M{"$in": timeLineUserList}}).Sort("-timestamp").All(&tweets)
 	
 	var container struct {
 		Page	string	`json:"page"`
