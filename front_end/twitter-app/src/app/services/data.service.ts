@@ -134,4 +134,32 @@ export class DataService {
     })
     .catch(this.handleError);
   }
+
+  /**
+   * Add a new comment into the tweet
+   */
+  addNewComment(commentContent, tweetid){
+    let options: RequestOptions = this.getHeader();
+    let message: object ={ "message":commentContent};
+    console.log(message);
+    return this.http.post(`${this.backEndHostUrl}/newcomment/${tweetid}`, commentContent, options)
+    .toPromise()
+    .then((res: Response) => {
+      console.log("back end response: successfully");
+      console.log(JSON.stringify(res.json()));
+      console.log(res.json());
+  })
+  .catch(this.handleError);
+  }
+
+  fetchComment(tweetid){
+    let options: RequestOptions = this.getHeader();
+    return this.http.get(`${this.backEndHostUrl}/fetchcomment/${tweetid}`, options)
+    .toPromise()
+    .then((res: Response) => {
+      console.log("back end response: Get comments successfully");
+      localStorage.setItem('user_comments', JSON.stringify(res.json()));
+  })
+  .catch(this.handleError);
+  }
 }

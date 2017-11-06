@@ -18,6 +18,9 @@ export class CommentlistComponent implements OnInit {
 
   ngOnInit() {
     console.log("Tweet-------------------------");
+    console.log("Tweet-------------------------");
+    console.log("Tweet-------------------------");
+
     console.log(this.tweet);
     this.subscriptComments = this.data.fetchComment(this.tweet.id)
     .subscribe(list => 
@@ -25,6 +28,7 @@ export class CommentlistComponent implements OnInit {
         this.commentsList = list.commentlist;
         console.log(list);
       }
+      
     );
   }
 
