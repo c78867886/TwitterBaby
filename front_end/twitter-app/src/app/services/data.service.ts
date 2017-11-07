@@ -134,4 +134,36 @@ export class DataService {
     })
     .catch(this.handleError);
   }
+
+  /**
+   * Add a new comment into the tweet
+   */
+  addNewComment(commentContent, tweetid){
+    let options: RequestOptions = this.getHeader();
+    let message: object ={ "message":commentContent};
+    return this.http.post(`${this.backEndHostUrl}/newcomment/${tweetid}`, message, options)
+    .toPromise()
+    .then((res: Response) => {
+      console.log("back end response: successfully");
+      console.log(JSON.stringify(res.json()));
+      this.fetchComment(tweetid);
+      return res.json();
+      })
+    .catch(this.handleError);
+  }
+
+  /**
+   * Get comments for the specific tweet.
+   * @param tweetid 
+   */
+  fetchComment(tweetid:string): Observable<object>{
+    let options: RequestOptions = this.getHeader();
+    return this.http.get(`${this.backEndHostUrl}/fetchcomment/${tweetid}`, options)
+      .map(res => res.json())
+      .do(res => {
+         console.log(res);
+         console.log("Get result successfully!");
+      })
+      .catch(this.handleError);
+  }
 }

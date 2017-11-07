@@ -43,6 +43,8 @@ import { NotfoundComponent } from './components/notfound/notfound.component';
 import { UserprofileComponent } from './components/userprofile/userprofile.component';
 import { MatDialogModule } from '@angular/material';
 import { EditUserProfileDialogComponent } from './components/edit-user-profile-dialog/edit-user-profile-dialog.component';
+import { EditCommentsDialogComponent } from './components/edit-comments-dialog/edit-comments-dialog.component';
+import { CommentlistComponent } from './components/commentlist/commentlist.component';
 
 
 @NgModule({
@@ -62,6 +64,8 @@ import { EditUserProfileDialogComponent } from './components/edit-user-profile-d
     NotfoundComponent,
     UserprofileComponent,
     EditUserProfileDialogComponent,
+    EditCommentsDialogComponent,
+    CommentlistComponent,
   ],
   imports: [
     BrowserModule,
@@ -85,6 +89,7 @@ import { EditUserProfileDialogComponent } from './components/edit-user-profile-d
   ],
   entryComponents:[
     EditUserProfileDialogComponent,
+    EditCommentsDialogComponent,
   ],
   providers: [
     { provide: 'data', useClass: DataService },

@@ -1,0 +1,49 @@
+<div class="example-container">
+    <div>
+      <mat-dialog-actions id="closeBtn">
+            <button  mat-icon-button matTooltip="Close"  (click)="onCloseCancel()" name="Cancel" >
+                <mat-icon>cancel</mat-icon>
+            </button>
+      </mat-dialog-actions>
+     <mat-card class="card">
+      <mat-card-header>
+        <div mat-card-avatar class="header-image"></div>
+        <mat-card-title>{{tweet.owner}}</mat-card-title>
+        <mat-card-subtitle>{{ tweet.timestamp | date: 'short'}}</mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content>
+          <p class="tweetMessage">
+            {{ tweet.message }}
+          </p>
+        </mat-card-content>
+        <mat-dialog-actions>
+            <button matTooltip="Like" class="comments" mat-icon-button >
+                <mat-icon>thumb_up</mat-icon>
+            </button>
+        </mat-dialog-actions>
+      </mat-card>
+    </div>
+    <mat-expansion-panel class="expansionpanel">
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            New Comment
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+        <mat-form-field class="example-full-width">
+          <textarea matInput placeholder="Write a comment" [(ngModel)]="commentContent"></textarea>
+        </mat-form-field>
+        <button class='disBtn' mat-raised-button *ngIf="content === ''" class="submitbtn" (click)="postComment()">
+          Comment
+        </button>
+        <button class='actBtn' mat-raised-button *ngIf="content !== ''" class="submitbtn" (click)="postComment()">
+          Comment
+        </button>
+      </mat-expansion-panel>
+      <div style="overflow-y: scroll; height:300px;" >
+         <app-commentlist [commentlist]='list'></app-commentlist>
+      </div>
+    <mat-dialog-actions>
+        <button mat-raised-button (click)="onCloseCancel()" class="dialogBtnCanc">Cancel</button>
+    </mat-dialog-actions>
+
+</div>

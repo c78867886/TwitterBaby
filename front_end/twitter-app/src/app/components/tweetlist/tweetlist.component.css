@@ -5,7 +5,9 @@
 
 .action {
     display: flex;
-    justify-content: flex-end;
+    justify-content: space-around;
+    color: #5f5f5f;
+    padding-top: 0;
 }
 
 .header-image {
@@ -17,4 +19,13 @@
     position: absolute;
     margin-left: 40%;
     margin-top: 10%;
+}
+
+.actionbtn {
+    font-size: 10px;
+    color: #00ADA7;
+}
+
+mat-card:hover{
+    background-color:rgba(136, 184, 206, 0.2);
 }
