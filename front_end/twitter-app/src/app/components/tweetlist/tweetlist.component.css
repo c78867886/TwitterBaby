@@ -25,3 +25,7 @@
     font-size: 10px;
     color: #00ADA7;
 }
+
+mat-card:hover{
+    background-color:rgba(136, 184, 206, 0.2);
+}
