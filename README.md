@@ -58,7 +58,7 @@ Contributing
 - Jason Ho
 - Chih-Yin Lee
 - Jason He
-- Diane Lin
+- Diane Lin(Xiemenger)
 
 
 

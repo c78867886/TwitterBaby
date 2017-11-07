@@ -141,25 +141,29 @@ export class DataService {
   addNewComment(commentContent, tweetid){
     let options: RequestOptions = this.getHeader();
     let message: object ={ "message":commentContent};
-    console.log(message);
-    return this.http.post(`${this.backEndHostUrl}/newcomment/${tweetid}`, commentContent, options)
+    return this.http.post(`${this.backEndHostUrl}/newcomment/${tweetid}`, message, options)
     .toPromise()
     .then((res: Response) => {
       console.log("back end response: successfully");
       console.log(JSON.stringify(res.json()));
-      console.log(res.json());
-  })
-  .catch(this.handleError);
+      this.fetchComment(tweetid);
+      return res.json();
+      })
+    .catch(this.handleError);
   }
 
-  fetchComment(tweetid){
+  /**
+   * Get comments for the specific tweet.
+   * @param tweetid 
+   */
+  fetchComment(tweetid:string): Observable<object>{
     let options: RequestOptions = this.getHeader();
     return this.http.get(`${this.backEndHostUrl}/fetchcomment/${tweetid}`, options)
-    .toPromise()
-    .then((res: Response) => {
-      console.log("back end response: Get comments successfully");
-      localStorage.setItem('user_comments', JSON.stringify(res.json()));
-  })
-  .catch(this.handleError);
+      .map(res => res.json())
+      .do(res => {
+         console.log(res);
+         console.log("Get result successfully!");
+      })
+      .catch(this.handleError);
   }
 }

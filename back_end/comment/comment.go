@@ -35,17 +35,31 @@ func NewHandler(dbURL string, key string) (h *Handler) {
 }
 
 // NewComment : Add one comment for a specific tweet.
-//			  URL: "/api/v1/newTweet"
+//			  URL: "/api/v1/newcomment/:tweet"
 //			  Method: POST
-//			  Return 200 Created on success, along with the tweet data.
-//			  Return 404 Not Found if the user is not in the database.
-//			  Return 400 Bad Request if the content of the tweet is empty.
+//			  Return 200 Created on success, along with the comment data.
+//			  Return 404 Not Found if the tweetID is not in the database.
+//			  Return 400 Bad Request if the content of the comment is empty.
 func (h *Handler) NewComment(c echo.Context) (err error) {
 	userName := userNameFromToken(c)
 	tweetID := c.Param("tweet")
 
 	db := h.db.Clone()
 	defer db.Close()
+
+	// Check tweetID is valid
+	if bson.IsObjectIdHex(tweetID){
+		validTweet := new(model.Tweet)
+		err = db.DB("se_avengers").C("tweets").FindId(bson.ObjectIdHex(tweetID)).One(&validTweet)
+		if err != nil {
+			if err == mgo.ErrNotFound {
+				return &echo.HTTPError{Code: http.StatusNotFound, Message: "Invalid tweet ID"}
+			}
+			return &echo.HTTPError{Code: http.StatusNotFound, Message: "Invalid tweet ID"}
+		}
+	}else{
+		return &echo.HTTPError{Code: http.StatusNotFound, Message: "Invalid tweet ID"}
+	}
 
 	comment := &model.Comment{ID: bson.NewObjectId(), FromTweetID: string(tweetID), FromUsername: string(userName), Timestamp: time.Now()}
 	if err = c.Bind(comment); err != nil {
@@ -90,13 +104,27 @@ func (h *Handler) NewComment(c echo.Context) (err error) {
 //				 URL: "/api/v1/fetchcomment/:tweet"
 //				 Method: GET
 //				 Return 200 OK on success.
-//				 Return 404 Not Found if the user is not in the database.
+//				 Return 404 Not Found if the tweetID is not in the database.
 func (h *Handler) FetchComment (c echo.Context) (err error) {
 	//username := userNameFromToken(c)
 	tweetID := c.Param("tweet")
 	
 	db := h.db.Clone()
 	defer db.Close()
+
+	// Check tweetID is valid
+	if bson.IsObjectIdHex(tweetID){
+		validTweet := new(model.Tweet)
+		err = db.DB("se_avengers").C("tweets").FindId(bson.ObjectIdHex(tweetID)).One(&validTweet)
+		if err != nil {
+			if err == mgo.ErrNotFound {
+				return &echo.HTTPError{Code: http.StatusNotFound, Message: "Invalid tweet ID"}
+			}
+			return &echo.HTTPError{Code: http.StatusNotFound, Message: "Invalid tweet ID"}
+		}
+	}else{
+		return &echo.HTTPError{Code: http.StatusNotFound, Message: "Invalid tweet ID"}
+	}
 
 	// Retrieve comments from database
 	comments := []model.Comment{}

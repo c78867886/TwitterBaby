@@ -1,0 +1,17 @@
+.header-image {
+    background-image: url('http://s7d2.scene7.com/is/image/PetSmart/PB1201_STORY_CARO-Authority-HealthyOutside-DOG-20160818?$PB1201$');
+    background-size: cover;
+}
+
+.comments{
+    height: 20px;
+}
+
+mat-card:hover{
+    background-color:rgba(47, 137, 179,0.2);
+}
+
+.continue{
+    text-align: center;
+    height: 4px;
+}

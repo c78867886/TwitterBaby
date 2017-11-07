@@ -13,22 +13,10 @@
   <mat-card-actions class="action">
     <button mat-raised-button color="accent">LIKE</button>
     <button mat-raised-button color="accent">SHARE</button>
-    <button matTooltip="Write a Comment" class="comments" (click)="editCommentDialog(tweet)" mat-icon-button >
-        <mat-icon>chat</mat-icon>
+    <button matTooltip="Show Comments" class="comments" (click)="editCommentDialog(tweet)" mat-icon-button >
+        <mat-icon>forum</mat-icon>
     </button>
   </mat-card-actions>
   <hr>
-  <app-commentlist [tweet]='tweet'></app-commentlist>
-  <!-- <mat-card *ngFor="let comment of comments" class="comments">
-      <mat-card-header>
-          <div mat-card-avatar class="header-image"></div>
-          <mat-card-title>{{ comment.FromUserName }}</mat-card-title>
-          <mat-card-subtitle>{{ comment.timestamp | date: 'short'}}</mat-card-subtitle>
-      </mat-card-header> 
-      <mat-card-content>
-        <p class="tweetMessage">
-            {{ comment.message }}
-        </p>
-      </mat-card-content> 
-  </mat-card>-->
+    <!-- <app-commentlist [tweet]='tweet'></app-commentlist> -->
 </mat-card>

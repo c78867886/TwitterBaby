@@ -9,27 +9,39 @@ import { Subscription } from 'rxjs/Subscription';
   styleUrls: ['./commentlist.component.css']
 })
 export class CommentlistComponent implements OnInit {
-  @Input() tweet;
+  @Input() commentlist;
 
-  commentsList: Comment[];
+  public commentsList: Comment[];
   subscriptComments: Subscription;
-  
-  constructor( @Inject('data') private data) { }
+  showCommentOrNot:string;
+  toggle: boolean;
+  constructor( @Inject('data') private data,) { }
 
   ngOnInit() {
-    console.log("Tweet-------------------------");
-    console.log("Tweet-------------------------");
-    console.log("Tweet-------------------------");
+    this.toggle = false;
+    this.showCommentOrNot = "Show More comments...";
+    // this.getComments(this.tweet.id);
+  }
 
-    console.log(this.tweet);
-    this.subscriptComments = this.data.fetchComment(this.tweet.id)
+  /**
+   * Get Comments for the tweet
+   */
+  public getComments(tweetid){
+    this.subscriptComments = this.data.fetchComment(tweetid)
     .subscribe(list => 
       {
         this.commentsList = list.commentlist;
-        console.log(list);
       }
-      
     );
+  }
+  
+  showAllComments(){
+    this.toggle = !this.toggle;
+    if (this.toggle){
+      this.showCommentOrNot = "Show less...";
+    } else {
+      this.showCommentOrNot = "Show More Comments...";
+    }
   }
 
 }
