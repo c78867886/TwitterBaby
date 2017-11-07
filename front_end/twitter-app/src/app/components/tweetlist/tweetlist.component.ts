@@ -22,7 +22,7 @@ export class TweetlistComponent implements OnInit {
   editCommentDialog(tweet){
     console.log("Open a dialog");
     let dialogRef = this.dialog.open(EditCommentsDialogComponent, {
-      width: '400px',
+      width: '600px',
       data: tweet,
     })
 
