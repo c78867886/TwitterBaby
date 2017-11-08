@@ -54,24 +54,24 @@ func TestNewTweet (t *testing.T) {
 		// test success
 		restHTTPTestCase{
 			true,
-			restHTTPInput{"testSignup", `{"message":"testMessage", "picture":"iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAAjVBMVEXp6en///+8vLwPZ66L1fPYiVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAAjVBMVEXp6en///+8vLwPZ66L1fPYiVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAAjVBMVEXp6en///+8vLwPZ66L1fPYiVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAAjVBMVEXp6en///+8vLwPZ66L1fPYiVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAAjVBMVEXp6en///+8vLwPZ66L1fPYiVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAAjVBMVEXp6en///+8vLwPZ66L1fPYiVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAAjVBMVEXp6en///+8vLwPZ66L1fPYiVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAAjVBMVEXp6en///+8vLwPZ66L1fPYiVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAAjVBMVEXp6en///+8vLwPZ66L1fPYiVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAAjVBMVEXp6en///+8vLwPZ66L1fPYiVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAAjVBMVEXp6en///+8vLwPZ66L1fPYiVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAAjVBMVEXp6en///+8vLwPZ66L1fPYiVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAAjVBMVEXp6en///+8vLwPZ66L1fPYiVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAAjVBMVEXp6en///+8vLwPZ66L1fPY"}`},
-			restHTTPExpected{http.StatusOK, `{"owner":"testSignup","message":"testMessage","picture":"iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAAjVBMVEXp6en///+8vLwPZ66L1fPYiVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAAjVBMVEXp6en///+8vLwPZ66L1fPYiVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAAjVBMVEXp6en///+8vLwPZ66L1fPYiVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAAjVBMVEXp6en///+8vLwPZ66L1fPYiVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAAjVBMVEXp6en///+8vLwPZ66L1fPYiVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAAjVBMVEXp6en///+8vLwPZ66L1fPYiVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAAjVBMVEXp6en///+8vLwPZ66L1fPYiVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAAjVBMVEXp6en///+8vLwPZ66L1fPYiVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAAjVBMVEXp6en///+8vLwPZ66L1fPYiVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAAjVBMVEXp6en///+8vLwPZ66L1fPYiVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAAjVBMVEXp6en///+8vLwPZ66L1fPYiVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAAjVBMVEXp6en///+8vLwPZ66L1fPYiVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAAjVBMVEXp6en///+8vLwPZ66L1fPYiVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAAjVBMVEXp6en///+8vLwPZ66L1fPY"}`},
+			restHTTPInput{"testNewTweet", `{"message":"testMessage", "picture":"iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAAjVBMVEXp6en///+8vLwPZ66L1fPYiVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAAjVBMVEXp6en///+8vLwPZ66L1fPYiVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAAjVBMVEXp6en///+8vLwPZ66L1fPYiVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAAjVBMVEXp6en///+8vLwPZ66L1fPYiVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAAjVBMVEXp6en///+8vLwPZ66L1fPYiVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAAjVBMVEXp6en///+8vLwPZ66L1fPYiVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAAjVBMVEXp6en///+8vLwPZ66L1fPYiVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAAjVBMVEXp6en///+8vLwPZ66L1fPYiVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAAjVBMVEXp6en///+8vLwPZ66L1fPYiVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAAjVBMVEXp6en///+8vLwPZ66L1fPYiVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAAjVBMVEXp6en///+8vLwPZ66L1fPYiVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAAjVBMVEXp6en///+8vLwPZ66L1fPYiVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAAjVBMVEXp6en///+8vLwPZ66L1fPYiVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAAjVBMVEXp6en///+8vLwPZ66L1fPY"}`},
+			restHTTPExpected{http.StatusOK, `{"owner":"testNewTweet","message":"testMessage","picture":"iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAAjVBMVEXp6en///+8vLwPZ66L1fPYiVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAAjVBMVEXp6en///+8vLwPZ66L1fPYiVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAAjVBMVEXp6en///+8vLwPZ66L1fPYiVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAAjVBMVEXp6en///+8vLwPZ66L1fPYiVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAAjVBMVEXp6en///+8vLwPZ66L1fPYiVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAAjVBMVEXp6en///+8vLwPZ66L1fPYiVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAAjVBMVEXp6en///+8vLwPZ66L1fPYiVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAAjVBMVEXp6en///+8vLwPZ66L1fPYiVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAAjVBMVEXp6en///+8vLwPZ66L1fPYiVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAAjVBMVEXp6en///+8vLwPZ66L1fPYiVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAAjVBMVEXp6en///+8vLwPZ66L1fPYiVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAAjVBMVEXp6en///+8vLwPZ66L1fPYiVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAAjVBMVEXp6en///+8vLwPZ66L1fPYiVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAAjVBMVEXp6en///+8vLwPZ66L1fPY"}`},
 		},
 		restHTTPTestCase{
 			true,
-			restHTTPInput{"testSignup", `{"message":"testMessage", "picture":""}`},
-			restHTTPExpected{http.StatusOK, `{"owner":"testSignup","message":"testMessage","picture":""}`},
+			restHTTPInput{"testNewTweet", `{"message":"testMessage", "picture":""}`},
+			restHTTPExpected{http.StatusOK, `{"owner":"testNewTweet","message":"testMessage","picture":""}`},
 		},
 		// test empty
 		restHTTPTestCase{
 			false,
-			restHTTPInput{"testSignup", `{"message":"", "picture":"iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAAjVBMVEXp6en///+8vLwPZ66L1fPYiVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAAjVBMVEXp6en///+8vLwPZ66L1fPYiVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAAjVBMVEXp6en///+8vLwPZ66L1fPYiVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAAjVBMVEXp6en///+8vLwPZ66L1fPYiVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAAjVBMVEXp6en///+8vLwPZ66L1fPYiVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAAjVBMVEXp6en///+8vLwPZ66L1fPYiVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAAjVBMVEXp6en///+8vLwPZ66L1fPY"}`},
+			restHTTPInput{"testNewTweet", `{"message":"", "picture":"iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAAjVBMVEXp6en///+8vLwPZ66L1fPYiVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAAjVBMVEXp6en///+8vLwPZ66L1fPYiVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAAjVBMVEXp6en///+8vLwPZ66L1fPYiVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAAjVBMVEXp6en///+8vLwPZ66L1fPYiVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAAjVBMVEXp6en///+8vLwPZ66L1fPYiVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAAjVBMVEXp6en///+8vLwPZ66L1fPYiVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAAjVBMVEXp6en///+8vLwPZ66L1fPY"}`},
 			restHTTPExpected{http.StatusBadRequest, "Message cannot be empty."},
 		},
 		// test illegal picture
 		restHTTPTestCase{
 			false,
-			restHTTPInput{"testSignup", `{"message":"testMessage", "picture":"` + string(oversizedImage[:]) + `"}`},
+			restHTTPInput{"testNewTweet", `{"message":"testMessage", "picture":"` + string(oversizedImage[:]) + `"}`},
 			restHTTPExpected{http.StatusBadRequest, "Image must be smaller than 10 MB."},
 		},
 	}
@@ -121,24 +121,24 @@ func TestFetchOwnTweets (t *testing.T) {
 		// test success
 		restHTTPTestCase{
 			true,
-			restHTTPInput{"testUserInfo_1", ""},
-			restHTTPExpected{http.StatusOK, `{"page":"1","totalpage":"2","totaltweets":"6","tweetlist":"[]"}`},
+			restHTTPInput{"testFetchOenTweetsSuccess", ""},
+			restHTTPExpected{http.StatusOK, `{"page":"1","totalpage":"4","totaltweets":"10","tweetlist":"[]"}`},
 		},
 		// test over page
 		restHTTPTestCase{
 			true,
-			restHTTPInput{"testSignup", ""},
+			restHTTPInput{"testFetchOenTweetsOverPage", ""},
 			restHTTPExpected{http.StatusOK, `{"page":"1","totalpage":"1","totaltweets":"1","tweetlist":"[]"}`},
 		},
 		// test the user with no tweet
 		restHTTPTestCase{
 			true,
-			restHTTPInput{"testUserInfo_2", ""},
+			restHTTPInput{"testFetchOenTweetsWithNoTweet1", ""},
 			restHTTPExpected{http.StatusOK, `{"page":"0","totalpage":"0","totaltweets":"0","tweetlist":"[]"}`},
 		},
 		restHTTPTestCase{
 			true,
-			restHTTPInput{"testShowFollower_1", ""},
+			restHTTPInput{"testFetchOenTweetsWithNoTweet2", ""},
 			restHTTPExpected{http.StatusOK, `{"page":"0","totalpage":"0","totaltweets":"0","tweetlist":"[]"}`},
 		},
 		// tes username not in db
@@ -183,27 +183,27 @@ func TestFetchTweetTimeLine (t *testing.T) {
 		// test success
 		restHTTPTestCase{
 			true,
-			restHTTPInput{"testShowFollowing_2", ""},
+			restHTTPInput{"TestFetchTweetTimeLineSuccess", ""},
 			restHTTPExpected{http.StatusOK, `{"page":"1","totalpage":"3","totaltweets":"8","tweetlist":"[]"}`},
 		},
 		// test over page
 		restHTTPTestCase{
 			true,
-			restHTTPInput{"testSignup", ""},
+			restHTTPInput{"TestFetchTweetTimeLineOverPage", ""},
 			restHTTPExpected{http.StatusOK, `{"page":"0","totalpage":"0","totaltweets":"0","tweetlist":"[]"}`},
 		},
 		// test the user with no tweet
 		restHTTPTestCase{
 			true,
-			restHTTPInput{"testUserInfo_2", ""},
+			restHTTPInput{"TestFetchTweetTimeLineNoTweet1", ""},
 			restHTTPExpected{http.StatusOK, `{"page":"0","totalpage":"0","totaltweets":"0","tweetlist":"[]"}`},
 		},
 		restHTTPTestCase{
 			true,
-			restHTTPInput{"testShowFollower_1", ""},
+			restHTTPInput{"TestFetchTweetTimeLineNoTweet2", ""},
 			restHTTPExpected{http.StatusOK, `{"page":"0","totalpage":"0","totaltweets":"0","tweetlist":"[]"}`},
 		},
-		// tes username not in db
+		// test username not in db
 		restHTTPTestCase{
 			false,
 			restHTTPInput{"userNotExist", ""},

@@ -10,7 +10,7 @@ import (
 	"model"
 	"github.com/dgrijalva/jwt-go"
 	//"math"
-	//"strconv"
+	"strconv"
 )
 
 type (
@@ -50,7 +50,7 @@ func (h *Handler) NewComment(c echo.Context) (err error) {
 	// Check tweetID is valid
 	if bson.IsObjectIdHex(tweetID){
 		validTweet := new(model.Tweet)
-		err = db.DB("se_avengers").C("tweets").FindId(bson.ObjectIdHex(tweetID)).One(&validTweet)
+		err = db.DB(h.dbName).C("tweets").FindId(bson.ObjectIdHex(tweetID)).One(&validTweet)
 		if err != nil {
 			if err == mgo.ErrNotFound {
 				return &echo.HTTPError{Code: http.StatusNotFound, Message: "Invalid tweet ID"}
@@ -72,17 +72,17 @@ func (h *Handler) NewComment(c echo.Context) (err error) {
 	}
 	
 	// Save comment in database
-	err = db.DB("se_avengers").C("comments").Insert(comment)
+	err = db.DB(h.dbName).C("comments").Insert(comment)
 	if err != nil {
 		return
 	}
 
 	// update comment number of tweet
 	tweet := model.Tweet{}
-	db.DB("se_avengers").C("tweets").FindId(bson.ObjectIdHex(tweetID)).One(&tweet)
+	db.DB(h.dbName).C("tweets").FindId(bson.ObjectIdHex(tweetID)).One(&tweet)
 	
 	tweetid := tweet.ID.Hex()
-	err = db.DB("se_avengers").C("tweets").Update(bson.M{"_id": bson.ObjectIdHex(tweetid)}, bson.M{"$set": bson.M{"numcomment": tweet.Numcomment+1}})
+	err = db.DB(h.dbName).C("tweets").Update(bson.M{"_id": bson.ObjectIdHex(tweetid)}, bson.M{"$set": bson.M{"numcomment": tweet.Numcomment+1}})
 
 
 	comment.ID = ""
@@ -115,7 +115,7 @@ func (h *Handler) FetchComment (c echo.Context) (err error) {
 	// Check tweetID is valid
 	if bson.IsObjectIdHex(tweetID){
 		validTweet := new(model.Tweet)
-		err = db.DB("se_avengers").C("tweets").FindId(bson.ObjectIdHex(tweetID)).One(&validTweet)
+		err = db.DB(h.dbName).C("tweets").FindId(bson.ObjectIdHex(tweetID)).One(&validTweet)
 		if err != nil {
 			if err == mgo.ErrNotFound {
 				return &echo.HTTPError{Code: http.StatusNotFound, Message: "Invalid tweet ID"}
@@ -128,16 +128,18 @@ func (h *Handler) FetchComment (c echo.Context) (err error) {
 
 	// Retrieve comments from database
 	comments := []model.Comment{}
-	err = db.DB("se_avengers").C(model.CommentCollection).Find(bson.M{"fromtweetid": tweetID}).Sort("-timestamp").All(&comments)
+	err = db.DB(h.dbName).C(model.CommentCollection).Find(bson.M{"fromtweetid": tweetID}).Sort("-timestamp").All(&comments)
 
 	if err != nil {
 		return
 	}
 
 	var container struct {
+		TotalComment string `json:"totalcomment"`
 		CommentList []model.Comment `json:"commentlist"`
 	}
 	container.CommentList = comments
+	container.TotalComment = strconv.Itoa(len(comments))
 	
 	return c.JSON(http.StatusOK, container)
 }
