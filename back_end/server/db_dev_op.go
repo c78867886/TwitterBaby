@@ -248,6 +248,24 @@ func reconstructTestDB() {
 		model.User{ID: bson.NewObjectId(), Username: "testForwardNewTweetNotif_2", FirstName: "testForwardNewTweetNotif", Password: "test", Email: "testForwardNewTweetNotif@gmail.com", Followers: []string{}, Following: []string{"xxx"}},
 		model.User{ID: bson.NewObjectId(), Username: "testForwardFollowNotif", FirstName: "testForwardFollowNotif", Password: "test", Email: "testForwardFollowNotif@gmail.com", Followers: []string{}, Following: []string{}},
 		model.User{ID: bson.NewObjectId(), Username: "testClearNotif", FirstName: "testClearNotif", Password: "test", Email: "testClearNotif@gmail.com", Followers: []string{}, Following: []string{}},
+		// User for tweet testing
+		model.User{ID: bson.NewObjectId(), Username: "testNewTweet", FirstName: "testNewTweet", Password: "test", Email: "testNewTweet@gmail.com", Followers: []string{}, Following: []string{}},
+		model.User{ID: bson.NewObjectId(), Username: "testFetchOenTweetsSuccess", FirstName: "testFetchOenTweetsSuccess", Password: "test", Email: "testFetchOenTweetsSuccess@gmail.com", Followers: []string{}, Following: []string{}},
+		model.User{ID: bson.NewObjectId(), Username: "testFetchOenTweetsOverPage", FirstName: "testFetchOenTweetsOverPage", Password: "test", Email: "testFetchOenTweetsOverPage@gmail.com", Followers: []string{}, Following: []string{}},
+		model.User{ID: bson.NewObjectId(), Username: "testFetchOenTweetsWithNoTweet1", FirstName: "testFetchOenTweetsWithNoTweet1", Password: "test", Email: "testFetchOenTweetsWithNoTweet1@gmail.com", Followers: []string{}, Following: []string{}},
+		model.User{ID: bson.NewObjectId(), Username: "testFetchOenTweetsWithNoTweet2", FirstName: "testFetchOenTweetsWithNoTweet2", Password: "test", Email: "testFetchOenTweetsWithNoTweet2@gmail.com", Followers: []string{}, Following: []string{}},
+		model.User{ID: bson.NewObjectId(), Username: "TestFetchTweetTimeLineSuccess", FirstName: "TestFetchTweetTimeLineSuccess", Password: "test", Email: "TestFetchTweetTimeLineSuccess@gmail.com", Followers: []string{}, Following: []string{"TestFetchTweetTimeLineFollowing1", "TestFetchTweetTimeLineFollowing2"}},
+		model.User{ID: bson.NewObjectId(), Username: "TestFetchTweetTimeLineOverPage", FirstName: "TestFetchTweetTimeLineOverPage", Password: "test", Email: "TestFetchTweetTimeLineOverPage@gmail.com", Followers: []string{}, Following: []string{}},
+		model.User{ID: bson.NewObjectId(), Username: "TestFetchTweetTimeLineNoTweet1", FirstName: "TestFetchTweetTimeLineNoTweet1", Password: "test", Email: "TestFetchTweetTimeLineNoTweet1@gmail.com", Followers: []string{}, Following: []string{}},
+		model.User{ID: bson.NewObjectId(), Username: "TestFetchTweetTimeLineNoTweet2", FirstName: "TestFetchTweetTimeLineNoTweet2", Password: "test", Email: "TestFetchTweetTimeLineNoTweet2@gmail.com", Followers: []string{}, Following: []string{}},
+		model.User{ID: bson.NewObjectId(), Username: "TestFetchTweetTimeLineFollowing1", FirstName: "TestFetchTweetTimeLineFollowing1", Password: "test", Email: "TestFetchTweetTimeLineFollowing1@gmail.com", Followers: []string{}, Following: []string{}},
+		model.User{ID: bson.NewObjectId(), Username: "TestFetchTweetTimeLineFollowing2", FirstName: "TestFetchTweetTimeLineFollowing2", Password: "test", Email: "TestFetchTweetTimeLineFollowing2@gmail.com", Followers: []string{}, Following: []string{}},
+		// User for comment testing
+		model.User{ID: bson.NewObjectId(), Username: "TestNewCommentSuccess", FirstName: "TestNewCommentSuccess", Password: "test", Email: "TestNewCommentSuccess@gmail.com", Followers: []string{}, Following: []string{}},
+		model.User{ID: bson.NewObjectId(), Username: "TestNewCommentEmpty", FirstName: "TestNewCommentEmpty", Password: "test", Email: "TestNewCommentEmpty@gmail.com", Followers: []string{}, Following: []string{}},
+		model.User{ID: bson.NewObjectId(), Username: "TestNewCommentInvalidTweetID", FirstName: "TestNewCommentInvalidTweetID", Password: "test", Email: "TestNewCommentInvalidTweetID@gmail.com", Followers: []string{}, Following: []string{}},
+		model.User{ID: bson.NewObjectId(), Username: "TestFetchCommentSuccess", FirstName: "TestFetchCommentSuccess", Password: "test", Email: "TestFetchCommentSuccess@gmail.com", Followers: []string{}, Following: []string{}},
+		model.User{ID: bson.NewObjectId(), Username: "TestFetchCommentSuccess", FirstName: "TestFetchCommentInvalidTweetID", Password: "test", Email: "TestFetchCommentSuccess@gmail.com", Followers: []string{}, Following: []string{}},
 	}
 
 	for _, u := range users {
@@ -256,6 +274,67 @@ func reconstructTestDB() {
 			panic(err)
 		}
 	}
+
+	tweetC := h.DB.DB(h.DBName).C(model.TweetCollection)
+	
+		tweets := []model.Tweet {
+			// testFetchOenTweetsSuccess
+			model.Tweet{ID: bson.NewObjectId(), Owner: "testFetchOenTweetsSuccess", Message: "testFetchOenTweetsSuccess, testFetchOenTweetsSuccess, testFetchOenTweetsSuccess, testFetchOenTweetsSuccess", Timestamp: time.Now()}, 
+			model.Tweet{ID: bson.NewObjectId(), Owner: "testFetchOenTweetsSuccess", Message: "testFetchOenTweetsSuccess, testFetchOenTweetsSuccess, testFetchOenTweetsSuccess, testFetchOenTweetsSuccess", Timestamp: time.Now()}, 
+			model.Tweet{ID: bson.NewObjectId(), Owner: "testFetchOenTweetsSuccess", Message: "testFetchOenTweetsSuccess, testFetchOenTweetsSuccess, testFetchOenTweetsSuccess, testFetchOenTweetsSuccess", Timestamp: time.Now()}, 
+			model.Tweet{ID: bson.NewObjectId(), Owner: "testFetchOenTweetsSuccess", Message: "testFetchOenTweetsSuccess, testFetchOenTweetsSuccess, testFetchOenTweetsSuccess, testFetchOenTweetsSuccess", Timestamp: time.Now()}, 
+			model.Tweet{ID: bson.NewObjectId(), Owner: "testFetchOenTweetsSuccess", Message: "testFetchOenTweetsSuccess, testFetchOenTweetsSuccess, testFetchOenTweetsSuccess, testFetchOenTweetsSuccess", Timestamp: time.Now()}, 
+			model.Tweet{ID: bson.NewObjectId(), Owner: "testFetchOenTweetsSuccess", Message: "testFetchOenTweetsSuccess, testFetchOenTweetsSuccess, testFetchOenTweetsSuccess, testFetchOenTweetsSuccess", Timestamp: time.Now()}, 
+			model.Tweet{ID: bson.NewObjectId(), Owner: "testFetchOenTweetsSuccess", Message: "testFetchOenTweetsSuccess, testFetchOenTweetsSuccess, testFetchOenTweetsSuccess, testFetchOenTweetsSuccess", Timestamp: time.Now()}, 
+			model.Tweet{ID: bson.NewObjectId(), Owner: "testFetchOenTweetsSuccess", Message: "testFetchOenTweetsSuccess, testFetchOenTweetsSuccess, testFetchOenTweetsSuccess, testFetchOenTweetsSuccess", Timestamp: time.Now()}, 
+			model.Tweet{ID: bson.NewObjectId(), Owner: "testFetchOenTweetsSuccess", Message: "testFetchOenTweetsSuccess, testFetchOenTweetsSuccess, testFetchOenTweetsSuccess, testFetchOenTweetsSuccess", Timestamp: time.Now()}, 
+			model.Tweet{ID: bson.NewObjectId(), Owner: "testFetchOenTweetsSuccess", Message: "testFetchOenTweetsSuccess, testFetchOenTweetsSuccess, testFetchOenTweetsSuccess, testFetchOenTweetsSuccess", Timestamp: time.Now()}, 
+			// testFetchOenTweetsOverPage
+			model.Tweet{ID: bson.NewObjectId(), Owner: "testFetchOenTweetsOverPage", Message: "testFetchOenTweetsSuccess, testFetchOenTweetsSuccess, testFetchOenTweetsSuccess, testFetchOenTweetsSuccess", Timestamp: time.Now()}, 
+			// TestFetchTweetTimeLine
+			model.Tweet{ID: bson.NewObjectId(), Owner: "TestFetchTweetTimeLineFollowing1", Message: "testFetchOenTweetsSuccess, testFetchOenTweetsSuccess, testFetchOenTweetsSuccess, testFetchOenTweetsSuccess", Timestamp: time.Now()}, 
+			model.Tweet{ID: bson.NewObjectId(), Owner: "TestFetchTweetTimeLineFollowing1", Message: "testFetchOenTweetsSuccess, testFetchOenTweetsSuccess, testFetchOenTweetsSuccess, testFetchOenTweetsSuccess", Timestamp: time.Now()}, 
+			model.Tweet{ID: bson.NewObjectId(), Owner: "TestFetchTweetTimeLineFollowing1", Message: "testFetchOenTweetsSuccess, testFetchOenTweetsSuccess, testFetchOenTweetsSuccess, testFetchOenTweetsSuccess", Timestamp: time.Now()}, 
+			model.Tweet{ID: bson.NewObjectId(), Owner: "TestFetchTweetTimeLineFollowing1", Message: "testFetchOenTweetsSuccess, testFetchOenTweetsSuccess, testFetchOenTweetsSuccess, testFetchOenTweetsSuccess", Timestamp: time.Now()}, 
+			model.Tweet{ID: bson.NewObjectId(), Owner: "TestFetchTweetTimeLineFollowing2", Message: "testFetchOenTweetsSuccess, testFetchOenTweetsSuccess, testFetchOenTweetsSuccess, testFetchOenTweetsSuccess", Timestamp: time.Now()}, 
+			model.Tweet{ID: bson.NewObjectId(), Owner: "TestFetchTweetTimeLineFollowing2", Message: "testFetchOenTweetsSuccess, testFetchOenTweetsSuccess, testFetchOenTweetsSuccess, testFetchOenTweetsSuccess", Timestamp: time.Now()}, 
+			model.Tweet{ID: bson.NewObjectId(), Owner: "TestFetchTweetTimeLineFollowing2", Message: "testFetchOenTweetsSuccess, testFetchOenTweetsSuccess, testFetchOenTweetsSuccess, testFetchOenTweetsSuccess", Timestamp: time.Now()}, 
+			model.Tweet{ID: bson.NewObjectId(), Owner: "TestFetchTweetTimeLineFollowing2", Message: "testFetchOenTweetsSuccess, testFetchOenTweetsSuccess, testFetchOenTweetsSuccess, testFetchOenTweetsSuccess", Timestamp: time.Now()}, 
+			// TestFetchComment
+			model.Tweet{ID: bson.NewObjectId(), Owner: "TestFetchCommentSuccess", Message: "testFetchOenTweetsSuccess, testFetchOenTweetsSuccess, testFetchOenTweetsSuccess, testFetchOenTweetsSuccess", Timestamp: time.Now()}, 
+		}
+		for _, t := range tweets {
+			err := tweetC.Insert(t)
+			if err != nil {
+				panic(err)
+			}
+		}
+
+		CommentC := h.DB.DB(h.DBName).C(model.CommentCollection)
+		tempTweet := []model.Tweet{}
+		tweetC.Find(nil).Sort("timestamp").All(&tempTweet)
+		fromTweetIDForTesting := tempTweet[0].ID.Hex()
+			comments := []model.Comment {
+				// testFetchOenTweetsSuccess
+				model.Comment{ID: bson.NewObjectId(), FromTweetID: fromTweetIDForTesting, FromUsername: "TestFetchCommentSuccess", Message: "testFetchOenTweetsSuccess, testFetchOenTweetsSuccess, testFetchOenTweetsSuccess, testFetchOenTweetsSuccess", Timestamp: time.Now()}, 
+				model.Comment{ID: bson.NewObjectId(), FromTweetID: fromTweetIDForTesting, FromUsername: "TestFetchCommentSuccess", Message: "testFetchOenTweetsSuccess, testFetchOenTweetsSuccess, testFetchOenTweetsSuccess, testFetchOenTweetsSuccess", Timestamp: time.Now()}, 
+				model.Comment{ID: bson.NewObjectId(), FromTweetID: fromTweetIDForTesting, FromUsername: "TestFetchCommentSuccess", Message: "testFetchOenTweetsSuccess, testFetchOenTweetsSuccess, testFetchOenTweetsSuccess, testFetchOenTweetsSuccess", Timestamp: time.Now()}, 
+				model.Comment{ID: bson.NewObjectId(), FromTweetID: fromTweetIDForTesting, FromUsername: "TestFetchCommentSuccess", Message: "testFetchOenTweetsSuccess, testFetchOenTweetsSuccess, testFetchOenTweetsSuccess, testFetchOenTweetsSuccess", Timestamp: time.Now()}, 
+				model.Comment{ID: bson.NewObjectId(), FromTweetID: fromTweetIDForTesting, FromUsername: "TestFetchCommentSuccess", Message: "testFetchOenTweetsSuccess, testFetchOenTweetsSuccess, testFetchOenTweetsSuccess, testFetchOenTweetsSuccess", Timestamp: time.Now()}, 
+				model.Comment{ID: bson.NewObjectId(), FromTweetID: fromTweetIDForTesting, FromUsername: "TestFetchCommentSuccess", Message: "testFetchOenTweetsSuccess, testFetchOenTweetsSuccess, testFetchOenTweetsSuccess, testFetchOenTweetsSuccess", Timestamp: time.Now()}, 
+				model.Comment{ID: bson.NewObjectId(), FromTweetID: fromTweetIDForTesting, FromUsername: "TestFetchCommentSuccess", Message: "testFetchOenTweetsSuccess, testFetchOenTweetsSuccess, testFetchOenTweetsSuccess, testFetchOenTweetsSuccess", Timestamp: time.Now()}, 
+				model.Comment{ID: bson.NewObjectId(), FromTweetID: fromTweetIDForTesting, FromUsername: "TestFetchCommentSuccess", Message: "testFetchOenTweetsSuccess, testFetchOenTweetsSuccess, testFetchOenTweetsSuccess, testFetchOenTweetsSuccess", Timestamp: time.Now()}, 
+				model.Comment{ID: bson.NewObjectId(), FromTweetID: fromTweetIDForTesting, FromUsername: "TestFetchCommentSuccess", Message: "testFetchOenTweetsSuccess, testFetchOenTweetsSuccess, testFetchOenTweetsSuccess, testFetchOenTweetsSuccess", Timestamp: time.Now()}, 
+				model.Comment{ID: bson.NewObjectId(), FromTweetID: fromTweetIDForTesting, FromUsername: "TestFetchCommentSuccess", Message: "testFetchOenTweetsSuccess, testFetchOenTweetsSuccess, testFetchOenTweetsSuccess, testFetchOenTweetsSuccess", Timestamp: time.Now()}, 
+				model.Comment{ID: bson.NewObjectId(), FromTweetID: fromTweetIDForTesting, FromUsername: "TestFetchCommentSuccess", Message: "testFetchOenTweetsSuccess, testFetchOenTweetsSuccess, testFetchOenTweetsSuccess, testFetchOenTweetsSuccess", Timestamp: time.Now()}, 
+				model.Comment{ID: bson.NewObjectId(), FromTweetID: fromTweetIDForTesting, FromUsername: "TestFetchCommentSuccess", Message: "testFetchOenTweetsSuccess, testFetchOenTweetsSuccess, testFetchOenTweetsSuccess, testFetchOenTweetsSuccess", Timestamp: time.Now()}, 
+			}
+			for _, t := range comments {
+				err := CommentC.Insert(t)
+				if err != nil {
+					panic(err)
+				}
+			}
 
 	notificationC := h.DB.DB(h.DBName).C(model.NotificationCollection)
 
