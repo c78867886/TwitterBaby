@@ -13,13 +13,14 @@ import { MatToolbarModule,
   MatExpansionModule,
   MatProgressSpinnerModule,
   MatChipsModule,
+  MatDialogModule
   } from '@angular/material';
 
 import { TweetlistComponent } from './tweetlist.component';
 
-// describe('TweetlistComponent', () => {
-//   let component: TweetlistComponent;
-//   let fixture: ComponentFixture<TweetlistComponent>;
+describe('TweetlistComponent', () => {
+  let component: TweetlistComponent;
+  let fixture: ComponentFixture<TweetlistComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -35,6 +36,7 @@ import { TweetlistComponent } from './tweetlist.component';
         MatProgressSpinnerModule,
         MatChipsModule,
         FormsModule,
+        MatDialogModule,
         RouterTestingModule,
         BrowserAnimationsModule
       ],
@@ -46,13 +48,13 @@ import { TweetlistComponent } from './tweetlist.component';
   }));
 
 
-//   beforeEach(() => {
-//     fixture = TestBed.createComponent(TweetlistComponent);
-//     component = fixture.componentInstance;
-//     fixture.detectChanges();
-//   });
+  beforeEach(() => {
+    fixture = TestBed.createComponent(TweetlistComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+  });
 
-//   it('should be created', () => {
-//     expect(component).toBeTruthy();
-//   });
-// });
+  it('should be created', () => {
+    expect(component).toBeTruthy();
+  });
+});

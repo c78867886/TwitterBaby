@@ -52,7 +52,7 @@ export class DataService {
   followUser(id: string): Promise<Object> {
     let post = {};
     let options: RequestOptions = this.getHeader();
-    return this.http.post(`http://127.0.0.1:1323/api/v1/follow/${id}`, post, options)
+    return this.http.post(this.localhost + `/api/v1/follow/${id}`, post, options)
       .toPromise()
       .catch(this.handleError);
   }
@@ -60,7 +60,7 @@ export class DataService {
   unfollowUser(id: string): Promise<Object> {
     let post = {};
     let options: RequestOptions = this.getHeader();
-    return this.http.post(`http://127.0.0.1:1323/api/v1/unfollow/${id}`, post, options)
+    return this.http.post(this.localhost + `/api/v1/unfollow/${id}`, post, options)
       .toPromise()
       .catch(this.handleError);
   }
@@ -86,7 +86,7 @@ export class DataService {
     let options: RequestOptions = this.getHeader();
     let message: object = {message: content};
     //console.log(message);
-    return this.http.post(`http://127.0.0.1:1323/api/v1/newTweet`, message, options)
+    return this.http.post(this.localhost + `/api/v1/newTweet`, message, options)
             .toPromise()
             .then((res: Response) => {
               this.getTweetListTimeLine(id, 1);

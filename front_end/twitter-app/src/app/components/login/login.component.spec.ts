@@ -22,6 +22,7 @@ import { MatToolbarModule,
   MatExpansionModule,
   MatProgressSpinnerModule,
   MatChipsModule,
+  MatDialogModule,
   } from '@angular/material';
 
 describe('LoginComponent', () => {
@@ -50,6 +51,7 @@ describe('LoginComponent', () => {
         MatExpansionModule,
         MatProgressSpinnerModule,
         MatChipsModule,
+        MatDialogModule,
         FormsModule,
         RouterTestingModule,
         BrowserAnimationsModule
@@ -84,8 +86,7 @@ describe('LoginComponent', () => {
     fixture.detectChanges();
   });
 
-//   it('should be created', () => {
-//     expect(component).toBeTruthy();
-//   });
-// });
-})
+  it('should be created', () => {
+    expect(component).toBeTruthy();
+  });
+});

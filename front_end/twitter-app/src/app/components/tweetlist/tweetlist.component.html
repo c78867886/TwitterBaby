@@ -1,9 +1,11 @@
 <mat-spinner *ngIf="!tweetlist" class="spinner"></mat-spinner>
 <mat-card *ngFor="let tweet of tweetlist" class="example-card">
-  <mat-card-header>
-    <div mat-card-avatar class="header-image"></div>
-    <mat-card-title>{{ tweet.owner }}</mat-card-title>
-    <mat-card-subtitle>{{ tweet.timestamp | date: 'short'}}</mat-card-subtitle>
+  <mat-card-header class="header">
+    <img class="image" mat-card-sm-image [src] = "url">
+    <div class="headText">
+      <mat-card-title>{{ tweet.owner }}</mat-card-title>
+      <mat-card-subtitle>{{ tweet.timestamp | date: 'short'}}</mat-card-subtitle>
+    </div>
   </mat-card-header>
   <mat-card-content>
     <p class="tweetMessage">
@@ -12,7 +14,7 @@
   </mat-card-content>
   <mat-card-actions class="action">
     <button class="actionbtn" mat-button ><mat-icon>launch</mat-icon> Share</button>
-    <button class="actionbtn" matTooltip="Show Comments" (click)="editCommentDialog(tweet)" mat-icon-button >
+    <button class="actionbtn" id="comment" (click)="editCommentDialog(tweet)" mat-button >
         <mat-icon>comment</mat-icon>
         Comment
     </button>
