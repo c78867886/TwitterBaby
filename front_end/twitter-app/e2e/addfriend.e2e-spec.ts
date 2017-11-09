@@ -34,7 +34,7 @@ describe('twitter-app Friendship', () => {
     let profileBtn = page.getProfileBtn();
     profileBtn.click();
     page.sleep();
-    expect(page.getProfileCpnt()).toBeDefined();
+    expect(page.getProfileCpnt().isPresent()).toBe(true);
   })
 
   it('should log out', () => {
