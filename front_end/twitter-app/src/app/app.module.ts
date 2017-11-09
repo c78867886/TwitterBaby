@@ -11,9 +11,7 @@ import { AuthGuardService } from './services/auth-guard.service';
 import { AuthGuardLoggedService } from './services/auth-guard-logged.service';
 import { NotificationService } from './services/notification.service';
 import { rooting } from './app.router';
-import { ImageUploadModule } from "angular2-image-upload";
 import { MediaService } from './services/media.service';
-//import { SampleModule } from 'angular2-base64-image-upload';
 
 
 import { MatToolbarModule, 
@@ -25,7 +23,8 @@ import { MatToolbarModule,
          MatExpansionModule,
          MatProgressSpinnerModule,
          MatChipsModule,
-         MatTooltipModule
+         MatTooltipModule,
+         MatDialogModule
          } from '@angular/material';
          
 import { UserInfoComponent } from './components/user-info/user-info.component';
@@ -41,7 +40,6 @@ import { SignUpComponent } from './components/sign-up/sign-up.component';
 import { NavBarComponent } from './components/nav-bar/nav-bar.component';
 import { NotfoundComponent } from './components/notfound/notfound.component';
 import { UserprofileComponent } from './components/userprofile/userprofile.component';
-import { MatDialogModule } from '@angular/material';
 import { EditUserProfileDialogComponent } from './components/edit-user-profile-dialog/edit-user-profile-dialog.component';
 import { EditCommentsDialogComponent } from './components/edit-comments-dialog/edit-comments-dialog.component';
 import { CommentlistComponent } from './components/commentlist/commentlist.component';
@@ -82,10 +80,9 @@ import { CommentlistComponent } from './components/commentlist/commentlist.compo
     MatProgressSpinnerModule,
     MatChipsModule,
     MatTooltipModule,
-    rooting,
     ReactiveFormsModule,
     MatDialogModule,
-    ImageUploadModule.forRoot(),
+    rooting,
   ],
   entryComponents:[
     EditUserProfileDialogComponent,

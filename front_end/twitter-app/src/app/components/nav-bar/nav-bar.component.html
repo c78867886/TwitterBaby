@@ -1,5 +1,5 @@
 <mat-toolbar *ngIf="shouldBeShowed" class="navbar">
-  <button mat-button routerLink="/home" class="brand">BabyTwitter</button>
+  <img class="brand" routerLink="/home" src="http://www.twitlogo.com/c/9baa30ec00c78086eeab29941cc88db7.png">
   <span class="example-spacer"></span>
 
   <form matTooltip="Find an user through his/her username" class="form" (submit)="onSubmit()" autocomplete="off">
@@ -42,7 +42,7 @@
     <span>{{loginName}}</span>
   </button>
   <mat-menu #menu="matMenu" [overlapTrigger]="false">
-    <button mat-menu-item (click)='goToUserProfile()'>
+    <button class="profileBtn" mat-menu-item (click)='goToUserProfile()'>
       <mat-icon>
       account_circle
       </mat-icon>

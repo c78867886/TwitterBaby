@@ -18,12 +18,6 @@ import { MatToolbarModule,
   MatChipsModule,
   } from '@angular/material';
 
-<<<<<<< HEAD
-// describe('FollowlistComponent', () => {
-//   let component: FollowlistComponent;
-//   let fixture: ComponentFixture<FollowlistComponent>;
-
-=======
 describe('FollowlistComponent', () => {
   let component: FollowlistComponent;
   let fixture: ComponentFixture<FollowlistComponent>;
@@ -31,7 +25,6 @@ describe('FollowlistComponent', () => {
   let dataService: DataService;
   let de: DebugElement;
   let el: HTMLElement;
->>>>>>> 378f0b9effe6b76e9dc756c123d4775ef8d86004
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
@@ -56,18 +49,6 @@ describe('FollowlistComponent', () => {
     .compileComponents();
   }));
 
-<<<<<<< HEAD
-//   beforeEach(() => {
-//     fixture = TestBed.createComponent(FollowlistComponent);
-//     component = fixture.componentInstance;
-//     fixture.detectChanges();
-//   });
-
-//   it('should be created', () => {
-//     expect(component).toBeTruthy();
-//   });
-// });
-=======
   beforeEach(() => {
     fixture = TestBed.createComponent(FollowlistComponent);
     component = fixture.componentInstance;
@@ -89,4 +70,3 @@ describe('FollowlistComponent', () => {
     expect(el.textContent).toContain('test');
   });
 });
->>>>>>> 378f0b9effe6b76e9dc756c123d4775ef8d86004

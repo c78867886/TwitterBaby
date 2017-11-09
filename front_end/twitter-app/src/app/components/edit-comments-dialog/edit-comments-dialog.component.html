@@ -23,19 +23,19 @@
         </mat-dialog-actions>
       </mat-card>
     </div>
-    <mat-expansion-panel class="expansionpanel">
+    <mat-expansion-panel class="expansionpanel2">
         <mat-expansion-panel-header>
           <mat-panel-title>
             New Comment
           </mat-panel-title>
         </mat-expansion-panel-header>
         <mat-form-field class="example-full-width">
-          <textarea matInput placeholder="Write a comment" [(ngModel)]="commentContent"></textarea>
+          <textarea class="commenttextarea" matInput placeholder="Write a comment" [(ngModel)]="commentContent"></textarea>
         </mat-form-field>
-        <button class='disBtn' mat-raised-button *ngIf="content === ''" class="submitbtn" (click)="postComment()">
+        <button class='disBtn' disabled mat-raised-button *ngIf="commentContent === ''" (click)="postComment()">
           Comment
         </button>
-        <button class='actBtn' mat-raised-button *ngIf="content !== ''" class="submitbtn" (click)="postComment()">
+        <button class='actBtn2' mat-raised-button *ngIf="commentContent !== ''" (click)="postComment()">
           Comment
         </button>
       </mat-expansion-panel>
@@ -43,7 +43,7 @@
          <app-commentlist [commentlist]='list'></app-commentlist>
       </div>
     <mat-dialog-actions>
-        <button mat-raised-button (click)="onCloseCancel()" class="dialogBtnCanc">Cancel</button>
+        <button mat-raised-button (click)="onCloseCancel()" class="dialogBtnCancel">Cancel</button>
     </mat-dialog-actions>
 
 </div>

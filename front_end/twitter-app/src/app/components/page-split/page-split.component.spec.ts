@@ -16,15 +16,14 @@ describe('PageSplitComponent', () => {
     })
     .compileComponents();
   }));
+
+  beforeEach(() => {
+    fixture = TestBed.createComponent(PageSplitComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+  });
+
+  it('should be created', () => {
+    expect(component).toBeTruthy();
+  });
 });
-
-//   beforeEach(() => {
-//     fixture = TestBed.createComponent(PageSplitComponent);
-//     component = fixture.componentInstance;
-//     fixture.detectChanges();
-//   });
-
-//   it('should be created', () => {
-//     expect(component).toBeTruthy();
-//   });
-// });

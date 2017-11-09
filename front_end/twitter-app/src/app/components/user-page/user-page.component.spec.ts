@@ -17,6 +17,7 @@ import { MatToolbarModule,
   MatExpansionModule,
   MatProgressSpinnerModule,
   MatChipsModule,
+  MatDialogModule
   } from '@angular/material';
 
 describe('UserPageComponent', () => {
@@ -39,6 +40,7 @@ describe('UserPageComponent', () => {
         MatExpansionModule,
         MatProgressSpinnerModule,
         MatChipsModule,
+        MatDialogModule,
         FormsModule,
         RouterTestingModule,
         BrowserAnimationsModule
@@ -60,7 +62,7 @@ describe('UserPageComponent', () => {
     fixture.detectChanges();
   });
 
-//   it('should be created', () => {
-//     expect(component).toBeTruthy();
-//   });
-// });
+  it('should be created', () => {
+    expect(component).toBeTruthy();
+  });
+ });
