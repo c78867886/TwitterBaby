@@ -13,5 +13,6 @@ type Tweet struct {
 	From 		string			`json:"from,omitempty" bson:"from,omitempty"`
 	Message 	string			`json:"message" bson:"message"`
 	Numcomment  int				`json:"numcomment" bson:"numcomment"`
+	Picture		string			`json:"picture,omitempty" bson:"picture,omitempty"`
 	Timestamp	time.Time		`json:"timestamp,omitempty" bson:"timestamp"`
 }

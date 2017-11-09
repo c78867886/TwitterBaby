@@ -2,134 +2,239 @@ package tweet
 
 import (
 	"model"
+	"notification"
+	"fmt"
 	"strings"
 	"time"
 	"net/http"
 	"net/http/httptest"
 	"testing"
-	"fmt"
+	"gopkg.in/mgo.v2"
+	"gopkg.in/mgo.v2/bson"
 	"github.com/labstack/echo"
 	"github.com/dgrijalva/jwt-go"
 	"github.com/stretchr/testify/assert"
+	"encoding/json"
+)
+
+type (
+	restHTTPTestCase struct {
+		positive	bool
+		input		restHTTPInput
+		expected	restHTTPExpected
+	}
+
+	restHTTPInput struct {
+		user	string
+		target	string
+	}
+
+	restHTTPExpected struct {
+		code 		int
+		message 	string
+	}
 )
 
 const key  = "UYrtPaa0Pky7QZyVrkIfnouatG7LjTKystf0FGdOuDiXCZyCSuVz8YdK7OBeSrC"
 
-func TestFetchOwnTweets (t *testing.T) {
-	// test cases
-	requestParam := []string {
-		"TomRiddle",
-		"JasonHe", 
-		"MarsLee" }
-
-	expectedJSON := []string {
-		"{\"page\":\"0\",\"totalpage\":\"0\",\"totaltweets\":\"0\",\"tweetlist\":[]}",
-		"{\"page\":\"1\",\"totalpage\":\"9\",\"totaltweets\":\"25\",\"tweetlist\":[{\"id\":\"59de695257a4370860b1eb9a\",\"owner\":\"JasonHe\",\"message\":\"This is a test message from JasonHe!\",\"timestamp\":\"2017-10-11T14:56:18.704-04:00\"},{\"id\":\"59d24577311bc337bfec6d06\",\"owner\":\"JasonHe\",\"message\":\"Hi, I am Jason He. Weather sucks.\",\"timestamp\":\"2017-10-02T09:56:07.892-04:00\"},{\"id\":\"59d24577311bc337bfec6d07\",\"owner\":\"JasonHe\",\"message\":\"Hello from Jason He.\",\"timestamp\":\"2017-10-02T09:56:07.892-04:00\"}]}" ,
-		"{\"page\":\"1\",\"totalpage\":\"8\",\"totaltweets\":\"24\",\"tweetlist\":[{\"id\":\"59d24577311bc337bfec6d04\",\"owner\":\"MarsLee\",\"message\":\"Hi, I am Chih-Yin Lee. Weather sucks.\",\"timestamp\":\"2017-10-02T09:56:07.892-04:00\"},{\"id\":\"59d24577311bc337bfec6d05\",\"owner\":\"MarsLee\",\"message\":\"Hello from Chih-Yin Lee.\",\"timestamp\":\"2017-10-02T09:56:07.892-04:00\"},{\"id\":\"59d24577311bc337bfec6d0f\",\"owner\":\"MarsLee\",\"message\":\"Hi, I am Chih-Yin Lee. Weather sucks.\",\"timestamp\":\"2017-10-02T09:56:07.892-04:00\"}]}"}
-
+func TestNewTweet (t *testing.T) {
 	// Setup
 	e := echo.New()
-	h := NewHandler("mongodb://SEavenger:SEavenger@ds149324.mlab.com:49324/se_avengers", key, make(chan model.Notification))
+	nh := notification.NewHandler("mongodb://SEavenger:SEavenger@ds121225.mlab.com:21225/se_avengers_test")
+	h := NewHandler("mongodb://SEavenger:SEavenger@ds121225.mlab.com:21225/se_avengers_test", key, nh.Manager.Operator)
 
-	// test empty request parameter
-	//c.SetParamValues("")
+	const illegalSize int = 10485760+1
+	oversizedImage := [illegalSize]byte{}
+	for i := 0; i < illegalSize; i++ {
+		oversizedImage[i] = 'A'
+	}
 
+	// Test cases
+	testCases := []restHTTPTestCase {
+		// test success
+		restHTTPTestCase{
+			true,
+			restHTTPInput{"testNewTweet", `{"message":"testMessage", "picture":"iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAAjVBMVEXp6en///+8vLwPZ66L1fPYiVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAAjVBMVEXp6en///+8vLwPZ66L1fPYiVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAAjVBMVEXp6en///+8vLwPZ66L1fPYiVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAAjVBMVEXp6en///+8vLwPZ66L1fPYiVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAAjVBMVEXp6en///+8vLwPZ66L1fPYiVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAAjVBMVEXp6en///+8vLwPZ66L1fPYiVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAAjVBMVEXp6en///+8vLwPZ66L1fPYiVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAAjVBMVEXp6en///+8vLwPZ66L1fPYiVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAAjVBMVEXp6en///+8vLwPZ66L1fPYiVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAAjVBMVEXp6en///+8vLwPZ66L1fPYiVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAAjVBMVEXp6en///+8vLwPZ66L1fPYiVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAAjVBMVEXp6en///+8vLwPZ66L1fPYiVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAAjVBMVEXp6en///+8vLwPZ66L1fPYiVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAAjVBMVEXp6en///+8vLwPZ66L1fPY"}`},
+			restHTTPExpected{http.StatusOK, `{"owner":"testNewTweet","message":"testMessage","picture":"iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAAjVBMVEXp6en///+8vLwPZ66L1fPYiVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAAjVBMVEXp6en///+8vLwPZ66L1fPYiVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAAjVBMVEXp6en///+8vLwPZ66L1fPYiVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAAjVBMVEXp6en///+8vLwPZ66L1fPYiVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAAjVBMVEXp6en///+8vLwPZ66L1fPYiVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAAjVBMVEXp6en///+8vLwPZ66L1fPYiVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAAjVBMVEXp6en///+8vLwPZ66L1fPYiVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAAjVBMVEXp6en///+8vLwPZ66L1fPYiVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAAjVBMVEXp6en///+8vLwPZ66L1fPYiVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAAjVBMVEXp6en///+8vLwPZ66L1fPYiVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAAjVBMVEXp6en///+8vLwPZ66L1fPYiVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAAjVBMVEXp6en///+8vLwPZ66L1fPYiVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAAjVBMVEXp6en///+8vLwPZ66L1fPYiVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAAjVBMVEXp6en///+8vLwPZ66L1fPY"}`},
+		},
+		restHTTPTestCase{
+			true,
+			restHTTPInput{"testNewTweet", `{"message":"testMessage", "picture":""}`},
+			restHTTPExpected{http.StatusOK, `{"owner":"testNewTweet","message":"testMessage","picture":""}`},
+		},
+		// test empty
+		restHTTPTestCase{
+			false,
+			restHTTPInput{"testNewTweet", `{"message":"", "picture":"iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAAjVBMVEXp6en///+8vLwPZ66L1fPYiVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAAjVBMVEXp6en///+8vLwPZ66L1fPYiVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAAjVBMVEXp6en///+8vLwPZ66L1fPYiVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAAjVBMVEXp6en///+8vLwPZ66L1fPYiVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAAjVBMVEXp6en///+8vLwPZ66L1fPYiVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAAjVBMVEXp6en///+8vLwPZ66L1fPYiVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAAjVBMVEXp6en///+8vLwPZ66L1fPY"}`},
+			restHTTPExpected{http.StatusBadRequest, "Message cannot be empty."},
+		},
+		// test illegal picture
+		restHTTPTestCase{
+			false,
+			restHTTPInput{"testNewTweet", `{"message":"testMessage", "picture":"` + string(oversizedImage[:]) + `"}`},
+			restHTTPExpected{http.StatusBadRequest, "Image must be smaller than 10 MB."},
+		},
+	}
+	
 	// Run
-	for i, rp := range requestParam {
+	for _, tc := range testCases {
+		// Delete DB entry
+		if tc.positive {
+			_, err := h.db.DB(h.dbName).C(model.TweetCollection).RemoveAll(bson.M{"owner": "testSignup"})
+			if err != nil {
+				if err != mgo.ErrNotFound {
+					t.Fatal(err)
+				}
+			}
+		}
+
+		// Setup
+		req := httptest.NewRequest(echo.POST, "/", strings.NewReader(tc.input.target))
+		req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
+		req.Header.Set(echo.HeaderAuthorization, "Bearer " + getToken(tc.input.user))
+		rec := httptest.NewRecorder()
+		c := e.NewContext(req, rec)
+		c.SetPath("/api/v1/newTweet")
+		processJWTToken(c)
+
+		// Assertion
+		if tc.positive {
+			if assert.NoError(t, h.NewTweet(c), tc.input.target) {
+				assert.Equal(t, tc.expected.code, rec.Code, tc.input.target)
+				assert.Equal(t, tc.expected.message, rec.Body.String(), tc.input.target)
+			}
+		} else {
+			if err := h.NewTweet(c); assert.Error(t, err, tc.input.target) {
+				assert.Equal(t, tc.expected.code, err.(*echo.HTTPError).Code, tc.input.target)
+				assert.Equal(t, tc.expected.message, err.(*echo.HTTPError).Message, tc.input.target)
+			}
+		}
+	}
+	h.Shutdown()
+}
+
+func TestFetchOwnTweets (t *testing.T) {
+	e := echo.New()
+	h := NewHandler("mongodb://SEavenger:SEavenger@ds121225.mlab.com:21225/se_avengers_test", key, make(chan model.Notification))
+
+	testCases := []restHTTPTestCase {
+		// test success
+		restHTTPTestCase{
+			true,
+			restHTTPInput{"testFetchOenTweetsSuccess", ""},
+			restHTTPExpected{http.StatusOK, `{"page":"1","totalpage":"4","totaltweets":"10","tweetlist":"[]"}`},
+		},
+		// test over page
+		restHTTPTestCase{
+			true,
+			restHTTPInput{"testFetchOenTweetsOverPage", ""},
+			restHTTPExpected{http.StatusOK, `{"page":"1","totalpage":"1","totaltweets":"1","tweetlist":"[]"}`},
+		},
+		// test the user with no tweet
+		restHTTPTestCase{
+			true,
+			restHTTPInput{"testFetchOenTweetsWithNoTweet1", ""},
+			restHTTPExpected{http.StatusOK, `{"page":"0","totalpage":"0","totaltweets":"0","tweetlist":"[]"}`},
+		},
+		restHTTPTestCase{
+			true,
+			restHTTPInput{"testFetchOenTweetsWithNoTweet2", ""},
+			restHTTPExpected{http.StatusOK, `{"page":"0","totalpage":"0","totaltweets":"0","tweetlist":"[]"}`},
+		},
+		// tes username not in db
+		restHTTPTestCase{
+			false,
+			restHTTPInput{"userNotExist", ""},
+			restHTTPExpected{http.StatusNotFound, "User userNotExist does not exist."},
+		},
+	}
+	// Run
+	for _, tc := range testCases {
 		// Setup
 		req := httptest.NewRequest(echo.GET, "/?page=1&perpage=3", nil)
-		req.Header.Set(echo.HeaderAuthorization, "Bearer " + getToken(rp))
+		req.Header.Set(echo.HeaderAuthorization, "Bearer " + getToken(tc.input.user))
 		rec := httptest.NewRecorder()
 		c := e.NewContext(req, rec)
 		c.SetPath("api/v1/tweetlist")
 		c.SetParamNames("username")
-		c.SetParamValues(rp)
+		c.SetParamValues(tc.input.user)
 		processJWTToken(c)
 
 		// Assertion
-		if assert.NoError(t, h.FetchTweets(c)) {
-			assert.Equal(t, http.StatusOK, rec.Code)
-			assert.Equal(t, expectedJSON[i], rec.Body.String())
-		}
-	}
-}
-
-func TestNewTweet (t *testing.T) {
-	// Setup
-	e := echo.New()
-	h := NewHandler("mongodb://SEavenger:SEavenger@ds149324.mlab.com:49324/se_avengers", key, make(chan model.Notification))
-
-	// test empty request parameter
-	//c.SetParamValues("")
-
-	// test cases
-	requestParam := []string {
-		`{"message":"BBBBBBBBQ"}`,
-	}
-
-	expectedJSON := []string {
-		"{\"owner\":\"59d24577311bc337bfec6cf9\",\"message\":\"BBBBBBBBQ\"}",
-	}
-	
-	// Run
-	for i, rp := range requestParam {
-		// Setup
-		req := httptest.NewRequest(echo.POST, "/", strings.NewReader(rp))
-		req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
-		req.Header.Set(echo.HeaderAuthorization, "Bearer " + getIDToken("59d24577311bc337bfec6cf9"))
-		rec := httptest.NewRecorder()
-		c := e.NewContext(req, rec)
-		c.SetPath("api/v1/newTweet")
-		c.SetParamNames("id")
-		c.SetParamValues(rp)
-		processJWTToken(c)
-
-		// Assertion
-		if assert.NoError(t, h.NewTweet(c)) {
-			assert.Equal(t, http.StatusOK, rec.Code)
-			assert.Equal(t, expectedJSON[i], rec.Body.String())
+		if tc.positive {
+			if assert.NoError(t, h.FetchTweets(c), tc.input.user + " fetching own tweet") {
+				assert.Equal(t, tc.expected.code, rec.Code, tc.input.user + " fetching own tweet")
+				assert.Equal(t, tc.expected.message, removeTweetList(rec.Body.String()), tc.input.user + " fetching own tweet")
+			}
+		} else {
+			if err := h.FetchTweets(c); assert.Error(t, err, tc.input.user + " fetching own tweet") {
+				assert.Equal(t, tc.expected.code, err.(*echo.HTTPError).Code, tc.input.user + " fetching own tweet")
+				assert.Equal(t, tc.expected.message, err.(*echo.HTTPError).Message, tc.input.user + " fetching own tweet")
+			}
 		}
 	}
 }
 
 func TestFetchTweetTimeLine (t *testing.T) {
-	// test cases
-	requestParam := []string {
-		"TomRiddle",
-		"JasonHe", 
-		"MarsLee" }
-
-	expectedJSON := []string {
-		"{\"page\":\"0\",\"totalpage\":\"0\",\"totaltweets\":\"0\",\"tweetlist\":[]}",
-		"{\"page\":\"1\",\"totalpage\":\"9\",\"totaltweets\":\"25\",\"tweetlist\":[{\"id\":\"59de695257a4370860b1eb9a\",\"owner\":\"JasonHe\",\"message\":\"This is a test message from JasonHe!\",\"timestamp\":\"2017-10-11T14:56:18.704-04:00\"},{\"id\":\"59d24577311bc337bfec6d06\",\"owner\":\"JasonHe\",\"message\":\"Hi, I am Jason He. Weather sucks.\",\"timestamp\":\"2017-10-02T09:56:07.892-04:00\"},{\"id\":\"59d24577311bc337bfec6d07\",\"owner\":\"JasonHe\",\"message\":\"Hello from Jason He.\",\"timestamp\":\"2017-10-02T09:56:07.892-04:00\"}]}" ,
-		"{\"page\":\"1\",\"totalpage\":\"8\",\"totaltweets\":\"24\",\"tweetlist\":[{\"id\":\"59d24577311bc337bfec6d04\",\"owner\":\"MarsLee\",\"message\":\"Hi, I am Chih-Yin Lee. Weather sucks.\",\"timestamp\":\"2017-10-02T09:56:07.892-04:00\"},{\"id\":\"59d24577311bc337bfec6d05\",\"owner\":\"MarsLee\",\"message\":\"Hello from Chih-Yin Lee.\",\"timestamp\":\"2017-10-02T09:56:07.892-04:00\"},{\"id\":\"59d24577311bc337bfec6d0f\",\"owner\":\"MarsLee\",\"message\":\"Hi, I am Chih-Yin Lee. Weather sucks.\",\"timestamp\":\"2017-10-02T09:56:07.892-04:00\"}]}"}
-
-	// Setup
 	e := echo.New()
-	h := NewHandler("mongodb://SEavenger:SEavenger@ds149324.mlab.com:49324/se_avengers", key, make(chan model.Notification))
+	h := NewHandler("mongodb://SEavenger:SEavenger@ds121225.mlab.com:21225/se_avengers_test", key, make(chan model.Notification))
 
-	// test empty request parameter
-	//c.SetParamValues("")
-
+	testCases := []restHTTPTestCase {
+		// test success
+		restHTTPTestCase{
+			true,
+			restHTTPInput{"TestFetchTweetTimeLineSuccess", ""},
+			restHTTPExpected{http.StatusOK, `{"page":"1","totalpage":"3","totaltweets":"8","tweetlist":"[]"}`},
+		},
+		// test over page
+		restHTTPTestCase{
+			true,
+			restHTTPInput{"TestFetchTweetTimeLineOverPage", ""},
+			restHTTPExpected{http.StatusOK, `{"page":"0","totalpage":"0","totaltweets":"0","tweetlist":"[]"}`},
+		},
+		// test the user with no tweet
+		restHTTPTestCase{
+			true,
+			restHTTPInput{"TestFetchTweetTimeLineNoTweet1", ""},
+			restHTTPExpected{http.StatusOK, `{"page":"0","totalpage":"0","totaltweets":"0","tweetlist":"[]"}`},
+		},
+		restHTTPTestCase{
+			true,
+			restHTTPInput{"TestFetchTweetTimeLineNoTweet2", ""},
+			restHTTPExpected{http.StatusOK, `{"page":"0","totalpage":"0","totaltweets":"0","tweetlist":"[]"}`},
+		},
+		// test username not in db
+		restHTTPTestCase{
+			false,
+			restHTTPInput{"userNotExist", ""},
+			restHTTPExpected{http.StatusNotFound, "User userNotExist does not exist."},
+		},
+	}
 	// Run
-	for i, rp := range requestParam {
+	for _, tc := range testCases {
 		// Setup
 		req := httptest.NewRequest(echo.GET, "/?page=1&perpage=3", nil)
-		req.Header.Set(echo.HeaderAuthorization, "Bearer " + getToken(rp))
+		req.Header.Set(echo.HeaderAuthorization, "Bearer " + getToken(tc.input.user))
 		rec := httptest.NewRecorder()
 		c := e.NewContext(req, rec)
-		c.SetPath("api/v1/tweetlist")
+		c.SetPath("api/v1/tweettimeline")
 		c.SetParamNames("username")
-		c.SetParamValues(rp)
+		c.SetParamValues(tc.input.user)
 		processJWTToken(c)
 
 		// Assertion
-		if assert.NoError(t, h.FetchTweets(c)) {
-			assert.Equal(t, http.StatusOK, rec.Code)
-			assert.Equal(t, expectedJSON[i], rec.Body.String())
+		if tc.positive {
+			if assert.NoError(t, h.FetchTweetTimeLine(c), tc.input.user + " fetching tweetTimeLine") {
+				assert.Equal(t, tc.expected.code, rec.Code, tc.input.user + " fetching tweetTimeLine")
+				assert.Equal(t, tc.expected.message, removeTweetList(rec.Body.String()), tc.input.user + " fetching tweetTimeLine")
+			}
+		} else {
+			if err := h.FetchTweetTimeLine(c); assert.Error(t, err, tc.input.user + " fetching tweetTimeLine") {
+				assert.Equal(t, tc.expected.code, err.(*echo.HTTPError).Code, tc.input.user + " fetching tweetTimeLine")
+				assert.Equal(t, tc.expected.message, err.(*echo.HTTPError).Message, tc.input.user + " fetching tweetTimeLine")
+			}
 		}
 	}
-	
 }
 
 func getIDToken(id string) string {
@@ -214,4 +319,13 @@ func jwtFromHeader(header string, authScheme string) jwtExtractor {
 		}
 		return "", ErrJWTMissing
 	}
+}
+
+func removeTweetList(recorderString string) string {
+	in := []byte(recorderString)
+	var raw map[string]string
+	json.Unmarshal(in, &raw)
+	raw["tweetlist"] = "[]"
+	out, _ := json.Marshal(raw)
+	return string(out)
 }

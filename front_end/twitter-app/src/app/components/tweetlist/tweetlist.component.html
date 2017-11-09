@@ -11,12 +11,12 @@
     </p>
   </mat-card-content>
   <mat-card-actions class="action">
-    <button mat-raised-button color="accent">LIKE</button>
-    <button mat-raised-button color="accent">SHARE</button>
-    <button matTooltip="Show Comments" class="comments" (click)="editCommentDialog(tweet)" mat-icon-button >
-        <mat-icon>forum</mat-icon>
+    <button class="actionbtn" mat-button ><mat-icon>launch</mat-icon> Share</button>
+    <button class="actionbtn" matTooltip="Show Comments" (click)="editCommentDialog(tweet)" mat-icon-button >
+        <mat-icon>comment</mat-icon>
+        Comment
     </button>
+    <button class="actionbtn" mat-button><mat-icon>thumb_up</mat-icon> Like</button>
   </mat-card-actions>
-  <hr>
     <!-- <app-commentlist [tweet]='tweet'></app-commentlist> -->
 </mat-card>
