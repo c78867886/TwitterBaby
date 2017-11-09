@@ -1,6 +1,7 @@
 # TwitterBaby
-> This is the course project for CEN5035 aim to create a naive version of twitter. 
-> This project will create a web application with basic twitter function including: (filled here)
+> This is the course project for CEN5035 aim to create a simple version of twitter. 
+> This project will create a web application with basic twitter function including: 
+  Sign in, Sign up, Show tweets in the home wepage, Follow, Unfollow, Post Tweet, Delete Tweet, Edit User Profile, Notification, Comments....
 
 ## Getting Started
 
