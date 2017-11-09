@@ -29,3 +29,7 @@
     float: left;
     size: 48;
 }
+
+mat-card:hover{
+    background-color:rgba(136, 184, 206, 0.2);
+}
