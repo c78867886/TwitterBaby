@@ -1,6 +1,6 @@
 import { TestBed, inject, getTestBed, fakeAsync, tick } from '@angular/core/testing';
 import { MockBackend, MockConnection } from '@angular/http/testing';
-import { Http, BaseRequestOptions, ResponseOptions } from '@angular/http';
+import { Http, BaseRequestOptions, Response, ResponseOptions } from '@angular/http';
 import { DataService } from './data.service';
 import { HttpModule } from '@angular/http';
 describe('DataService', () => {

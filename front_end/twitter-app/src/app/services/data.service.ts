@@ -97,20 +97,20 @@ export class DataService {
   }
 
   //MockLogin only for development
-  mockLogin(): Promise<Object> {
-    let loginfo: object = {email:"hojason117@gmail.com", password:"test1"};
-    let headers: Headers = new Headers({ 'content-type': 'application/json'});
-    let options: RequestOptions = new RequestOptions({ headers: headers });
-    return this.http.post('http://127.0.0.1:1323/api/v1/login', loginfo, options)
-      .toPromise()
-      .then((res: Response) => {
-        console.log(res.json());
-        localStorage.setItem('access_token', res.json().token);
-        localStorage.setItem('id', res.json().id);
-        localStorage.setItem('user_info_object', JSON.stringify(res.json()));
-      })
-      .catch(this.handleError);
-  }
+  // mockLogin(): Promise<Object> {
+  //   let loginfo: object = {email:"hojason117@gmail.com", password:"test1"};
+  //   let headers: Headers = new Headers({ 'content-type': 'application/json'});
+  //   let options: RequestOptions = new RequestOptions({ headers: headers });
+  //   return this.http.post('http://127.0.0.1:1323/api/v1/login', loginfo, options)
+  //     .toPromise()
+  //     .then((res: Response) => {
+  //       console.log(res.json());
+  //       localStorage.setItem('access_token', res.json().token);
+  //       localStorage.setItem('id', res.json().id);
+  //       localStorage.setItem('user_info_object', JSON.stringify(res.json()));
+  //     })
+  //     .catch(this.handleError);
+  // }
 
   // ERROR handler
   private handleError(error: any): Promise<any> {

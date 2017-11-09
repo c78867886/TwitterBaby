@@ -12,9 +12,8 @@ describe('AuthGuardLoggedService', () => {
       { provide: 'auth', useClass: AuthService }]
     });
   });
-});
 
-//   it('should be created', inject([AuthGuardLoggedService], (service: AuthGuardLoggedService) => {
-//     expect(service).toBeTruthy();
-//   }));
-// });
+  it('should be created', inject([AuthGuardLoggedService], (service: AuthGuardLoggedService) => {
+    expect(service).toBeTruthy();
+  }));
+});
