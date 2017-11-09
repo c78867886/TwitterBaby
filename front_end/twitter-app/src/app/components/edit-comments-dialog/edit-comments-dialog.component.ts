@@ -12,7 +12,7 @@ import { CommentlistComponent } from '../commentlist/commentlist.component';
 })
 export class EditCommentsDialogComponent implements OnInit {
 
-  public commentContent: string;
+  public commentContent: string = '';
   commentsSubscription: Subscription;
   list:Comment[];
   
@@ -22,11 +22,7 @@ export class EditCommentsDialogComponent implements OnInit {
              ) { }
 
   ngOnInit() {
-    this.commentsSubscription = this.data.fetchComment(this.tweet.id)
-    .subscribe(list => 
-      {
-        this.list = list.commentlist;
-      })
+    this.freshData();
   }
 
   /**
@@ -36,6 +32,7 @@ export class EditCommentsDialogComponent implements OnInit {
     this.data.addNewComment(this.commentContent, this.tweet.id)
     .then(res => {
       this.freshData();
+      this.commentContent = '';
       console.log("Adding comment is done")
       console.log(res);
     })

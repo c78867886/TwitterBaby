@@ -5,6 +5,7 @@ import { EditUserProfileDialogComponent } from '../edit-user-profile-dialog/edit
 import { Subscription } from 'rxjs/Subscription';
 // import {ChangeDetectorRef} from '@angular/core';
 import { Router } from '@angular/router';
+import { userinfo } from '../../models/userinfo.model';
 // import { MediaService } from '../../services/media.service';
 
 @Component({
@@ -21,22 +22,33 @@ export class UserprofileComponent implements OnInit {
   userBio: string;
   dialogResult = "";
   private elem: ElementRef;
+  userInfosubscription:Subscription;
 
   constructor(public dialog : MatDialog,
               // private ref:ChangeDetectorRef,
               private route: Router,
               @Inject('media') private mediaService,
+              @Inject('data') private data,
               ) { }
 
   ngOnInit() {
     let userinfo = JSON.parse(localStorage.getItem("user_info_object"));
     if (userinfo) {
         this.userName = userinfo.username;
-        this.userFirstName = userinfo.firstname;
-        this.userLastName = userinfo.lastname;
-        this.userEmail = userinfo.email;
-        this.userBio = userinfo.bio;
     }
+
+    /**
+    * Get User Info
+    */
+    this.userInfosubscription = this.data.getUserInfoForProfile(this.userName)
+    .subscribe(newUserInfo => 
+      { 
+        this.userFirstName = newUserInfo.userinfo.firstname;
+        this.userLastName = newUserInfo.userinfo.lastname;
+        this.userEmail = newUserInfo.userinfo.email;
+        this.userBio = newUserInfo.userinfo.bio;
+      }
+    );
   }
   
   /**
@@ -106,8 +118,6 @@ export class UserprofileComponent implements OnInit {
       alert("The file is not an image, Please select an image");
       return;
     }
-
-    
 
     const formData = new FormData();
     formData.append("image", image);

@@ -52,7 +52,7 @@ export class DataService {
   followUser(id: string): Promise<Object> {
     let post = {};
     let options: RequestOptions = this.getHeader();
-    return this.http.post(`http://127.0.0.1:1323/api/v1/follow/${id}`, post, options)
+    return this.http.post(this.localhost + `/api/v1/follow/${id}`, post, options)
       .toPromise()
       .catch(this.handleError);
   }
@@ -60,7 +60,7 @@ export class DataService {
   unfollowUser(id: string): Promise<Object> {
     let post = {};
     let options: RequestOptions = this.getHeader();
-    return this.http.post(`http://127.0.0.1:1323/api/v1/unfollow/${id}`, post, options)
+    return this.http.post(this.localhost + `/api/v1/unfollow/${id}`, post, options)
       .toPromise()
       .catch(this.handleError);
   }
@@ -86,7 +86,7 @@ export class DataService {
     let options: RequestOptions = this.getHeader();
     let message: object = {message: content};
     //console.log(message);
-    return this.http.post(`http://127.0.0.1:1323/api/v1/newTweet`, message, options)
+    return this.http.post(this.localhost + `/api/v1/newTweet`, message, options)
             .toPromise()
             .then((res: Response) => {
               this.getTweetListTimeLine(id, 1);
@@ -130,6 +130,7 @@ export class DataService {
       .toPromise()
       .then((res: Response) => {
         localStorage.setItem('user_info_object', JSON.stringify(res.json()));
+        this.getUserInfoForProfile(userNewInfo.username);
         console.log(res.json());
     })
     .catch(this.handleError);
@@ -163,6 +164,21 @@ export class DataService {
       .do(res => {
          console.log(res);
          console.log("Get result successfully!");
+      })
+      .catch(this.handleError);
+  }
+
+  /**
+   * Get User name by observable
+   * @param username 
+   */
+  getUserInfoForProfile(username: string): Observable<object>{
+    let options: RequestOptions = this.getHeader();
+    return this.http.get(`${this.backEndHostUrl}/userInfo/${username}`, options)
+      .map(res => res.json())
+      .do(res => {
+         console.log(res);
+         console.log("Get user info successfully!");
       })
       .catch(this.handleError);
   }

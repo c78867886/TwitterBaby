@@ -4,7 +4,7 @@
       <mat-card-header >
           <div mat-card-avatar class="header-image"></div>
           <mat-card-title>{{ comment.fromusername }}   {{ comment.timestamp | date: 'short'}}</mat-card-title>
-          <mat-card-subtitle>{{ comment.message }}</mat-card-subtitle>
+          <mat-card-subtitle class="commentContent">{{ comment.message }}</mat-card-subtitle>
       </mat-card-header> 
   </mat-card>
   <mat-card class="continue" *ngIf="i===4" >

@@ -27,6 +27,16 @@ describe('twitter-app Friendship', () => {
     expect(page.getFriendCol()).toBeTruthy();
   });
 
+  it('should show profile page', () => {
+    let rightBtn = page.getNavRightButton();
+    rightBtn.click();
+    page.sleep();
+    let profileBtn = page.getProfileBtn();
+    profileBtn.click();
+    page.sleep();
+    expect(page.getProfileCpnt()).toBeDefined();
+  })
+
   it('should log out', () => {
     let rightBtn = page.getNavRightButton();
     rightBtn.click();

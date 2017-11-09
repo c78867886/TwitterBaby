@@ -1,6 +1,7 @@
 import { NavBarComponent } from './nav-bar.component';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { DataService } from '../../services/data.service';
+import { NotificationService } from '../../services/notification.service';
 import { HttpModule } from '@angular/http';
 import { FormsModule } from '@angular/forms';
 import { RouterTestingModule } from '@angular/router/testing';
@@ -17,9 +18,9 @@ import { MatToolbarModule,
   MatChipsModule,
   } from '@angular/material';
 
-// describe('NavBarComponent', () => {
-//   let component: NavBarComponent;
-//   let fixture: ComponentFixture<NavBarComponent>;
+describe('NavBarComponent', () => {
+  let component: NavBarComponent;
+  let fixture: ComponentFixture<NavBarComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -41,18 +42,19 @@ import { MatToolbarModule,
       declarations: [ NavBarComponent ],
 
       providers: [ {provide: 'data', useClass: DataService},
-                   {provide: 'auth', useClass: AuthService} ],
+                   {provide: 'auth', useClass: AuthService},
+                   {provide: 'notify', useClass: NotificationService} ],
     })
     .compileComponents();
   }));
 
-//   beforeEach(() => {
-//     fixture = TestBed.createComponent(NavBarComponent);
-//     component = fixture.componentInstance;
-//     fixture.detectChanges();
-//   });
+  beforeEach(() => {
+    fixture = TestBed.createComponent(NavBarComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+  });
 
-//   it('should be created', () => {
-//     expect(component).toBeTruthy();
-//   });
-// });
+  it('should be created', () => {
+    expect(component).toBeTruthy();
+  });
+});

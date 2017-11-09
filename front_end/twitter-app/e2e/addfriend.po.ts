@@ -2,7 +2,7 @@ import { browser, by, element, protractor } from 'protractor';
 
 export class FriendshipPage {
   sleep() {
-    browser.sleep(3000);
+    browser.sleep(1000);
   }
 
   navigateToHome() {
@@ -23,6 +23,14 @@ export class FriendshipPage {
 
   getNavRightButton() {
     return element(by.css('.navRightButton'));
+  }
+
+  getProfileBtn() {
+    return element(by.css('.profileBtn'));
+  }
+
+  getProfileCpnt() {
+    return element(by.css('.profileContainer'));
   }
 
   getLogoutButton() {

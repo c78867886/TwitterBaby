@@ -7,7 +7,7 @@ export interface UserInfo {
 }
 
 
-interface userinfo {
+export interface userinfo {
     bio: string;
     email: string;
     firstname: string;

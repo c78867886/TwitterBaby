@@ -25,6 +25,7 @@ describe('FollowerlistComponent', () => {
   let dataService: DataService;
   let de: DebugElement;
   let el: HTMLElement;
+  
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
@@ -43,7 +44,6 @@ describe('FollowerlistComponent', () => {
         BrowserAnimationsModule
       ],
       declarations: [ FollowerlistComponent ],
-
       providers: [ {provide: 'data', useClass: DataService} ],
     })
     .compileComponents();

@@ -25,11 +25,9 @@ describe('twitter-app Login', () => {
     expect(signPassword.getAttribute('value')).toEqual("testpassword");
     expect(signFirstName.getAttribute('value')).toEqual("Jason");
     expect(signLastName.getAttribute('value')).toEqual("He");
-    page.sleep();
     page.signSubmitBtn().click();
     page.sleep();
     expect(page.alertDiv().getText()).toEqual('Something is wrong, please sign up again.');
-    page.sleep();
   });
 
   it('should display signup page', () => {
@@ -51,10 +49,7 @@ describe('twitter-app Login', () => {
     expect(signPassword.getAttribute('value')).toEqual("testpassword");
     expect(signFirstName.getAttribute('value')).toEqual("Jason");
     expect(signLastName.getAttribute('value')).toEqual("He");
-    page.sleep();
     page.signSubmitBtn().click();
-    page.sleep();
-    page.sleep();
     page.sleep();
   });
 
@@ -70,7 +65,6 @@ describe('twitter-app Login', () => {
 
     passwordInput.sendKeys('testpassword');
     expect(passwordInput.getAttribute('value')).toEqual('testpassword');
-    page.sleep();
     loginSubmitButton.click();
     page.sleep();
   });
