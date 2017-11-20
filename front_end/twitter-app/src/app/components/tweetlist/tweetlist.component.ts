@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, Inject } from '@angular/core';
 import { Tweet } from '../../models/tweet.model';
 import { EditCommentsDialogComponent } from '../edit-comments-dialog/edit-comments-dialog.component';
 import { MatDialog } from '@angular/material'
@@ -15,7 +15,7 @@ export class TweetlistComponent implements OnInit {
   @Input() username: string;
   yesShow: boolean;
   url: string = 'http://s7d2.scene7.com/is/image/PetSmart/PB1201_STORY_CARO-Authority-HealthyOutside-DOG-20160818?$PB1201$';
-  constructor(public dialog : MatDialog) { }
+  constructor(public dialog : MatDialog, @Inject("data") private data) { }
 
   ngOnInit() {
   }
@@ -34,9 +34,10 @@ export class TweetlistComponent implements OnInit {
 
   }
 
-  // showComments(tweet){
-  //   this.yesShow = !this.yesShow;
-  //   CommentlistComponent.showTweetComments(tweet);
-  //   console.log("show comments in webpage");
-  // }
+  deleteTweet(tweetId) {
+    this.data.deleteTweet(tweetId);
+    this.tweetlist = this.tweetlist.filter((el) => {
+      return el.id != tweetId;
+    })
+  }
 }

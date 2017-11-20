@@ -96,6 +96,18 @@ export class DataService {
 
   }
 
+  //Delete Tweet
+  deleteTweet(tweetId: string): Promise<Object> {
+    let options: RequestOptions = this.getHeader();
+    return this.http.delete(this.localhost + '/api/v1/deleteTweet/' + tweetId, options)
+            .toPromise()
+            .then((res: Response) => {
+              return res.json();
+            })
+            .catch(this.handleError);
+  }
+
+
   //MockLogin only for development
   // mockLogin(): Promise<Object> {
   //   let loginfo: object = {email:"hojason117@gmail.com", password:"test1"};
