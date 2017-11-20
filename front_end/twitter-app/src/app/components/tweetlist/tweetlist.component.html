@@ -4,8 +4,10 @@
     <img class="image" mat-card-sm-image [src] = "url">
     <div class="headText">
       <mat-card-title>{{ tweet.owner }}</mat-card-title>
-      <mat-card-subtitle>{{ tweet.timestamp | date: 'short'}}</mat-card-subtitle>
+      <mat-card-subtitle class="timestamp">{{ tweet.timestamp | date: 'short'}}</mat-card-subtitle>
     </div>
+    <div class="space"></div>
+    <button *ngIf="tweet.owner===username" (click)="deleteTweet(tweet.id)" mat-icon-button class="deletebtn"><mat-icon>close</mat-icon></button>
   </mat-card-header>
   <mat-card-content>
     <p class="tweetMessage">
@@ -18,7 +20,6 @@
         <mat-icon>comment</mat-icon>
         Comment
     </button>
-    <button class="actionbtn" mat-button><mat-icon>thumb_up</mat-icon> Like</button>
   </mat-card-actions>
     <!-- <app-commentlist [tweet]='tweet'></app-commentlist> -->
 </mat-card>
