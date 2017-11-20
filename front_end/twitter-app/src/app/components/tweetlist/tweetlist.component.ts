@@ -4,6 +4,7 @@ import { EditCommentsDialogComponent } from '../edit-comments-dialog/edit-commen
 import { MatDialog } from '@angular/material'
 import { Subscription } from 'rxjs/Subscription';
 import { CommentlistComponent } from '../commentlist/commentlist.component';
+import { RetweetDialogComponent } from '../retweet-dialog/retweet-dialog.component';
 
 @Component({
   selector: 'app-tweetlist',
@@ -32,6 +33,14 @@ export class TweetlistComponent implements OnInit {
       console.log('Dialog is closed: ${result}');
     })
 
+  }
+
+  retweetDialog(tweet) {
+    console.log("Click share");
+    let dialogRef = this.dialog.open(RetweetDialogComponent, {
+      width: '600px',
+      data: tweet
+    });
   }
 
   deleteTweet(tweetId) {

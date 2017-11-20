@@ -1,0 +1,7 @@
+<form class="form" autocomplete="off">
+  <mat-form-field class="example-full-width">
+    <input name="share" matInput placeholder="Share your feels...">
+  </mat-form-field>
+  <button class="submitbtn" mat-raised-button (click)="onSubmit()">SHARE</button>
+  <p><span class="ownerName">@{{ tweet.owner }}: </span>{{tweet.message}} </p>
+</form>
