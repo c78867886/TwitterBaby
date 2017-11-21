@@ -1,7 +1,7 @@
 # TwitterBaby
 > This is the course project for CEN5035 aim to create a simple version of twitter. 
 > This project will create a web application with basic twitter function including: 
-  Sign in, Sign up, Show tweets in the home wepage, Follow, Unfollow, Post Tweet, Delete Tweet, Edit User Profile, Notification, Comments....
+  Login, Signup, Show tweets in the home wepage, Follow, Unfollow, Post Tweet, Delete Tweet, Edit User Profile, Notification, Comments....
 
 ## Getting Started
 
@@ -45,10 +45,9 @@ Add additional notes about how to deploy this on a live system
 
 ## Built With
 
-Dropwizard - The web framework used
-Maven - Dependency Management
-ROME - Used to generate RSS Feeds
-Contributing
+Angular 2 - The web framework used
+Echo - Go web framework
+MongoDB - Database used
 
 ## Version
 
@@ -56,10 +55,7 @@ Contributing
 
 ## Authors
 
-- Jason Ho
+- Jason Chia-Hsien Ho
 - Chih-Yin Lee
 - Jason He
 - Diane Lin(Xiemenger)
-
-
-
