@@ -7,14 +7,20 @@ import { MatDialogRef } from '@angular/material';
   styleUrls: ['./retweet-dialog.component.css']
 })
 export class RetweetDialogComponent implements OnInit {
-
+  message: string = "";
   constructor(@Inject(MAT_DIALOG_DATA) private tweet,
-              private thisDialogRef: MatDialogRef<RetweetDialogComponent>) { }
-
+              private thisDialogRef: MatDialogRef<RetweetDialogComponent>,
+              @Inject("data") private data) { }
+  
   ngOnInit() {
   }
 
-  onSubmit() {
+  onSubmit(tweetid: string) {
+    let dataObject = {
+      Idretweet: tweetid,
+      message: this.message
+    }
+    this.data.retweet(JSON.parse(localStorage.getItem("user_info_object")).username, dataObject);
     this.thisDialogRef.close("Share!");
   }
 

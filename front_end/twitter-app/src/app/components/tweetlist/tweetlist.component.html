@@ -13,6 +13,12 @@
     <p class="tweetMessage">
       {{ tweet.message }}
     </p>
+    <div class="retweet" *ngIf="tweet.isretweet">
+      <span class="retweetname">
+        @{{ tweet.ownerretweet }}:
+      </span> 
+      {{ tweet.messageretweet }}
+    </div>
   </mat-card-content>
   <mat-card-actions class="action">
     <button class="actionbtn" mat-button (click)="retweetDialog(tweet)" ><mat-icon>launch</mat-icon> Share</button>
