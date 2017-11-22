@@ -35,7 +35,10 @@ export class DataService {
     this.timelineSource.next([]);
     this.http.get(this.localhost +`/api/v1/tweettimeline/${id}?perpage=15&page=${page}`, options)
                       .toPromise()
-                      .then((res: Response) => this.timelineSource.next(res.json()))
+                      .then((res: Response) => {
+                        console.log(res.json());
+                        this.timelineSource.next(res.json());
+                      })
                       .catch(this.handleError);
     return this.timelineSource.asObservable();
   }
@@ -107,6 +110,17 @@ export class DataService {
             .catch(this.handleError);
   }
 
+  // ReTweet
+  retweet(id: string, data: object): Promise<Object> {
+    let options: RequestOptions = this.getHeader();
+    return this.http.post(this.localhost + '/api/v1/reTweet', data, options)
+            .toPromise()
+            .then((res) => {
+              this.getTweetListTimeLine(id, 1);
+              return res.json();
+            })
+            .catch(this.handleError);
+  }
 
   //MockLogin only for development
   // mockLogin(): Promise<Object> {

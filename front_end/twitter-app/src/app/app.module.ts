@@ -44,6 +44,7 @@ import { EditUserProfileDialogComponent } from './components/edit-user-profile-d
 import { EditCommentsDialogComponent } from './components/edit-comments-dialog/edit-comments-dialog.component';
 import { CommentlistComponent } from './components/commentlist/commentlist.component';
 import { RetweetDialogComponent } from './components/retweet-dialog/retweet-dialog.component';
+import { FooterComponent } from './components/footer/footer.component';
 
 
 @NgModule({
@@ -66,6 +67,7 @@ import { RetweetDialogComponent } from './components/retweet-dialog/retweet-dial
     EditCommentsDialogComponent,
     CommentlistComponent,
     RetweetDialogComponent,
+    FooterComponent,
   ],
   imports: [
     BrowserModule,
