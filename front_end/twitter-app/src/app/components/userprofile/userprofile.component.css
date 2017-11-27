@@ -1,7 +1,7 @@
 .profileContainer{
     width:70%;
     height: 100%;
-    margin: auto;
+    margin: 0 auto;
     font: 15px/1.5 Arial, Helvetica, sans-serif;
     background-color: rgb(235, 231, 231);
 }

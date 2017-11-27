@@ -21,7 +21,11 @@
     </div>
   </mat-card-content>
   <mat-card-actions class="action">
-    <button class="actionbtn" mat-button (click)="retweetDialog(tweet)" ><mat-icon>launch</mat-icon> Share</button>
+    <button class="actionbtn" id="share" mat-button (click)="retweetDialog(tweet)" >
+      <mat-icon>launch</mat-icon>
+       Share
+    </button>
+
     <button class="actionbtn" id="comment" (click)="editCommentDialog(tweet)" mat-button >
         <mat-icon>comment</mat-icon>
         Comment
