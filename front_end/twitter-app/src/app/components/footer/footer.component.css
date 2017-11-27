@@ -1,12 +1,10 @@
-.footbar {
+p {
+    display: block;
     position: relative;
-    border-top: 1px solid #efefef;
+    /* border-top: 1px solid #efefef; */
     width: 80%;
     margin: 0 auto;
-    top: 30px;
-}
-
-p {
+    top: 180px;
     padding-bottom: 20px;
     text-align: center;
 }
