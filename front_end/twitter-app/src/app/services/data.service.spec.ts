@@ -121,4 +121,59 @@ describe('DataService', () => {
     expect(service.postTweet("id", "content")).toBeDefined();
   }));
 
+  it('deleteTweet() should send request to server', fakeAsync(() => {
+    backend.connections.subscribe(connection => { 
+      let options = new ResponseOptions({
+        body: JSON.stringify({success: true})
+      });
+      connection.mockRespond(new Response(options));
+    });
+    tick();
+    expect(service.deleteTweet("id")).toBeDefined();
+  }));
+
+  it('retweet() should send request to server', fakeAsync(() => {
+    backend.connections.subscribe(connection => { 
+      let options = new ResponseOptions({
+        body: JSON.stringify({success: true})
+      });
+      connection.mockRespond(new Response(options));
+    });
+    tick();
+    expect(service.retweet("id", {})).toBeDefined();
+  }));
+
+  it('updateuserinfo() should send request to server', fakeAsync(() => {
+    backend.connections.subscribe(connection => { 
+      let options = new ResponseOptions({
+        body: JSON.stringify({success: true})
+      });
+      connection.mockRespond(new Response(options));
+    });
+    tick();
+    expect(service.updateUserInfo({})).toBeDefined();
+  }));
+
+  it('addnewcomment() should send request to server', fakeAsync(() => {
+    backend.connections.subscribe(connection => { 
+      let options = new ResponseOptions({
+        body: JSON.stringify({success: true})
+      });
+      connection.mockRespond(new Response(options));
+    });
+    tick();
+    expect(service.addNewComment({}, "222")).toBeDefined();
+  }));
+
+  it('fetchComment() should send request to server', fakeAsync(() => {
+    backend.connections.subscribe(connection => { 
+      let options = new ResponseOptions({
+        body: JSON.stringify({success: true})
+      });
+      connection.mockRespond(new Response(options));
+    });
+    tick();
+    expect(service.fetchComment("222")).toBeDefined();
+  }));
+
 });

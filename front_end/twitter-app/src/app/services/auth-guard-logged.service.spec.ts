@@ -15,5 +15,6 @@ describe('AuthGuardLoggedService', () => {
 
   it('should be created', inject([AuthGuardLoggedService], (service: AuthGuardLoggedService) => {
     expect(service).toBeTruthy();
+    service.canActivate();
   }));
 });
