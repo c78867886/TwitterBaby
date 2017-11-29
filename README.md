@@ -57,5 +57,5 @@ MongoDB - Database used
 
 - Jason Chia-Hsien Ho
 - Chih-Yin Lee
-- Jason He
+- Jason He (Xing He)
 - Diane Lin(Xiemenger)
