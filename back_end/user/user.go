@@ -349,8 +349,8 @@ func (h *Handler) UpdateUserInfo(c echo.Context) (err error) {
 		return
 	}
 
-	if update.FirstName == "" || update.LastName == "" || update.Bio == "" || update.Tag == "" {
-		return &echo.HTTPError{Code: http.StatusBadRequest, Message: "All fields must not be empty."}
+	if update.FirstName == "" {
+		return &echo.HTTPError{Code: http.StatusBadRequest, Message: "Firstname must not be empty."}
 	}
 
 	err = db.DB(h.dbName).C(model.UserCollection).Update(bson.M{"username": username}, bson.M{"$set": bson.M{"firstname": update.FirstName, "lastname": update.LastName, "bio": update.Bio, "tag": update.Tag}})
