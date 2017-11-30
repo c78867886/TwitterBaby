@@ -409,6 +409,8 @@ func (h *Handler) UpdateProfilePicture(c echo.Context) (err error) {
 		return
 	}
 
+	db.DB(h.dbName).C(model.TweetCollection).UpdateAll(bson.M{"owner": username}, bson.M{"$set": bson.M{"picture": &image.Base64String}})
+
 	user := &model.User{}
 	err = db.DB(h.dbName).C(model.UserCollection).Find(bson.M{"username": username}).One(user)
 	if err != nil {
