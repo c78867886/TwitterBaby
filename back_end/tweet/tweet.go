@@ -134,6 +134,21 @@ func (h *Handler) NewTweet(c echo.Context) (err error) {
 	if err = c.Bind(tweet); err != nil {
 		return
 	}
+
+	// Retrieve user info from database
+	user := model.User{}
+	err = db.DB(h.dbName).C(model.UserCollection).Find(bson.M{"username": userName}).One(&user)
+	if err != nil {
+		if err == mgo.ErrNotFound {
+			return &echo.HTTPError{Code: http.StatusNotFound, Message: "User does not exist."}
+		}
+		return
+	}
+	if user.Picture != ""{
+		tweet.Picture = user.Picture
+	}else{
+		tweet.Picture = ""
+	}
 	
 	
 	// Validation
