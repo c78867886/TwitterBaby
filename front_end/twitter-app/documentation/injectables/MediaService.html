@@ -166,6 +166,9 @@
                                 <li class="link">
                                     <a href="../classes/NavBarPage.html" >NavBarPage</a>
                                 </li>
+                                <li class="link">
+                                    <a href="../classes/User.html" >User</a>
+                                </li>
                         </ul>
                     </li>
             
@@ -422,6 +425,9 @@
                                        <li class="link">
                                            <a href="../classes/NavBarPage.html" >NavBarPage</a>
                                        </li>
+                                       <li class="link">
+                                           <a href="../classes/User.html" >User</a>
+                                       </li>
                                </ul>
                            </li>
                    
@@ -595,7 +601,7 @@
                                         <span class="modifier">Private</span> <a href="#handleError">handleError</a>
                                     </li>
                                     <li>
-                                         <a href="#uploadImg">uploadImg</a>
+                                         <a href="#uploadAvator">uploadAvator</a>
                                     </li>
                                 </ul>
                             </td>
@@ -615,7 +621,7 @@
                             </tr>
                                     <tr>
                                         <td class="col-md-4">
-                                            <div class="io-line">Defined in <a href="" data-line="9" class="link-to-prism">src/app/services/media.service.ts:9</a></div>
+                                            <div class="io-line">Defined in <a href="" data-line="10" class="link-to-prism">src/app/services/media.service.ts:10</a></div>
                                         </td>
                                     </tr>
             
@@ -673,7 +679,7 @@
             
                                     <tr>
                                         <td class="col-md-4">
-                                            <div class="io-line">Defined in <a href="" data-line="23" class="link-to-prism">src/app/services/media.service.ts:23</a></div>
+                                            <div class="io-line">Defined in <a href="" data-line="24" class="link-to-prism">src/app/services/media.service.ts:24</a></div>
                                         </td>
                                     </tr>
             
@@ -708,7 +714,7 @@
             
                                     <tr>
                                         <td class="col-md-4">
-                                            <div class="io-line">Defined in <a href="" data-line="43" class="link-to-prism">src/app/services/media.service.ts:43</a></div>
+                                            <div class="io-line">Defined in <a href="" data-line="47" class="link-to-prism">src/app/services/media.service.ts:47</a></div>
                                         </td>
                                     </tr>
             
@@ -756,20 +762,20 @@
                         <tbody>
                             <tr>
                                 <td class="col-md-4">
-                                    <a name="uploadImg"></a>
-                                    <span class="name"><b> uploadImg</b><a href="#uploadImg"><span class="fa fa-link"></span></a></span>
+                                    <a name="uploadAvator"></a>
+                                    <span class="name"><b> uploadAvator</b><a href="#uploadAvator"><span class="fa fa-link"></span></a></span>
                                 </td>
                             </tr>
                             <tr>
                                 <td class="col-md-4">
-            <code>uploadImg(formdata: <a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank">any</a>)</code>
+            <code>uploadAvator(user: <a href="../classes/User.html">User</a>)</code>
                                 </td>
                             </tr>
             
             
                                     <tr>
                                         <td class="col-md-4">
-                                            <div class="io-line">Defined in <a href="" data-line="31" class="link-to-prism">src/app/services/media.service.ts:31</a></div>
+                                            <div class="io-line">Defined in <a href="" data-line="32" class="link-to-prism">src/app/services/media.service.ts:32</a></div>
                                         </td>
                                     </tr>
             
@@ -789,9 +795,9 @@
                                                     </thead>
                                                     <tbody>
                                                             <tr>
-                                                              <td>formdata</td>
+                                                              <td>user</td>
                                                               <td>
-                                                                      <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+                                                                      <code><a href="../classes/User.html" target="_self" >User</a></code>
                                                               </td>
                                                               <td>
                                                               </td>
@@ -803,7 +809,7 @@
                                         <div>
                                         </div>
                                         <div class="io-description">
-                                            <b>Returns : </b>    <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+                                            <b>Returns : </b>    <code>Observable&lt;object&gt;</code>
             
                                         </div>
                                             <div class="io-description">
@@ -847,7 +853,7 @@
                                 </tr>
                                     <tr>
                                         <td class="col-md-4">
-                                            <div class="io-line">Defined in <a href="" data-line="9" class="link-to-prism">src/app/services/media.service.ts:9</a></div>
+                                            <div class="io-line">Defined in <a href="" data-line="10" class="link-to-prism">src/app/services/media.service.ts:10</a></div>
                                         </td>
                                     </tr>
             
@@ -865,6 +871,7 @@ import { Http, Response, Headers, RequestOptions } from &#x27;@angular/http&#x27
 import { BehaviorSubject } from &#x27;rxjs/BehaviorSubject&#x27;;
 import { Observable } from &#x27;rxjs/Rx&#x27;;
 import &#x27;rxjs/add/operator/toPromise&#x27;;
+import { User } from &#x27;../components/userprofile/user&#x27;;
 
 @Injectable()
 export class MediaService {
@@ -884,21 +891,24 @@ export class MediaService {
    */
   getHeader(): RequestOptions {
     let access_token: string &#x3D; localStorage.getItem(&quot;access_token&quot;);
-    let headers: Headers &#x3D; new Headers({&#x27;Content-Type&#x27;: &#x27;application/x-www-form-urlencoded&#x27;});
+    let headers: Headers &#x3D; new Headers({&#x27;Content-Type&#x27;: &#x27;application/json&#x27;});
     headers.append(&#x27;Authorization&#x27;, &#x27;Bearer &#x27; + access_token);
     return new RequestOptions({ headers: headers });
   }
 
 
-  uploadImg(formdata: any) {
+  uploadAvator(user: User) : Observable&lt;object&gt; {
     let options: RequestOptions &#x3D; this.getHeader();
-    // let _url: string &#x3D; &quot;https://httpbin.org/status/200&quot;;
-    return this._http.post(&#x60;${this.backEndHostUrl}/updateProfilePic&#x60;,formdata ,options)
-      .toPromise()
-      .then((res:Response)&#x3D;&gt; {
-        console.log(&quot;Backend Upload image to backend successfully&quot;);
-      })
-      .catch(this.handleError);
+    let message: object &#x3D; { picture: user.picture };
+    console.log(&quot;picture data: &quot; + user.picture);
+    return this._http.post(&#x60;${this.backEndHostUrl}/updateProfilePic&#x60;, message ,options)
+    .map(res &#x3D;&gt; res.json())
+    .do(res &#x3D;&gt; {
+       console.log(&quot;---------&quot;);
+       console.log(res);
+       console.log(&quot;Get result successfully!&quot;);
+    })
+    .catch(this.handleError);
   }
 
     // ERROR handler

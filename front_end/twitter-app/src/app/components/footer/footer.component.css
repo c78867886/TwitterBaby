@@ -1,10 +1,11 @@
 p {
     display: block;
     position: relative;
-    /* border-top: 1px solid #efefef; */
+    border-top: 1px solid #efefef;
     width: 80%;
     margin: 0 auto;
-    top: 180px;
+    top: 80px;
     padding-bottom: 20px;
     text-align: center;
+    line-height: 200%;
 }

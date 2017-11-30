@@ -1,7 +1,7 @@
 <mat-spinner *ngIf="!tweetlist" class="spinner"></mat-spinner>
 <mat-card *ngFor="let tweet of tweetlist" class="example-card">
   <mat-card-header class="header">
-    <img class="image" mat-card-sm-image [src] = "url">
+    <img class="image" mat-card-sm-image [src] = "tweet.picture || url">
     <div class="headText">
       <mat-card-title>{{ tweet.owner }}</mat-card-title>
       <mat-card-subtitle class="timestamp">{{ tweet.timestamp | date: 'short'}}</mat-card-subtitle>

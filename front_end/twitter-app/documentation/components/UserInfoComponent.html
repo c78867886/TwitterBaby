@@ -166,6 +166,9 @@
                                 <li class="link">
                                     <a href="../classes/NavBarPage.html" >NavBarPage</a>
                                 </li>
+                                <li class="link">
+                                    <a href="../classes/User.html" >User</a>
+                                </li>
                         </ul>
                     </li>
             
@@ -421,6 +424,9 @@
                                        </li>
                                        <li class="link">
                                            <a href="../classes/NavBarPage.html" >NavBarPage</a>
+                                       </li>
+                                       <li class="link">
+                                           <a href="../classes/User.html" >User</a>
                                        </li>
                                </ul>
                            </li>
@@ -912,10 +918,10 @@ export class UserInfoComponent implements OnInit {
     <div class="tab-pane fade" id="templateData">
         <pre class="line-numbers"><code class="language-html">&lt;mat-card class&#x3D;&quot;userInfo&quot; *ngIf&#x3D;&quot;userInfo !&#x3D;&#x3D; null&quot;&gt;
   &lt;mat-card-header class&#x3D;&quot;header&quot;&gt;
-    &lt;img class&#x3D;&quot;image&quot; mat-card-sm-image [src] &#x3D; &quot;url&quot;&gt;
+    &lt;img class&#x3D;&quot;image&quot; mat-card-sm-image [src] &#x3D; &quot;userInfo.userinfo.picture || url&quot;&gt;
     &lt;div&gt;
         &lt;mat-card-title&gt;{{userInfo.userinfo.username}}&lt;/mat-card-title&gt;
-        &lt;mat-card-subtitle&gt;Dog Breed&lt;/mat-card-subtitle&gt;
+        &lt;mat-card-subtitle&gt;Animal Breed&lt;/mat-card-subtitle&gt;
     &lt;/div&gt;
   &lt;/mat-card-header&gt;
   &lt;mat-card-content&gt;
@@ -958,7 +964,7 @@ export class UserInfoComponent implements OnInit {
 <script src="../js/libs/htmlparser.js"></script>
 <script src="../js/libs/deep-iterator.js"></script>
 <script>
-        var COMPONENT_TEMPLATE = '<div><mat-card class="userInfo" *ngIf="userInfo !== null">  <mat-card-header class="header">    <img class="image" mat-card-sm-image [src] = "url">    <div>        <mat-card-title>{{userInfo.userinfo.username}}</mat-card-title>        <mat-card-subtitle>Dog Breed</mat-card-subtitle>    </div>  </mat-card-header>  <mat-card-content>    <p>      {{userInfo.userinfo.bio}}    </p>  </mat-card-content>  <mat-chip-list>    <mat-chip class=\'following\' [routerLink]="[\'/user/following/\', userInfo.userinfo.username]">Following: {{userInfo.followingcount}}</mat-chip>    <mat-chip class=\'follower\' [routerLink]="[\'/user/follower/\', userInfo.userinfo.username]">Followers: {{userInfo.followercount}}</mat-chip>  </mat-chip-list>  <mat-card-actions *ngIf="!isHost">    <button mat-raised-button class="followbtn" color="accent" (click)="followFunc()">      {{ (userInfo.followed) ? "Following" : "Follow" }}    </button>  </mat-card-actions></mat-card></div>'
+        var COMPONENT_TEMPLATE = '<div><mat-card class="userInfo" *ngIf="userInfo !== null">  <mat-card-header class="header">    <img class="image" mat-card-sm-image [src] = "userInfo.userinfo.picture || url">    <div>        <mat-card-title>{{userInfo.userinfo.username}}</mat-card-title>        <mat-card-subtitle>Animal Breed</mat-card-subtitle>    </div>  </mat-card-header>  <mat-card-content>    <p>      {{userInfo.userinfo.bio}}    </p>  </mat-card-content>  <mat-chip-list>    <mat-chip class=\'following\' [routerLink]="[\'/user/following/\', userInfo.userinfo.username]">Following: {{userInfo.followingcount}}</mat-chip>    <mat-chip class=\'follower\' [routerLink]="[\'/user/follower/\', userInfo.userinfo.username]">Followers: {{userInfo.followercount}}</mat-chip>  </mat-chip-list>  <mat-card-actions *ngIf="!isHost">    <button mat-raised-button class="followbtn" color="accent" (click)="followFunc()">      {{ (userInfo.followed) ? "Following" : "Follow" }}    </button>  </mat-card-actions></mat-card></div>'
     var COMPONENTS = [{'name': 'AppComponent', 'selector': 'app-root'},{'name': 'CommentlistComponent', 'selector': 'app-commentlist'},{'name': 'EditCommentsDialogComponent', 'selector': 'app-edit-comments-dialog'},{'name': 'EditUserProfileDialogComponent', 'selector': 'app-edit-user-profile-dialog'},{'name': 'FollowerlistComponent', 'selector': 'app-followerlist'},{'name': 'FollowlistComponent', 'selector': 'app-followlist'},{'name': 'FooterComponent', 'selector': 'app-footer'},{'name': 'LoginComponent', 'selector': 'app-login'},{'name': 'NavBarComponent', 'selector': 'app-nav-bar'},{'name': 'NotfoundComponent', 'selector': 'app-notfound'},{'name': 'PageSplitComponent', 'selector': 'app-page-split'},{'name': 'PostareaComponent', 'selector': 'app-postarea'},{'name': 'RetweetDialogComponent', 'selector': 'app-retweet-dialog'},{'name': 'SignUpComponent', 'selector': 'app-sign-up'},{'name': 'TweetlistComponent', 'selector': 'app-tweetlist'},{'name': 'UserInfoComponent', 'selector': 'app-user-info'},{'name': 'UserPageComponent', 'selector': 'app-user-page'},{'name': 'UserloginComponent', 'selector': 'app-userlogin'},{'name': 'UserprofileComponent', 'selector': 'app-userprofile'}];
     var DIRECTIVES = [];
     var ACTUAL_COMPONENT = {'name': 'UserInfoComponent'};
