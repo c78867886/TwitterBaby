@@ -144,12 +144,6 @@ func (h *Handler) NewTweet(c echo.Context) (err error) {
 		}
 		return
 	}
-	if user.Picture != ""{
-		tweet.Picture = user.Picture
-	}else{
-		tweet.Picture = ""
-	}
-	
 	
 	// Validation
 	if tweet.Message == "" {
@@ -157,6 +151,12 @@ func (h *Handler) NewTweet(c echo.Context) (err error) {
 	}
 	if len(tweet.Picture) > 10485760 {
 		return &echo.HTTPError{Code: http.StatusBadRequest, Message: "Image must be smaller than 10 MB."}
+	}
+
+	if user.Picture != ""{
+		tweet.Picture = user.Picture
+	}else{
+		tweet.Picture = ""
 	}
 	
 	// Save tweet in database
