@@ -1,18 +1,14 @@
 
-<!-- <app-nav-bar></app-nav-bar> -->
 <div class="profileContainer">
   <!-- Banner -->
   <div class="banner">
       <div id="banner_img">
           <div class="image-upload">
               <label for="file-input">
-                  <img class='profileheadimg' src="assets/images/grumpycat.jpeg"/>
+                  <img class='profileheadimg' src="{{ avatar || 'assets/images/defaultAvator.jpeg' }}"/>
               </label>
-              <input id="file-input" type="file" #fileInput (change)='uploadImg($event)' accept="image/jpg, image/jpeg, image/png" style="display: none;"/>
+              <input id="file-input" type="file" name="inputimg" required (change)="fileChange($event)"  accept="image/jpeg" #input>
           </div>
-          <!-- <input class="profileheadimg" type="image" (click)='uploadImg()' src="assets/images/grumpycat.jpeg" alt=""/> -->
-          <!-- <image-upload url="https://httpbin.org/status/200"></image-upload>
-          <img class="profileheadimg" (click)='uploadImg()' src="assets/images/grumpycat.jpeg" value="Head Image"> -->
       </div>  
   </div>
   <div class="banner_menu">
